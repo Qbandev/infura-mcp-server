@@ -44,7 +44,6 @@ Add to your Cursor MCP settings:
 }
 ```
 
-**Cursor MCP Configuration:**
 ![Cursor MCP Setup](img/cursor-mcp.jpg)
 
 **Primary Networks**: `mainnet`, `optimism-mainnet`, `arbitrum-mainnet`, `polygon-mainnet`, `base-mainnet`, `sepolia`
@@ -95,7 +94,7 @@ docker run -d \
 - `main` - Development build from main branch
 
 ## ✨ What You Can Do
-**Cursor Chat Interface:**
+
 ![Cursor Chat with Infura MCP](img/cursor-chat.jpg)
 
 Once connected, ask Claude or Cursor to:
