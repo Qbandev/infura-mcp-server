@@ -15,7 +15,9 @@
     "test:validate": "node test/validate.js",
     "test:tools": "node test/tools.js",
     "test:sse": "node test-sse.js",
-    "test:all": "npm test && npm run test:sse"
+    "test:all": "npm test && npm run test:sse",
+    "commitlint": "commitlint --edit",
+    "commitlint:last": "commitlint --from HEAD~1 --to HEAD --verbose"
   },
   "repository": {
     "type": "git",
@@ -33,7 +35,9 @@
   },
   "devDependencies": {
     "node-fetch": "^3.3.2",
-    "eventsource": "^2.0.2"
+    "eventsource": "^2.0.2",
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3"
   },
   "engines": {
     "node": ">=16.0.0"

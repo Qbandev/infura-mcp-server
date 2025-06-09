@@ -35,6 +35,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
         
+      - name: Validate commit messages
+        if: github.event_name == 'pull_request'
+        run: |
+          # Get the list of commits in the PR
+          git fetch origin ${{ github.base_ref }}
+          
+          # Validate all commits in the PR
+          npm run commitlint -- --from origin/${{ github.base_ref }} --to HEAD --verbose
+        
       - name: Lint package.json
         run: |
           node -e "
