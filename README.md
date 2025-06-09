@@ -217,6 +217,7 @@ npx infura-mcp-server --sse
 
 - [GitHub CLI](https://cli.github.com/) installed and authenticated (`gh auth login`)
 - NPM_TOKEN secret configured in GitHub repository (see `.github/SETUP.md`)
+- **Security**: Only repository owner can trigger releases (see `.github/SECURITY.md`)
 
 ### Available Release Commands
 
@@ -256,6 +257,25 @@ node scripts/release.js prerelease beta
    - Generates GitHub release with changelog
    - Publishes to npm registry
 5. **Monitoring**: Provides links to monitor progress
+
+## 🔒 Release Security
+
+**Only the repository owner (`Qbandev`) can trigger releases.**
+
+### Security Features:
+- ✅ **Authorization verification** before every release
+- ✅ **User identity validation** against authorized list  
+- ✅ **Audit logging** of all release attempts
+- ✅ **Fail-safe design** - unauthorized users cannot bypass security
+- ✅ **GPG signed commits** required
+
+### How it works:
+1. Release workflow starts with authorization check
+2. Compares triggering user against repository owner
+3. Only proceeds if authorized, fails immediately otherwise
+4. Logs all attempts for security audit
+
+For full security details, see **[`.github/SECURITY.md`](.github/SECURITY.md)**
 
 ## 🛠️ Available Tools
 

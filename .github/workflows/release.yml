@@ -27,8 +27,51 @@ permissions:
   packages: write
 
 jobs:
+  # Security check - only allow repository owner to run releases
+  authorize:
+    runs-on: ubuntu-latest
+    outputs:
+      authorized: ${{ steps.auth-check.outputs.authorized }}
+    steps:
+      - name: Check authorization
+        id: auth-check
+        run: |
+          # Only allow repository owner or specified collaborators
+          AUTHORIZED_USERS="Qbandev"  # Add more users separated by spaces if needed
+          REPO_OWNER="${{ github.repository_owner }}"
+          ACTOR="${{ github.actor }}"
+          
+          echo "Repository owner: $REPO_OWNER"
+          echo "Workflow actor: $ACTOR"
+          echo "Authorized users: $AUTHORIZED_USERS"
+          
+          # Check if actor is repository owner
+          if [ "$ACTOR" = "$REPO_OWNER" ]; then
+            echo "✅ Authorized: Repository owner"
+            echo "authorized=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Check if actor is in authorized users list
+          for user in $AUTHORIZED_USERS; do
+            if [ "$ACTOR" = "$user" ]; then
+              echo "✅ Authorized: Listed in authorized users"
+              echo "authorized=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+          done
+          
+          # Not authorized
+          echo "❌ Unauthorized: $ACTOR is not authorized to run releases"
+          echo "Only the repository owner ($REPO_OWNER) or authorized users can trigger releases"
+          echo "authorized=false" >> $GITHUB_OUTPUT
+          exit 1
+
   release:
     runs-on: ubuntu-latest
+    needs: authorize
+    if: needs.authorize.outputs.authorized == 'true'
+
     
     steps:
       - name: Checkout code
@@ -220,5 +263,7 @@ jobs:
             echo "Prerelease tag: ${{ github.event.inputs.prerelease_tag }}"
           fi
           echo "Repository: ${{ github.repository }}"
+          echo "Triggered by: ${{ github.actor }}"
+          echo "Authorization: ✅ Verified repository owner"
           echo "NPM Package: https://www.npmjs.com/package/infura-mcp-server"
           echo "GitHub Release: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ steps.version-bump.outputs.new-version }}" 
