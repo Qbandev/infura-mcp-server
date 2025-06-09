@@ -1,0 +1,213 @@
+name: Build and Publish Docker Image
+
+on:
+  # Trigger on releases
+  release:
+    types: [published]
+
+  # Trigger on version tags and main branch changes
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - main
+    paths:
+      - 'Dockerfile'
+      - 'mcpServer.js'
+      - 'package.json'
+      - 'lib/**'
+      - 'tools/**'
+      - 'commands/**'
+
+  # Allow manual dispatch
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Docker image tag'
+        required: false
+        default: 'latest'
+        type: string
+      push_to_registry:
+        description: 'Push to registry'
+        required: false
+        default: true
+        type: boolean
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # Security check - only allow repository owner to push to registry
+  authorize:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')
+    outputs:
+      authorized: ${{ steps.auth-check.outputs.authorized }}
+    steps:
+      - name: Check authorization
+        id: auth-check
+        run: |
+          AUTHORIZED_USERS="Qbandev"
+          REPO_OWNER="${{ github.repository_owner }}"
+          ACTOR="${{ github.actor }}"
+
+          echo "Repository owner: $REPO_OWNER"
+          echo "Workflow actor: $ACTOR"
+          echo "Authorized users: $AUTHORIZED_USERS"
+
+          if [ "$ACTOR" = "$REPO_OWNER" ]; then
+            echo "✅ Authorized: Repository owner"
+            echo "authorized=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          for user in $AUTHORIZED_USERS; do
+            if [ "$ACTOR" = "$user" ]; then
+              echo "✅ Authorized: Listed in authorized users"
+              echo "authorized=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+          done
+
+          echo "❌ Unauthorized: $ACTOR is not authorized to push Docker images"
+          echo "authorized=false" >> $GITHUB_OUTPUT
+          exit 1
+
+  build-and-push:
+    runs-on: ubuntu-latest
+    needs: [authorize]
+    if: always() && (needs.authorize.result == 'skipped' || needs.authorize.outputs.authorized == 'true')
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            # Tag with version for releases
+            type=ref,event=tag
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+
+            # Tag with 'latest' for main branch
+            type=raw,value=latest,enable={{is_default_branch}}
+
+            # Tag with branch name for development
+            type=ref,event=branch
+
+            # Tag with custom tag for manual dispatch
+            type=raw,value=${{ github.event.inputs.tag }},enable=${{ github.event_name == 'workflow_dispatch' }}
+
+          labels: |
+            org.opencontainers.image.title=Infura MCP Server
+            org.opencontainers.image.description=MCP server for Infura API with 40+ Ethereum JSON-RPC tools
+            org.opencontainers.image.vendor=qbandev
+            org.opencontainers.image.licenses=MIT
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.documentation=https://github.com/${{ github.repository }}#readme
+            org.opencontainers.image.url=https://github.com/${{ github.repository }}
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: false
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Test Docker image
+        run: |
+          # Test stdio mode (default)
+          echo "Testing stdio mode..."
+          timeout 10s docker run --rm \
+            -e INFURA_API_KEY=test_key_for_validation \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version || 'latest' }} \
+            echo '{"jsonrpc":"2.0","method":"tools/list","id":1}' || true
+
+          echo "✅ Stdio mode test completed"
+
+      - name: Push Docker image
+        if: >
+          github.event_name != 'pull_request' && 
+          (github.event.inputs.push_to_registry != 'false' || github.event.inputs.push_to_registry == '' || github.event.inputs.push_to_registry == null)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Generate image summary
+        if: success()
+        run: |
+          echo "## 🐳 Docker Image Published" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Registry:** \`${{ env.REGISTRY }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Repository:** \`${{ env.IMAGE_NAME }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Available Tags:" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.meta.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Usage:" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+          echo "# Standard MCP usage (Claude Desktop)" >> $GITHUB_STEP_SUMMARY
+          echo "docker run --rm -i \\" >> $GITHUB_STEP_SUMMARY
+          echo "  -e INFURA_API_KEY=your_api_key_here \\" >> $GITHUB_STEP_SUMMARY
+          echo "  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "# Web service mode (SSE)" >> $GITHUB_STEP_SUMMARY
+          echo "docker run -d \\" >> $GITHUB_STEP_SUMMARY
+          echo "  --name infura-mcp-server \\" >> $GITHUB_STEP_SUMMARY
+          echo "  -p 3001:3001 \\" >> $GITHUB_STEP_SUMMARY
+          echo "  -e INFURA_API_KEY=your_api_key_here \\" >> $GITHUB_STEP_SUMMARY
+          echo "  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \\" >> $GITHUB_STEP_SUMMARY
+          echo "  node mcpServer.js --sse" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+  security-scan:
+    runs-on: ubuntu-latest
+    needs: [build-and-push]
+    if: success()
+
+    steps:
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif' 

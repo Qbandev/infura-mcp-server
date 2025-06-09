@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # Web service deployment (SSE mode)
+  infura-mcp-server-sse:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: infura-mcp-server-sse
+    ports:
+      - "3001:3001"
+    environment:
+      - INFURA_API_KEY=${INFURA_API_KEY:-your_infura_api_key_here}
+      - INFURA_NETWORK=${INFURA_NETWORK:-mainnet}
+      - NODE_ENV=production
+      - DEBUG=${DEBUG:-false}
+    command: ["node", "mcpServer.js", "--sse"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "const http = require('http'); const options = { hostname: 'localhost', port: 3001, path: '/health', timeout: 5000 }; const req = http.request(options, (res) => process.exit(res.statusCode === 200 ? 0 : 1)); req.on('error', () => process.exit(1)); req.end();"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - mcp-network
+
+  # Standard MCP server (stdio mode) - for development/testing
+  infura-mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: infura-mcp-server
+    environment:
+      - INFURA_API_KEY=${INFURA_API_KEY:-your_infura_api_key_here}
+      - INFURA_NETWORK=${INFURA_NETWORK:-mainnet}
+      - NODE_ENV=production
+      - DEBUG=${DEBUG:-false}
+    # No ports exposed for stdio mode
+    # Use: docker-compose run --rm infura-mcp-server
+    profiles: ["stdio"]
+    networks:
+      - mcp-network
+
+networks:
+  mcp-network:
+    driver: bridge
+
+# Volumes for persistent data (if needed)
+volumes:
+  mcp-data: 

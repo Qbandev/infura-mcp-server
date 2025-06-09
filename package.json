@@ -23,7 +23,15 @@
     "release:minor": "./scripts/release.sh minor",
     "release:major": "./scripts/release.sh major",
     "release:beta": "./scripts/release.sh prerelease beta",
-    "release:alpha": "./scripts/release.sh prerelease alpha"
+    "release:alpha": "./scripts/release.sh prerelease alpha",
+    "docker:build": "docker build -t infura-mcp-server .",
+    "docker:run": "docker run --rm -i -e INFURA_API_KEY=${INFURA_API_KEY} infura-mcp-server",
+    "docker:run:sse": "docker run --rm -p 3001:3001 -e INFURA_API_KEY=${INFURA_API_KEY} infura-mcp-server node mcpServer.js --sse",
+    "docker:test": "docker run --rm -e INFURA_API_KEY=test_key infura-mcp-server --help",
+    "docker:compose:up": "docker-compose up -d infura-mcp-server-sse",
+    "docker:compose:stdio": "docker-compose run --rm infura-mcp-server",
+    "docker:compose:down": "docker-compose down",
+    "docker:compose:logs": "docker-compose logs -f"
   },
   "repository": {
     "type": "git",

@@ -40,18 +40,18 @@ jobs:
           AUTHORIZED_USERS="Qbandev"  # Add more users separated by spaces if needed
           REPO_OWNER="${{ github.repository_owner }}"
           ACTOR="${{ github.actor }}"
-          
+
           echo "Repository owner: $REPO_OWNER"
           echo "Workflow actor: $ACTOR"
           echo "Authorized users: $AUTHORIZED_USERS"
-          
+
           # Check if actor is repository owner
           if [ "$ACTOR" = "$REPO_OWNER" ]; then
             echo "✅ Authorized: Repository owner"
             echo "authorized=true" >> $GITHUB_OUTPUT
             exit 0
           fi
-          
+
           # Check if actor is in authorized users list
           for user in $AUTHORIZED_USERS; do
             if [ "$ACTOR" = "$user" ]; then
@@ -60,7 +60,7 @@ jobs:
               exit 0
             fi
           done
-          
+
           # Not authorized
           echo "❌ Unauthorized: $ACTOR is not authorized to run releases"
           echo "Only the repository owner ($REPO_OWNER) or authorized users can trigger releases"
@@ -72,7 +72,7 @@ jobs:
     needs: authorize
     if: needs.authorize.outputs.authorized == 'true'
 
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -81,23 +81,23 @@ jobs:
           fetch-depth: 0
           # This ensures the workflow can push back to the repo
           persist-credentials: true
-          
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
-          
+
       - name: Install dependencies
         run: npm ci
-        
+
       - name: Configure Git
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           # Configure git to use the token for authentication
           git config --local url."https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
-          
+
       - name: Run tests before release
         run: |
           if npm run | grep -q "test"; then
@@ -105,13 +105,13 @@ jobs:
           else
             echo "No test script found, skipping tests"
           fi
-          
+
       - name: Verify package works
         run: |
           echo "Verifying package functionality..."
           timeout 10s npm run list-tools || true
           echo "Package verification completed"
-          
+
       - name: Bump version
         id: version-bump
         run: |
@@ -120,10 +120,10 @@ jobs:
           else
             NEW_VERSION=$(npm version ${{ github.event.inputs.version_type }} --no-git-tag-version)
           fi
-          
+
           echo "new-version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "New version: $NEW_VERSION"
-          
+
       - name: Update CHANGELOG (if exists)
         run: |
           if [ -f "CHANGELOG.md" ]; then
@@ -134,14 +134,14 @@ jobs:
             echo "Creating CHANGELOG.md..."
             cat > CHANGELOG.md << EOF
           # Changelog
-          
+
           All notable changes to this project will be documented in this file.
-          
+
           The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
           and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-          
+
           ## ${{ steps.version-bump.outputs.new-version }} - $(date +%Y-%m-%d)
-          
+
           ### Added
           - Initial release
           - Infura MCP Server with 40+ Ethereum JSON-RPC tools
@@ -151,27 +151,27 @@ jobs:
           - Enhanced error handling and logging
           EOF
           fi
-          
+
       - name: Commit version bump
         run: |
           git add package.json package-lock.json CHANGELOG.md
           git commit -m "chore: bump version to ${{ steps.version-bump.outputs.new-version }}"
-          
+
       - name: Create and push tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Creating tag ${{ steps.version-bump.outputs.new-version }}..."
           git tag ${{ steps.version-bump.outputs.new-version }}
-          
+
           echo "Pushing commits to main..."
           git push origin main
-          
+
           echo "Pushing tag ${{ steps.version-bump.outputs.new-version }}..."
           git push origin ${{ steps.version-bump.outputs.new-version }}
-          
+
           echo "✅ Successfully created and pushed tag!"
-          
+
       - name: Generate release notes
         id: release-notes
         run: |
@@ -182,25 +182,25 @@ jobs:
           else
             COMMITS=$(git log --oneline --no-merges)
           fi
-          
+
           # Create release notes
           cat > release-notes.md << EOF
           ## What's Changed
-          
+
           $COMMITS
-          
+
           ## Installation
-          
+
           \`\`\`bash
           npm install -g infura-mcp-server
           # or
           npx infura-mcp-server
           \`\`\`
-          
+
           ## Usage
-          
+
           Set your Infura API key and connect to Claude Desktop or Cursor:
-          
+
           \`\`\`json
           {
             "mcpServers": {
@@ -214,16 +214,16 @@ jobs:
             }
           }
           \`\`\`
-          
+
           ## Features
-          
+
           - 40+ Ethereum JSON-RPC tools
           - Multi-network support (Mainnet, Optimism, Arbitrum, Polygon, Base, Sepolia)
           - SSE and stdio transport modes
           - Enhanced error handling and logging
           - Docker support
           EOF
-          
+
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -239,7 +239,7 @@ jobs:
               --title "Release ${{ steps.version-bump.outputs.new-version }}" \
               --notes-file release-notes.md
           fi
-          
+
       - name: Publish to NPM
         if: success()
         env:
@@ -252,7 +252,7 @@ jobs:
             npm publish
           fi
           echo "✅ Successfully published to NPM!"
-          
+
       - name: Release Summary
         if: always()
         run: |
@@ -266,4 +266,4 @@ jobs:
           echo "Triggered by: ${{ github.actor }}"
           echo "Authorization: ✅ Verified repository owner"
           echo "NPM Package: https://www.npmjs.com/package/infura-mcp-server"
-          echo "GitHub Release: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ steps.version-bump.outputs.new-version }}" 
+          echo "GitHub Release: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ steps.version-bump.outputs.new-version }}"

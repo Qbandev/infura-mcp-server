@@ -67,6 +67,49 @@ By default, connects to Ethereum Mainnet. To use other networks:
 
 **Additional Infura Networks**: `avalanche-mainnet`, `bsc-mainnet`, `celo-mainnet`, `linea-mainnet`, `mantle-mainnet`, `palm-mainnet`, `scroll-mainnet`, `starknet-mainnet`, `zksync-mainnet`, and [many more](https://docs.metamask.io/services/get-started/endpoints/)
 
+### 5. Docker Setup (Alternative)
+
+You can also run the MCP server using Docker. This is the standard MCP approach:
+
+**For Claude Desktop with Docker (Recommended):**
+
+```json
+{
+  "mcpServers": {
+    "Infura MCP Server": {
+      "command": "docker",
+      "args": [
+        "run", "--rm", "-i",
+        "-e", "INFURA_API_KEY=your_infura_api_key_here",
+        "-e", "INFURA_NETWORK=mainnet",
+        "ghcr.io/qbandev/infura-mcp-server:latest"
+      ]
+    }
+  }
+}
+```
+
+**For Web Service Deployment (SSE Mode):**
+
+```bash
+# Pull the latest image
+docker pull ghcr.io/qbandev/infura-mcp-server:latest
+
+# Run as web service
+docker run -d \
+  --name infura-mcp-server \
+  -p 3001:3001 \
+  -e INFURA_API_KEY=your_infura_api_key_here \
+  -e INFURA_NETWORK=mainnet \
+  ghcr.io/qbandev/infura-mcp-server:latest \
+  node mcpServer.js --sse
+```
+
+**Available Docker Tags:**
+- `latest` - Latest stable release  
+- `v0.1.1` - Specific version
+- `main` - Development build from main branch
+
 ## ✨ What You Can Do
 
 Once connected, ask Claude or Cursor to:

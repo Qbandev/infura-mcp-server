@@ -12,6 +12,7 @@ test-sse.js
 # Docker files
 Dockerfile
 .dockerignore
+docker-compose.yml
 
 # Logs
 *.log
