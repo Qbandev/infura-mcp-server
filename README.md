@@ -47,11 +47,6 @@ Add to your Cursor MCP settings:
 **Cursor MCP Configuration:**
 ![Cursor MCP Setup](img/cursor-mcp.jpg)
 
-**Cursor Chat Interface:**
-![Cursor Chat with Infura MCP](img/cursor-chat.jpg)
-
-
-
 **Primary Networks**: `mainnet`, `optimism-mainnet`, `arbitrum-mainnet`, `polygon-mainnet`, `base-mainnet`, `sepolia`
 
 **Additional Infura Networks**: `avalanche-mainnet`, `bsc-mainnet`, `celo-mainnet`, `linea-mainnet`, `mantle-mainnet`, `palm-mainnet`, `scroll-mainnet`, `starknet-mainnet`, `zksync-mainnet`, and [many more](https://docs.metamask.io/services/get-started/endpoints/)
@@ -100,6 +95,8 @@ docker run -d \
 - `main` - Development build from main branch
 
 ## ✨ What You Can Do
+**Cursor Chat Interface:**
+![Cursor Chat with Infura MCP](img/cursor-chat.jpg)
 
 Once connected, ask Claude or Cursor to:
 
