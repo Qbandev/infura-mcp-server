@@ -1,0 +1,39 @@
+{
+  "name": "mcp-server-infura",
+  "version": "1.0.0",
+  "description": "An MCP server for the Infura API, providing tools to interact with the Ethereum blockchain.",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "mcp-server-infura": "mcpServer.js"
+  },
+  "scripts": {
+    "start": "node mcpServer.js",
+    "start:sse": "node mcpServer.js --sse",
+    "list-tools": "node index.js tools",
+    "test:sse": "node test-sse.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-github-username/mcp-server-infura.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-github-username/mcp-server-infura/issues"
+  },
+  "homepage": "https://github.com/your-github-username/mcp-server-infura#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.9.0",
+    "commander": "^13.1.0",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "node-fetch": "^3.3.2",
+    "eventsource": "^2.0.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "author": "Postman, Inc.",
+  "license": "MIT"
+}
