@@ -21,7 +21,7 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, ".env") });
 
-const SERVER_NAME = "mcp-server-infura";
+const SERVER_NAME = "infura-mcp-server";
 
 // Enhanced logging function
 function log(level, message, data = null) {
