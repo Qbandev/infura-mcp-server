@@ -18,7 +18,7 @@ Before starting, please ensure you have:
 **1. Clone the repository**
 
 ```sh
-git clone https://github.com/your-github-username/infura-mcp-server.git
+git clone https://github.com/qbandev/infura-mcp-server.git
 cd infura-mcp-server
 ```
 

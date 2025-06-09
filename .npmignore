@@ -1,0 +1,28 @@
+# Development files
+.git
+.github
+.gitignore
+.env
+.env.*
+!.env.example
+
+# Test files
+test-sse.js
+
+# Docker files
+Dockerfile
+.dockerignore
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db

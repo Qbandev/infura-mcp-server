@@ -1,11 +1,11 @@
 {
-  "name": "mcp-server-infura",
-  "version": "1.0.0",
+  "name": "infura-mcp-server",
+  "version": "0.1.0",
   "description": "An MCP server for the Infura API, providing tools to interact with the Ethereum blockchain.",
   "main": "index.js",
   "type": "module",
   "bin": {
-    "mcp-server-infura": "mcpServer.js"
+    "infura-mcp-server": "mcpServer.js"
   },
   "scripts": {
     "start": "node mcpServer.js",
@@ -15,12 +15,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-github-username/mcp-server-infura.git"
+    "url": "https://github.com/qbandev/infura-mcp-server.git"
   },
   "bugs": {
-    "url": "https://github.com/your-github-username/mcp-server-infura/issues"
+    "url": "https://github.com/qbandev/infura-mcp-server/issues"
   },
-  "homepage": "https://github.com/your-github-username/mcp-server-infura#readme",
+  "homepage": "https://github.com/qbandev/infura-mcp-server#readme",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.9.0",
     "commander": "^13.1.0",
