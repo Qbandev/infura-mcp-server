@@ -4,9 +4,8 @@ globs:
 alwaysApply: false
 ---
 ---
-type: auto
 description: "Comprehensive project context for the Infura MCP Server - provides technical architecture, development guidelines, testing strategy, release automation, and blockchain integration details"
-autoAttach:
+globs:
   - "*.js"
   - "*.json"
   - "package.json"
@@ -15,6 +14,7 @@ autoAttach:
   - "tools/**/*"
   - "scripts/**/*"
   - "test/**/*"
+alwaysApply: false
 ---
 
 # Infura MCP Server Project Context
