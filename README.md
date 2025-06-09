@@ -44,24 +44,13 @@ Add to your Cursor MCP settings:
 }
 ```
 
-### 4. Choose Your Network (Optional)
+**Cursor MCP Configuration:**
+![Cursor MCP Setup](img/cursor-mcp.jpg)
 
-By default, connects to Ethereum Mainnet. To use other networks:
+**Cursor Chat Interface:**
+![Cursor Chat with Infura MCP](img/cursor-chat.jpg)
 
-```json
-{
-  "mcpServers": {
-    "Infura MCP Server": {
-      "command": "npx",
-      "args": ["infura-mcp-server"],
-      "env": {
-        "INFURA_API_KEY": "your_infura_api_key_here",
-        "INFURA_NETWORK": "polygon-mainnet"
-      }
-    }
-  }
-}
-```
+
 
 **Primary Networks**: `mainnet`, `optimism-mainnet`, `arbitrum-mainnet`, `polygon-mainnet`, `base-mainnet`, `sepolia`
 
