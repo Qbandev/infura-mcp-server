@@ -14,7 +14,7 @@ globs:
   - "tools/**/*"
   - "scripts/**/*"
   - "test/**/*"
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Infura MCP Server Project Context
