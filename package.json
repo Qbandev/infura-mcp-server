@@ -12,8 +12,8 @@
     "start:sse": "node mcpServer.js --sse",
     "list-tools": "node index.js tools",
     "test": "npm run test:validate && npm run test:tools",
-    "test:validate": "node -e \"console.log('✅ Package validation passed'); const pkg = require('./package.json'); if (!pkg.name || !pkg.version) throw new Error('Invalid package.json');\"",
-    "test:tools": "node -e \"console.log('✅ Testing tools discovery...'); require('./lib/tools.js').discoverTools().then(tools => console.log('✅ Discovered', tools.length, 'tools')).catch(err => { console.error('❌ Tools test failed:', err.message); process.exit(1); });\"",
+    "test:validate": "node test/validate.js",
+    "test:tools": "node test/tools.js",
     "test:sse": "node test-sse.js",
     "test:all": "npm test && npm run test:sse"
   },
