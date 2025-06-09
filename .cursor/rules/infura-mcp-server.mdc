@@ -1,5 +1,323 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: false
 ---
+---
+type: auto
+description: "Comprehensive project context for the Infura MCP Server - provides technical architecture, development guidelines, testing strategy, release automation, and blockchain integration details"
+autoAttach:
+  - "*.js"
+  - "*.json"
+  - "package.json"
+  - "*.md"
+  - ".github/**/*"
+  - "tools/**/*"
+  - "scripts/**/*"
+  - "test/**/*"
+---
+
+# Infura MCP Server Project Context
+
+## Project Overview
+
+The Infura MCP Server is a Model Context Protocol (MCP) server that provides 40+ Ethereum JSON-RPC tools with multi-network support. It enables AI assistants like Claude Desktop and Cursor to interact with Ethereum blockchain data through Infura's infrastructure.
+
+### Key Statistics
+- **Language**: Node.js ES modules (type: "module")
+- **Tools**: 40+ Ethereum JSON-RPC methods
+- **Networks**: 6 primary + 15+ additional Infura networks supported
+- **Transport**: SSE and stdio modes
+- **Version**: Published on npm as `infura-mcp-server`
+- **Security**: GPG signed commits, strict release access control
+
+## Technical Architecture
+
+### Core Files
+- `mcpServer.js` - Main MCP server implementation
+- `index.js` - Entry point and CLI handling
+- `tools/` - 40+ individual Ethereum JSON-RPC tools
+- `commands/` - Command definitions and metadata
+- `lib/` - Utility functions and helpers
+- `test/` - Validation and testing scripts
+
+### Supported Networks
+
+**Primary Networks (fully tested):**
+```javascript
+const PRIMARY_NETWORKS = {
+  mainnet: 'mainnet',
+  optimism: 'optimism-mainnet', 
+  arbitrum: 'arbitrum-mainnet',
+  polygon: 'polygon-mainnet',
+  base: 'base-mainnet',
+  sepolia: 'sepolia'
+};
+```
+
+**Additional Infura Networks (available via INFURA_NETWORK env var):**
+- `avalanche-mainnet` / `avalanche-fuji` - Avalanche C-Chain
+- `bsc-mainnet` / `bsc-testnet` - Binance Smart Chain  
+- `celo-mainnet` / `celo-alfajores` - Celo
+- `linea-mainnet` / `linea-sepolia` - Linea
+- `mantle-mainnet` / `mantle-sepolia` - Mantle
+- `palm-mainnet` / `palm-testnet` - Palm
+- `scroll-mainnet` / `scroll-sepolia` - Scroll
+- `starknet-mainnet` / `starknet-sepolia` - Starknet
+- `zksync-mainnet` / `zksync-sepolia` - ZKsync Era
+- `blast-mainnet` / `blast-sepolia` - Blast
+- `opbnb-mainnet` / `opbnb-testnet` - opBNB
+- `swellchain-mainnet` / `swellchain-testnet` - Swellchain
+- `unichain-mainnet` / `unichain-sepolia` - Unichain
+
+**Reference**: [Complete Infura Endpoints List](mdc:https:/docs.metamask.io/services/get-started/endpoints)
+
+### Environment Variables
+- `INFURA_API_KEY` - Required Infura API key
+- `INFURA_NETWORK` - Network selection (defaults to mainnet)
+- `DEBUG` - Enable debug logging
+
+## Available Tools (40+)
+
+### Account & Balance Tools
+- `eth_getBalance` - Get account balance
+- `eth_getTransactionCount` - Get nonce/transaction count
+- `eth_getCode` - Get contract bytecode
+
+### Block & Transaction Tools  
+- `eth_getBlockByNumber` - Get block by number
+- `eth_getBlockByHash` - Get block by hash
+- `eth_getTransactionByHash` - Get transaction details
+- `eth_getTransactionReceipt` - Get transaction receipt
+- `eth_getBlockTransactionCountByNumber` - Count transactions in block
+- `eth_getBlockTransactionCountByHash` - Count transactions in block
+
+### Smart Contract Tools
+- `eth_call` - Execute read-only contract call
+- `eth_estimateGas` - Estimate gas for transaction
+- `eth_getLogs` - Get event logs with filters
+- `eth_getStorageAt` - Read contract storage
+
+### Network & Node Tools
+- `eth_chainId` - Get chain ID
+- `eth_gasPrice` - Get current gas price
+- `eth_blockNumber` - Get latest block number
+- `net_version` - Get network version
+- `web3_clientVersion` - Get client version
+
+### Advanced Tools
+- `eth_getUncleByBlockNumberAndIndex` - Get uncle block
+- `eth_getUncleCountByBlockNumber` - Count uncle blocks
+- `eth_getProof` - Get Merkle proof
+- `eth_createAccessList` - Create access list
+- `eth_feeHistory` - Get fee history
+- `eth_maxPriorityFeePerGas` - Get priority fee
+
+## Development Guidelines
+
+### Code Style
+- Use English for all code, documentation, and comments
+- Follow ES module syntax (`import`/`export`)
+- Use camelCase for variables and functions
+- Use PascalCase for class names
+- Use snake_case for file names
+- Implement proper error handling with structured responses
+
+### Testing Strategy
+```bash
+npm test           # Run validation + tools discovery
+npm run test:validate  # Package.json validation
+npm run test:tools     # Validate all 40 tools
+npm run test:sse       # SSE functionality test
+```
+
+### Docker Support
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+EXPOSE 3000
+CMD ["npm", "start"]
+```
+
+## Release Automation & Security
+
+### Automated Release System
+- **Scripts**: `scripts/release.sh` (bash) and `scripts/release.js` (Node.js)
+- **NPM Commands**: `npm run release:patch|minor|major|beta|alpha`
+- **GitHub Workflows**: Automated testing, versioning, tagging, and publishing
+
+### Security Features
+- **Access Control**: Only repository owner (`Qbandev`) can trigger releases
+- **Authorization Job**: Pre-flight security check in GitHub Actions
+- **GPG Signatures**: All commits must be GPG signed
+- **Audit Logging**: All release attempts logged for security monitoring
+
+### Release Process
+1. Authorization verification (owner check)
+2. Comprehensive testing (all 40 tools)
+3. Version bumping (semantic versioning)
+4. Git tagging and changelog generation
+5. GitHub release creation
+6. Automatic npm publishing
+
+## Error Handling Patterns
+
+### Structured Error Responses
+```javascript
+return {
+  isError: true,
+  error: {
+    code: 'INFURA_ERROR',
+    message: 'Human-readable error message',
+    details: errorDetails
+  }
+};
+```
+
+### Common Error Types
+- `INFURA_API_ERROR` - Infura service errors
+- `INVALID_PARAMETERS` - Parameter validation failures  
+- `NETWORK_ERROR` - Connection issues
+- `RATE_LIMIT_ERROR` - API rate limiting
+
+## MCP Integration
+
+### Transport Modes
+- **stdio**: Standard input/output for Claude Desktop
+- **SSE**: Server-Sent Events for web applications
+
+### Tool Registration
+```javascript
+server.setRequestHandler(ListToolsRequestSchema, async () => ({
+  tools: tools.map(tool => ({
+    name: tool.name,
+    description: tool.description,
+    inputSchema: tool.inputSchema
+  }))
+}));
+```
+
+## Claude Desktop Configuration
+```json
+{
+  "mcpServers": {
+    "Infura MCP Server": {
+      "command": "npx",
+      "args": ["infura-mcp-server"],
+      "env": {
+        "INFURA_API_KEY": "your_api_key_here"
+      }
+    }
+  }
+}
+```
+
+## Cursor Integration  
+```json
+{
+  "mcpServers": {
+    "Infura MCP Server": {
+      "command": "npx", 
+      "args": ["infura-mcp-server"],
+      "env": {
+        "INFURA_API_KEY": "your_api_key_here"
+      }
+    }
+  }
+}
+```
+
+## Network-Specific Usage
+```bash
+# Mainnet (default)
+INFURA_API_KEY=your_key npx infura-mcp-server
+
+# Polygon 
+INFURA_API_KEY=your_key INFURA_NETWORK=polygon-mainnet npx infura-mcp-server
+
+# Arbitrum
+INFURA_API_KEY=your_key INFURA_NETWORK=arbitrum-mainnet npx infura-mcp-server
+
+# Avalanche C-Chain
+INFURA_API_KEY=your_key INFURA_NETWORK=avalanche-mainnet npx infura-mcp-server
+
+# Binance Smart Chain
+INFURA_API_KEY=your_key INFURA_NETWORK=bsc-mainnet npx infura-mcp-server
+```
+
+## Performance Considerations
+
+### Rate Limiting
+- Infura enforces API rate limits
+- Implement exponential backoff for retries
+- Cache frequently accessed data when appropriate
+
+### Gas Optimization
+- Use `eth_estimateGas` before transactions
+- Monitor gas prices with `eth_gasPrice`
+- Consider EIP-1559 fee mechanisms
+
+## Contributing Guidelines
+
+### Conventional Commits
+- `feat:` - New features
+- `fix:` - Bug fixes  
+- `docs:` - Documentation changes
+- `test:` - Test additions/changes
+- `ci:` - CI/CD changes
+- `security:` - Security improvements
+
+### Development Workflow
+1. Clone repository
+2. Install dependencies: `npm install`
+3. Set environment variables
+4. Run tests: `npm test`
+5. Create feature branch
+6. Make changes with GPG signed commits
+7. Submit pull request
+
+### Security Requirements
+- All commits must be GPG signed
+- Follow principle of least privilege
+- Validate all user inputs
+- Use environment variables for secrets
+- Regular security audits of dependencies
+
+## Important Files Reference
+
+- `package.json` - Project metadata and dependencies
+- `mcpServer.js` - Core server implementation  
+- `tools/` - All 40+ Ethereum JSON-RPC tools
+- `.github/workflows/` - CI/CD automation
+- `.github/SECURITY.md` - Security policies
+- `scripts/release.*` - Release automation
+- `Dockerfile` - Container configuration
+- `CONTRIBUTING.md` - Contribution guidelines
+
+## Best Practices
+
+### When Adding New Tools
+1. Follow existing tool structure in `tools/` directory
+2. Include proper JSON schema validation
+3. Add comprehensive error handling
+4. Update tool count in documentation
+5. Add to test suite validation
+
+### When Modifying Core Server
+1. Maintain backward compatibility
+2. Update all affected tools
+3. Run full test suite
+4. Update documentation
+5. Consider impact on all 6 networks
+
+### When Working with Blockchain Data
+1. Always validate addresses and parameters
+2. Handle network-specific differences
+3. Account for potential blockchain reorganizations
+4. Implement proper retry logic for transient failures
+5. Consider gas costs and optimization
+
+This project represents a production-ready MCP server with enterprise-grade security, comprehensive testing, and full automation. All development should maintain these high standards.
