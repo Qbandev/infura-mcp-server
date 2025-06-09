@@ -43,9 +43,7 @@
             "never"
         ],
         "subject-case": [
-            2,
-            "always",
-            "sentence-case"
+            0
         ],
         "subject-full-stop": [
             2,
