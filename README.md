@@ -2,8 +2,6 @@
 
 Connect Claude Desktop and Cursor to Ethereum blockchain data through Infura's API.
 
-Access 40+ Ethereum JSON-RPC tools across 6 networks: **Mainnet**, **Optimism**, **Arbitrum**, **Polygon**, **Base**, and **Sepolia**.
-
 ## 🚀 Quick Start
 
 ### 1. Get Your Infura API Key
@@ -13,9 +11,6 @@ Sign up at [infura.io](https://infura.io) and create a new API key for Web3 API.
 ### 2. Setup for Claude Desktop
 
 Add to your Claude Desktop config file:
-
-**macOS**: `~/Library/Application\ Support/Claude/claude_desktop_config.json`  
-**Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
 
 ```json
 {
@@ -61,14 +56,14 @@ By default, connects to Ethereum Mainnet. To use other networks:
       "args": ["infura-mcp-server"],
       "env": {
         "INFURA_API_KEY": "your_infura_api_key_here",
-        "INFURA_NETWORK": "polygon"
+        "INFURA_NETWORK": "polygon-mainnet"
       }
     }
   }
 }
 ```
 
-**Available Networks**: `mainnet`, `optimism`, `arbitrum`, `polygon`, `base`, `sepolia`
+**Available Networks**: `mainnet`, `optimism-mainnet`, `arbitrum-mainnet`, `polygon-mainnet`, `base-mainnet`, `sepolia`
 
 ## ✨ What You Can Do
 
