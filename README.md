@@ -157,15 +157,41 @@ curl -X POST \
 
 Replace `YOUR_SESSION_ID_HERE` with the sessionId you received from step 2.
 
-## 📦 Publishing & Running with NPX
+## 📦 Automated Publishing & Releases
 
-Once you are ready, you can publish this package to npm to make it easily available.
+This package includes automated GitHub workflows for publishing. You can easily create new releases using the built-in automation scripts.
 
-**1. Publish to NPM**
+**1. Automated Release (Recommended)**
 
-First, make sure you have an account on [npmjs.com](https://www.npmjs.com/) and you are logged in via the CLI (`npm login`).
+Use the automated release scripts to trigger GitHub workflows:
 
-Then, publish the package:
+```sh
+# Create a patch release (0.1.0 → 0.1.1)
+npm run release:patch
+
+# Create a minor release (0.1.0 → 0.2.0)  
+npm run release:minor
+
+# Create a major release (0.1.0 → 1.0.0)
+npm run release:major
+
+# Create a beta prerelease (0.1.0 → 0.1.1-beta.0)
+npm run release:beta
+
+# Create an alpha prerelease (0.1.0 → 0.1.1-alpha.0)
+npm run release:alpha
+```
+
+The automation will:
+- ✅ Run all tests
+- ✅ Bump version in package.json
+- ✅ Create git tag
+- ✅ Create GitHub release
+- ✅ Automatically publish to npm
+
+**2. Manual Publishing (Advanced)**
+
+If you prefer manual control, you can still publish directly:
 
 ```sh
 npm publish
@@ -184,6 +210,52 @@ Or for SSE mode:
 ```sh
 npx infura-mcp-server --sse
 ```
+
+## 🤖 Release Automation
+
+### Prerequisites
+
+- [GitHub CLI](https://cli.github.com/) installed and authenticated (`gh auth login`)
+- NPM_TOKEN secret configured in GitHub repository (see `.github/SETUP.md`)
+
+### Available Release Commands
+
+| Command | Description | Version Change |
+|---------|-------------|----------------|
+| `npm run release:patch` | Bug fixes and patches | 0.1.0 → 0.1.1 |
+| `npm run release:minor` | New features (backwards compatible) | 0.1.0 → 0.2.0 |
+| `npm run release:major` | Breaking changes | 0.1.0 → 1.0.0 |
+| `npm run release:beta` | Beta prerelease | 0.1.0 → 0.1.1-beta.0 |
+| `npm run release:alpha` | Alpha prerelease | 0.1.0 → 0.1.1-alpha.0 |
+
+### Manual Workflow Trigger
+
+You can also trigger releases using the scripts directly:
+
+```sh
+# Bash script (macOS/Linux)
+./scripts/release.sh patch
+./scripts/release.sh minor
+./scripts/release.sh prerelease beta
+
+# Node.js script (cross-platform)
+node scripts/release.js patch
+node scripts/release.js minor  
+node scripts/release.js prerelease beta
+```
+
+### What Happens During Release
+
+1. **Validation**: Checks GitHub CLI authentication and current version
+2. **Confirmation**: Prompts for confirmation before proceeding
+3. **Workflow Trigger**: Triggers the GitHub Release workflow
+4. **Automated Process**: 
+   - Runs comprehensive tests
+   - Bumps version in package.json
+   - Creates git tag
+   - Generates GitHub release with changelog
+   - Publishes to npm registry
+5. **Monitoring**: Provides links to monitor progress
 
 ## 🛠️ Available Tools
 

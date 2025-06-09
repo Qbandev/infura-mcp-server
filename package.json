@@ -17,7 +17,13 @@
     "test:sse": "node test-sse.js",
     "test:all": "npm test && npm run test:sse",
     "commitlint": "commitlint --edit",
-    "commitlint:last": "commitlint --from HEAD~1 --to HEAD --verbose"
+    "commitlint:last": "commitlint --from HEAD~1 --to HEAD --verbose",
+    "release": "./scripts/release.sh",
+    "release:patch": "./scripts/release.sh patch",
+    "release:minor": "./scripts/release.sh minor",
+    "release:major": "./scripts/release.sh major",
+    "release:beta": "./scripts/release.sh prerelease beta",
+    "release:alpha": "./scripts/release.sh prerelease alpha"
   },
   "repository": {
     "type": "git",
