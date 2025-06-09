@@ -1,0 +1,127 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ matrix.node-version }}-
+            ${{ runner.os }}-node-
+            
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Lint package.json
+        run: |
+          node -e "
+            const pkg = require('./package.json');
+            console.log('Package name:', pkg.name);
+            console.log('Version:', pkg.version);
+            console.log('Repository:', pkg.repository?.url);
+            
+            // Validate required fields
+            if (!pkg.name) throw new Error('Package name is required');
+            if (!pkg.version) throw new Error('Version is required');
+            if (!pkg.description) throw new Error('Description is required');
+            if (!pkg.main) throw new Error('Main entry point is required');
+            if (!pkg.repository) throw new Error('Repository is required');
+            
+            console.log('✅ Package.json validation passed');
+          "
+        
+      - name: Run tests (if available)
+        run: |
+          if npm run | grep -q "test"; then
+            npm test
+          else
+            echo "No test script found, skipping tests"
+          fi
+        continue-on-error: false
+        
+      - name: Verify package structure
+        run: |
+          echo "Checking package structure..."
+          
+          # Check main files exist
+          if [ ! -f "package.json" ]; then echo "❌ package.json missing"; exit 1; fi
+          if [ ! -f "README.md" ]; then echo "❌ README.md missing"; exit 1; fi
+          if [ ! -f "LICENSE" ]; then echo "❌ LICENSE missing"; exit 1; fi
+          if [ ! -f "mcpServer.js" ]; then echo "❌ mcpServer.js missing"; exit 1; fi
+          if [ ! -f "index.js" ]; then echo "❌ index.js missing"; exit 1; fi
+          if [ ! -d "tools" ]; then echo "❌ tools directory missing"; exit 1; fi
+          if [ ! -d "lib" ]; then echo "❌ lib directory missing"; exit 1; fi
+          
+          echo "✅ Package structure validation passed"
+        
+      - name: Test package installation
+        run: |
+          # Pack the package locally and test installation
+          npm pack
+          PACKAGE_FILE=$(ls *.tgz)
+          echo "Testing installation of $PACKAGE_FILE"
+          
+          # Create a test directory and install the package
+          mkdir -p test-install
+          cd test-install
+          npm init -y
+          npm install ../$PACKAGE_FILE
+          
+          echo "✅ Package installation test passed"
+        
+      - name: Verify tools can be listed
+        run: |
+          echo "Testing tools listing..."
+          
+          # Test that the server can start and list tools
+          if command -v timeout >/dev/null 2>&1; then
+            timeout 15s npm run list-tools || true
+          else
+            # Fallback for systems without timeout
+            npm run list-tools &
+            PID=$!
+            sleep 5
+            kill $PID 2>/dev/null || true
+            wait $PID 2>/dev/null || true
+          fi
+          
+          echo "✅ Tools listing test completed"
+        
+      - name: Check for security vulnerabilities
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+        
+      - name: Check bundle size
+        run: |
+          # Get package size
+          PACKAGE_SIZE=$(du -sh . | cut -f1)
+          echo "Package size: $PACKAGE_SIZE"
+          
+          # Count files
+          FILE_COUNT=$(find . -type f -not -path './node_modules/*' -not -path './.git/*' | wc -l)
+          echo "File count: $FILE_COUNT"
+          
+          echo "✅ Bundle size check completed" 

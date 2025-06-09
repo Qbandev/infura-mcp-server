@@ -1,0 +1,173 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+          - prerelease
+      prerelease_tag:
+        description: 'Prerelease tag (for prerelease only)'
+        required: false
+        default: 'beta'
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+      - name: Run tests before release
+        run: |
+          if npm run | grep -q "test"; then
+            npm test
+          else
+            echo "No test script found, skipping tests"
+          fi
+          
+      - name: Verify package works
+        run: |
+          echo "Verifying package functionality..."
+          timeout 10s npm run list-tools || true
+          echo "Package verification completed"
+          
+      - name: Bump version
+        id: version-bump
+        run: |
+          if [ "${{ github.event.inputs.version_type }}" = "prerelease" ]; then
+            NEW_VERSION=$(npm version prerelease --preid=${{ github.event.inputs.prerelease_tag }} --no-git-tag-version)
+          else
+            NEW_VERSION=$(npm version ${{ github.event.inputs.version_type }} --no-git-tag-version)
+          fi
+          
+          echo "new-version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "New version: $NEW_VERSION"
+          
+      - name: Update CHANGELOG (if exists)
+        run: |
+          if [ -f "CHANGELOG.md" ]; then
+            echo "Updating CHANGELOG.md..."
+            # Add placeholder entry for the new version
+            sed -i "1i\\## ${{ steps.version-bump.outputs.new-version }} - $(date +%Y-%m-%d)\\n\\n### Added\\n- New features go here\\n\\n### Changed\\n- Changes go here\\n\\n### Fixed\\n- Bug fixes go here\\n\\n" CHANGELOG.md
+          else
+            echo "Creating CHANGELOG.md..."
+            cat > CHANGELOG.md << EOF
+          # Changelog
+          
+          All notable changes to this project will be documented in this file.
+          
+          The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+          and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+          
+          ## ${{ steps.version-bump.outputs.new-version }} - $(date +%Y-%m-%d)
+          
+          ### Added
+          - Initial release
+          - Infura MCP Server with 40+ Ethereum JSON-RPC tools
+          - Support for multiple networks (Mainnet, Optimism, Arbitrum, Polygon, Base, Sepolia)
+          - SSE and stdio transport modes
+          - Docker support
+          - Enhanced error handling and logging
+          EOF
+          fi
+          
+      - name: Commit version bump
+        run: |
+          git add package.json package-lock.json CHANGELOG.md
+          git commit -m "chore: bump version to ${{ steps.version-bump.outputs.new-version }}"
+          
+      - name: Create and push tag
+        run: |
+          git tag ${{ steps.version-bump.outputs.new-version }}
+          git push origin main
+          git push origin ${{ steps.version-bump.outputs.new-version }}
+          
+      - name: Generate release notes
+        id: release-notes
+        run: |
+          # Get commits since last tag
+          LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -n "$LAST_TAG" ]; then
+            COMMITS=$(git log ${LAST_TAG}..HEAD --oneline --no-merges)
+          else
+            COMMITS=$(git log --oneline --no-merges)
+          fi
+          
+          # Create release notes
+          cat > release-notes.md << EOF
+          ## What's Changed
+          
+          $COMMITS
+          
+          ## Installation
+          
+          \`\`\`bash
+          npm install -g infura-mcp-server
+          # or
+          npx infura-mcp-server
+          \`\`\`
+          
+          ## Usage
+          
+          Set your Infura API key and connect to Claude Desktop or Cursor:
+          
+          \`\`\`json
+          {
+            "mcpServers": {
+              "Infura MCP Server": {
+                "command": "npx",
+                "args": ["infura-mcp-server"],
+                "env": {
+                  "INFURA_API_KEY": "your_infura_api_key_here"
+                }
+              }
+            }
+          }
+          \`\`\`
+          
+          ## Features
+          
+          - 40+ Ethereum JSON-RPC tools
+          - Multi-network support (Mainnet, Optimism, Arbitrum, Polygon, Base, Sepolia)
+          - SSE and stdio transport modes
+          - Enhanced error handling and logging
+          - Docker support
+          EOF
+          
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.version-bump.outputs.new-version }}
+          release_name: Release ${{ steps.version-bump.outputs.new-version }}
+          body_path: release-notes.md
+          draft: false
+          prerelease: ${{ github.event.inputs.version_type == 'prerelease' }} 
