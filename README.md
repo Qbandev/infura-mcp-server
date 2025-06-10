@@ -1,6 +1,6 @@
 # Infura MCP Server
 
-Connect Claude Desktop and Cursor to Ethereum blockchain data through Infura's API.
+Connect Claude Desktop and you IDE (Cursor or VSCode) to Ethereum blockchain data through Infura's API.
 
 ## 🚀 Quick Start
 
@@ -26,7 +26,7 @@ Add to your Claude Desktop config file:
 }
 ```
 
-### 3. Setup for Cursor
+### 3. Setup for IDE Cursor
 
 Add to your Cursor MCP settings:
 
@@ -59,8 +59,7 @@ You can also run the MCP server using Docker:
 docker pull ghcr.io/qbandev/infura-mcp-server:latest
 ```
 
-Add tpo your MCP config file:
-
+Add to your MCP config file:
 
 ```json
 {
@@ -114,16 +113,16 @@ Once connected, ask Claude or Cursor to:
 
 ## 🔧 Troubleshooting
 
-### Claude Desktop Not Working?
+### Not Working?
 
-1. Restart Claude Desktop after configuration
+1. Restart Claude or the IDE after configuration
 2. Check your API key is valid at [infura.io](https://infura.io/dashboard)
 3. Verify the config file path and JSON formatting
 
 ### Need Help?
 
 - View available tools: Ask "What Ethereum tools do you have available?"
-- Check connection: Ask "Can you check the current block number?"
+- Check connection: Ask "Can you check the current block number in Base?"
 
 ## 📚 Examples
 
@@ -137,5 +136,5 @@ Once connected, ask Claude or Cursor to:
 
 ---
 
-**Ready to explore Ethereum with AI?** Just install and start asking questions! 🎯
+**Ready to explore Blockchain with AI?** Just install and start asking questions! 🎯
 
