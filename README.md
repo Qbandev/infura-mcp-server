@@ -26,13 +26,11 @@ Add to your MCP config file:
 }
 ```
 
-### 3. Available tools and networks
+### 3. Available tools
 
 ![Cursor MCP Setup](img/cursor-mcp.jpg)
 
-**Primary Networks**: `mainnet`, `optimism-mainnet`, `arbitrum-mainnet`, `polygon-mainnet`, `base-mainnet`, `sepolia`
-
-**Additional Infura Networks**: `avalanche-mainnet`, `bsc-mainnet`, `celo-mainnet`, `linea-mainnet`, `mantle-mainnet`, `palm-mainnet`, `scroll-mainnet`, `starknet-mainnet`, `zksync-mainnet`, and [many more](https://docs.metamask.io/services/get-started/endpoints/)
+**Infura Networks**: [List of supported networks](https://www.infura.io/networks)
 
 ### 4. Docker Setup (Alternative)
 
