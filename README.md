@@ -93,11 +93,6 @@ docker run -d \
   node mcpServer.js --sse
 ```
 
-**Available Docker Tags:**
-- `latest` - Latest stable release  
-- `v0.1.1` - Specific version
-- `main` - Development build from main branch
-
 ## ✨ What You Can Do
 
 ![Cursor Chat with Infura MCP](img/cursor-chat.jpg)
