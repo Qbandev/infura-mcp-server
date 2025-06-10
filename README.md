@@ -8,7 +8,7 @@ Connect Claude Desktop and you IDE (Cursor or VSCode) to Ethereum blockchain dat
 
 Sign up at [infura.io](https://infura.io) and create a new API key for Web3 API.
 
-### 2. Setup for Claude Desktop
+### 2. Setup you MCP configuration
 
 Add to your MCP config file:
 
@@ -26,7 +26,7 @@ Add to your MCP config file:
 }
 ```
 
-### 3. Setup for IDE Cursor
+### 3. Available tools and networks
 
 ![Cursor MCP Setup](img/cursor-mcp.jpg)
 
