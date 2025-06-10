@@ -1,7 +1,7 @@
 ---
 description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 ---
 description: "Comprehensive project context for the Infura MCP Server - provides technical architecture, development guidelines, testing strategy, release automation, and blockchain integration details"
