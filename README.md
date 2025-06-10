@@ -52,9 +52,15 @@ Add to your Cursor MCP settings:
 
 ### 5. Docker Setup (Alternative)
 
-You can also run the MCP server using Docker. This is the standard MCP approach:
+You can also run the MCP server using Docker:
 
-**For Claude Desktop with Docker (Recommended):**
+```bash
+# Pull the latest image
+docker pull ghcr.io/qbandev/infura-mcp-server:latest
+```
+
+Add tpo your MCP config file:
+
 
 ```json
 {
