@@ -10,7 +10,7 @@ Sign up at [infura.io](https://infura.io) and create a new API key for Web3 API.
 
 ### 2. Setup for Claude Desktop
 
-Add to your Claude Desktop config file:
+Add to your MCP config file:
 
 ```json
 {
@@ -28,29 +28,13 @@ Add to your Claude Desktop config file:
 
 ### 3. Setup for IDE Cursor
 
-Add to your Cursor MCP settings:
-
-```json
-{
-  "mcpServers": {
-    "Infura MCP Server": {
-      "command": "npx",
-      "args": ["infura-mcp-server"],
-      "env": {
-        "INFURA_API_KEY": "your_infura_api_key_here"
-      }
-    }
-  }
-}
-```
-
 ![Cursor MCP Setup](img/cursor-mcp.jpg)
 
 **Primary Networks**: `mainnet`, `optimism-mainnet`, `arbitrum-mainnet`, `polygon-mainnet`, `base-mainnet`, `sepolia`
 
 **Additional Infura Networks**: `avalanche-mainnet`, `bsc-mainnet`, `celo-mainnet`, `linea-mainnet`, `mantle-mainnet`, `palm-mainnet`, `scroll-mainnet`, `starknet-mainnet`, `zksync-mainnet`, and [many more](https://docs.metamask.io/services/get-started/endpoints/)
 
-### 5. Docker Setup (Alternative)
+### 4. Docker Setup (Alternative)
 
 You can also run the MCP server using Docker:
 
@@ -117,7 +101,7 @@ Once connected, ask Claude or Cursor to:
 ### Need Help?
 
 - View available tools: Ask "What Ethereum tools do you have available?"
-- Check connection: Ask "Can you check the current block number in Base?"
+- Check connection: Ask "Can you check the current block number in Base mainnet?"
 
 ## 📚 Examples
 
@@ -126,7 +110,7 @@ Once connected, ask Claude or Cursor to:
 "What's in block 18500000?"
 "Call the totalSupply function on contract 0x123..."
 "Get transaction receipt for 0xabc..."
-"What's the current gas price on Polygon?"
+"What's the current gas price on Polygon mainnet?"
 ```
 
 ---
