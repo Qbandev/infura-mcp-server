@@ -61,34 +61,19 @@ Add to your MCP config file:
 }
 ```
 
-**For Web Service Deployment (SSE Mode):**
-
-```bash
-# Pull the latest image
-docker pull ghcr.io/qbandev/infura-mcp-server:latest
-
-# Run as web service
-docker run -d \
-  --name infura-mcp-server \
-  -p 3001:3001 \
-  -e INFURA_API_KEY=your_infura_api_key_here \
-  -e INFURA_NETWORK=mainnet \
-  ghcr.io/qbandev/infura-mcp-server:latest \
-  node mcpServer.js --sse
-```
-
 ## ✨ What You Can Do
 
 ![Cursor Chat with Infura MCP](img/cursor-chat.jpg)
 
 Once connected, ask Claude or Cursor to:
 
+- **View available tools**: "What Ethereum tools do you have available?"
 - **Check balances**: "What's the ETH balance of vitalik.eth?"
 - **Get transaction details**: "Show me transaction 0x123..."
 - **Read smart contracts**: "Call the balanceOf function on USDC contract"
 - **Analyze blocks**: "What transactions were in the latest block?"
 - **Estimate gas**: "How much gas would this transaction cost?"
-- **Get network info**: "What's the current gas price?"
+- **Get network info**: "What's the current gas price on Polygon mainnet?"
 
 ## 🔧 Troubleshooting
 
@@ -97,21 +82,6 @@ Once connected, ask Claude or Cursor to:
 1. Restart Claude or the IDE after configuration
 2. Check your API key is valid at [infura.io](https://infura.io/dashboard)
 3. Verify the config file path and JSON formatting
-
-### Need Help?
-
-- View available tools: Ask "What Ethereum tools do you have available?"
-- Check connection: Ask "Can you check the current block number in Base mainnet?"
-
-## 📚 Examples
-
-```
-"Get the balance of 0x742A4c... address"
-"What's in block 18500000?"
-"Call the totalSupply function on contract 0x123..."
-"Get transaction receipt for 0xabc..."
-"What's the current gas price on Polygon mainnet?"
-```
 
 ---
 
