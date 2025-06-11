@@ -18,6 +18,7 @@
     "test:all": "npm test && npm run test:sse",
     "commitlint": "commitlint --edit",
     "commitlint:last": "commitlint --from HEAD~1 --to HEAD --verbose",
+    "commitlint:ci": "commitlint --verbose",
     "release": "./scripts/release.sh",
     "release:patch": "./scripts/release.sh patch",
     "release:minor": "./scripts/release.sh minor",

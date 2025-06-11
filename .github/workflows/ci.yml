@@ -42,7 +42,7 @@ jobs:
           git fetch origin ${{ github.base_ref }}
 
           # Validate all commits in the PR
-          npm run commitlint -- --from origin/${{ github.base_ref }} --to HEAD --verbose
+          npx commitlint --from origin/${{ github.base_ref }} --to HEAD --verbose
 
       - name: Lint package.json
         run: |
