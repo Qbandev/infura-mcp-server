@@ -81,8 +81,8 @@ async function testSSEConnectionSimple() {
     };
 
     sse.onerror = (error) => {
-      // Only log significant errors
-      if (error.type !== 'error' || error.message) {
+      // Only log actual error events (not connection state changes)
+      if (error.type === 'error') {
         console.log('❌ SSE connection error:', error.type, error.message || '(connection failed)');
       }
     };

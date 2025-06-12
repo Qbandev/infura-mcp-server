@@ -23,7 +23,7 @@ The **Infura MCP Server LLM Context Document** is a comprehensive guide designed
 - **Transaction Tools** (7): Transaction details, receipts, indexing
 - **Smart Contract Tools** (3): Contract calls, gas estimation, storage
 - **Network Tools** (5): Chain info, peers, versions
-- **Filter Tools** (5): Event logs, log filtering
+- **Log Query Tools** (1): Event logs, log filtering
 - **Utility Tools** (4): Gas prices, fee history, protocol info
 
 ### 3. **Common Use Cases**
