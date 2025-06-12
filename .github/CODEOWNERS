@@ -1,1 +1,25 @@
-* @qbandev @jluque0101
+# Code Owners for automated review assignment
+# This file defines who will be automatically requested to review PRs
+
+# Default owner for everything
+* @Qbandev
+
+# JavaScript/TypeScript files
+*.js @Qbandev
+*.ts @Qbandev
+
+# Configuration files
+*.json @Qbandev
+*.yml @Qbandev
+*.yaml @Qbandev
+
+# Documentation
+*.md @Qbandev
+docs/ @Qbandev
+
+# GitHub specific files
+.github/ @Qbandev
+
+# Dependencies
+package.json @Qbandev
+package-lock.json @Qbandev
