@@ -1,10 +1,10 @@
 # Infura MCP Server
 
-A Model Context Protocol (MCP) server implementation that provides comprehensive Ethereum blockchain access through Infura's infrastructure. Connect Claude Desktop, VS Code, and other MCP clients to 31 read-only Ethereum JSON-RPC tools across 21+ networks.
+A Model Context Protocol (MCP) server implementation that provides comprehensive Ethereum blockchain access through Infura's infrastructure. Connect Claude Desktop, VS Code, and other MCP clients to 29 read-only Ethereum JSON-RPC tools across 21+ networks.
 
 ## Features
 
-- **31 read-only Ethereum JSON-RPC tools** - Complete blockchain query suite
+- **29 read-only Ethereum JSON-RPC tools** - Complete blockchain query suite
 - **Multi-network support** - 21+ networks including Ethereum, Polygon, Arbitrum, Base, Optimism
 - **Enterprise security** - 9.5/10 security rating with comprehensive CI/CD protection
 - **Real-time data** - Direct access to Infura's blockchain infrastructure
@@ -47,9 +47,7 @@ A Model Context Protocol (MCP) server implementation that provides comprehensive
 - **net_getVersion** - Get network ID
 - **web3_getClientVersion** - Get client version string
 
-### Filter Tools (3)
-- **eth_getFilterChanges** - Get filter changes since last poll
-- **eth_getFilterLogs** - Get all logs for filter
+### Log Query Tools (1)
 - **eth_getLogs** - Get logs with flexible filtering
 
 ### Utility Tools (4)

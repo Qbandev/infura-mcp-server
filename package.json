@@ -1,7 +1,7 @@
 {
   "name": "infura-mcp-server",
   "version": "0.1.1",
-  "description": "Model Context Protocol (MCP) server providing comprehensive read-only Ethereum blockchain access through Infura's infrastructure. Connect Claude Desktop, VS Code, and Cursor to 31 secure Ethereum JSON-RPC tools across 21+ networks including Ethereum, Polygon, Arbitrum, Base, and Optimism.",
+  "description": "Model Context Protocol (MCP) server providing comprehensive read-only Ethereum blockchain access through Infura's infrastructure. Connect Claude Desktop, VS Code, and Cursor to 29 secure Ethereum JSON-RPC tools across 21+ networks including Ethereum, Polygon, Arbitrum, Base, and Optimism.",
   "keywords": [
     "mcp",
     "model-context-protocol",

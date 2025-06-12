@@ -16,7 +16,7 @@ const packageJson = JSON.parse(readFileSync(join(projectRoot, 'package.json'), '
 const readme = readFileSync(join(projectRoot, 'README.md'), 'utf8');
 
 // Validate description
-const descriptionKeywords = ['MCP', 'Model Context Protocol', 'Infura', 'Ethereum', '31', 'read-only', 'JSON-RPC', '21+'];
+const descriptionKeywords = ['MCP', 'Model Context Protocol', 'Infura', 'Ethereum', '29', 'read-only', 'JSON-RPC', '21+'];
 const hasAllKeywords = descriptionKeywords.every(keyword => 
   packageJson.description.includes(keyword)
 );
