@@ -103,6 +103,14 @@ git commit -m "test: add unit tests"
 
 ## Troubleshooting
 
+### "GitHub Actions is not permitted to create or approve pull requests"
+**Solution**: Go to Settings → Actions → General → Workflow permissions:
+1. Select "Read and write permissions"
+2. Check "Allow GitHub Actions to create and approve pull requests"
+3. Click Save
+
+Alternative: Use a Personal Access Token with PR permissions.
+
 ### Release PR Not Created
 - Ensure commits follow conventional format
 - Check GitHub Actions for errors

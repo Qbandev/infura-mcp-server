@@ -8,6 +8,8 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write # Required for creating release notes
+  actions: write # Required if you have workflow files
 
 jobs:
   release-please:
@@ -19,7 +21,9 @@ jobs:
       - uses: googleapis/release-please-action@v4
         id: release
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Use GITHUB_TOKEN or a PAT with PR permissions
+          # If using PAT, create a secret called RELEASE_PLEASE_TOKEN
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
           release-type: node
 
   # Publish to npm when a release is created
