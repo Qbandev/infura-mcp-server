@@ -87,12 +87,6 @@ The Infura MCP Server supports **all networks available through MetaMask/Infura 
 - **swellchain-mainnet**, **swellchain-testnet** - Swellchain & Testnet
 - **unichain-mainnet**, **unichain-sepolia** - Unichain (Uniswap) & Testnet
 
-### Usage Notes
-- Use the `INFURA_NETWORK` environment variable to specify networks
-- All networks support the same 29 read-only JSON-RPC tools  
-- Primary networks (Ethereum, Polygon, Arbitrum, Base, Optimism) are fully tested
-- Additional networks leverage Infura's infrastructure for maximum reliability
-
 ## Configuration
 
 ### Usage with Claude Desktop
