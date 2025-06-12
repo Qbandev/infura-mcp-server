@@ -11,11 +11,6 @@ This project uses [Release Please](https://github.com/googleapis/release-please)
 - **Trigger**: Automatically on every push to `main`
 - **Process**: Creates a PR with version bumps and changelog updates
 
-### Legacy Manual Release (Being Phased Out)
-- **Workflow**: `.github/workflows/release.yml`
-- **Trigger**: Manual workflow dispatch
-- **Process**: Manual version bump and release
-
 ### Manual NPM Publish (Backup)
 - **Workflow**: `.github/workflows/npm-publish.yml`
 - **Trigger**: Manual workflow dispatch only
@@ -43,18 +38,6 @@ This project uses [Release Please](https://github.com/googleapis/release-please)
    - Creates a GitHub release
    - Tags the commit
    - Publishes to npm
-
-## Migration from Manual Releases
-
-### Before (Manual Process)
-1. Manually trigger `release.yml` workflow
-2. Choose version type (patch/minor/major)
-3. Workflow bumps version and creates release
-
-### After (Automated with Release Please)
-1. Make commits with conventional commit messages
-2. Release Please automatically creates a PR
-3. Review and merge the PR to release
 
 ## Commit Message Examples
 
@@ -109,8 +92,6 @@ git commit -m "test: add unit tests"
 2. Check "Allow GitHub Actions to create and approve pull requests"
 3. Click Save
 
-Alternative: Use a Personal Access Token with PR permissions.
-
 ### Release PR Not Created
 - Ensure commits follow conventional format
 - Check GitHub Actions for errors
@@ -148,13 +129,6 @@ The manual NPM publish workflow is available for emergency situations:
    - Verify version consistency
    - Run tests
    - Publish to npm if not already published
-
-## Removing Legacy Workflows
-
-Once comfortable with Release Please, you can:
-1. Delete `.github/workflows/release.yml` (manual release)
-2. Keep `.github/workflows/npm-publish.yml` as emergency backup (recommended)
-3. Remove manual release scripts from `package.json`
 
 ## Resources
 
