@@ -19,12 +19,10 @@ on:
         default: 'beta'
         type: string
 
-# Grant GITHUB_TOKEN the permissions required to make releases
+# Grant GITHUB_TOKEN only the minimal permissions required for releases
 permissions:
-  contents: write
-  pull-requests: write
-  issues: write
-  packages: write
+  contents: write  # Required for creating releases and pushing tags
+  packages: write  # Required for publishing packages
 
 jobs:
   # Security check - only allow repository owner to run releases
