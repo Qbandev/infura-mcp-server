@@ -14,11 +14,23 @@ const CONNECTION_TIMEOUT = 5000; // Reduced timeout for faster CI
 
 async function checkServerAvailability() {
   try {
-    const response = await fetch(`${SERVER_URL}/health`, { 
-      timeout: 2000,
-      method: 'GET'
-    });
-    return response.ok;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2000);
+    
+    try {
+      const response = await fetch(`${SERVER_URL}/health`, { 
+        method: 'GET',
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+      return response.ok;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        console.log('⚠️ Health check timed out');
+      }
+      return false;
+    }
   } catch (error) {
     return false;
   }
@@ -143,11 +155,24 @@ async function testSSEFallback() {
   
   try {
     // Test connection to non-existent endpoint
-    const response = await fetch('http://localhost:9999/sse', { 
-      timeout: 1000,
-      method: 'GET'
-    });
-    console.log('❌ Unexpected: Non-existent server responded');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 1000);
+    
+    try {
+      const response = await fetch('http://localhost:9999/sse', { 
+        method: 'GET',
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+      console.log('❌ Unexpected: Non-existent server responded');
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        console.log('✅ Expected: Connection timeout to non-existent server');
+      } else {
+        console.log('✅ Expected: Non-existent server properly rejected');
+      }
+    }
   } catch (error) {
     console.log('✅ Expected: Non-existent server properly rejected');
   }
