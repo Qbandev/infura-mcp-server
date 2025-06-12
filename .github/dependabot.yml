@@ -1,0 +1,59 @@
+# GitHub Dependabot configuration for automated dependency updates
+version: 2
+updates:
+  # Enable npm dependency updates
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    # Group all npm updates into a single PR to reduce noise
+    groups:
+      npm-dependencies:
+        patterns:
+          - "*"
+    # Only create PRs for security updates and version updates
+    open-pull-requests-limit: 5
+    # Allow both minor and patch updates
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+    # Add reviewers for security updates
+    reviewers:
+      - "qbandev"
+    # Add labels for easier filtering
+    labels:
+      - "dependencies"
+      - "security"
+
+  # Enable GitHub Actions dependency updates
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+      time: "09:00"
+    # Group all GitHub Actions updates
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "qbandev"
+    labels:
+      - "github-actions"
+      - "dependencies"
+
+  # Enable Docker dependency updates
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 2
+    reviewers:
+      - "qbandev"
+    labels:
+      - "docker"
+      - "dependencies" 
