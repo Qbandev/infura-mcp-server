@@ -93,8 +93,8 @@ if (missingFiles.length > 0) {
 
 // Test 8: Engine requirements
 console.log('✅ Testing Node.js engine requirements...');
-if (!packageJson.engines.node || !packageJson.engines.node.includes('>=16')) {
-  console.error('❌ Node.js engine requirement should be >=16.0.0');
+if (!packageJson.engines.node || !packageJson.engines.node.includes('>=20')) {
+  console.error('❌ Node.js engine requirement should be >=20.0.0');
   process.exit(1);
 }
 
