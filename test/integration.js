@@ -38,9 +38,9 @@ class IntegrationTester {
       errors: []
     };
     
-    this.hasApiKey = !!process.env.INFURA_API_KEY && 
-                     process.env.INFURA_API_KEY !== 'test_key_for_validation' &&
-                     process.env.INFURA_API_KEY !== 'your_infura_api_key_here';
+        this.hasApiKey = !!process.env.INFURA_API_KEY &&
+      process.env.INFURA_API_KEY !== 'your_infura_api_key_here' &&
+      process.env.INFURA_API_KEY.length > 10; // Basic validation for real key
   }
 
   log(level, message) {

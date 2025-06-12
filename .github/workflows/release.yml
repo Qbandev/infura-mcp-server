@@ -96,12 +96,37 @@ jobs:
           # Configure git to use the token for authentication
           git config --local url."https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
 
-      - name: Run tests before release
+      - name: Run comprehensive tests before release
+        env:
+          INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
         run: |
-          if npm run | grep -q "test"; then
-            npm test
+          echo "🧪 Running comprehensive test suite before release..."
+          
+          # Run basic validation tests
+          echo "📋 Running validation tests..."
+          npm test
+          
+          # Run comprehensive tool testing (all 35 tools)
+          echo "🔧 Running comprehensive tool validation (35 tools)..."
+          if [ -n "$INFURA_API_KEY" ]; then
+            echo "🔑 Using real API key for comprehensive testing..."
+            npm run test:comprehensive
           else
-            echo "No test script found, skipping tests"
+            echo "⚠️ No API key available, running structure validation only..."
+            npm run test:comprehensive
+          fi
+          
+          # Run SSE functionality tests  
+          echo "🌐 Running SSE functionality tests..."
+          npm run test:sse
+          
+          # Run integration tests if API key is available
+          if [ -n "$INFURA_API_KEY" ]; then
+            echo "🔗 Running integration tests with real API..."
+            npm run test:integration
+            echo "✅ All tests including real API validation passed - ready for release!"
+          else
+            echo "⚠️ Release proceeding without API validation (no secret configured)"
           fi
 
       - name: Verify package works

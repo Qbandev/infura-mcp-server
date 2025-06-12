@@ -1,279 +1,216 @@
-# Test Suite Documentation
+# Infura MCP Server - Testing Framework
 
-This directory contains comprehensive tests for the Infura MCP Server, covering all 40+ tools with multiple testing approaches.
+## 🧪 Overview
 
-## 🧪 Test Structure
+This testing framework validates **all 35 Ethereum JSON-RPC tools** with comprehensive testing across multiple levels:
 
-### Core Test Files
+1. **Structure Validation** - Tool definitions, parameters, schemas
+2. **Parameter Validation** - Required fields, types, enum values  
+3. **API Functionality** - Real Infura API calls (when API key available)
+4. **Integration Testing** - End-to-end functionality validation
+5. **SSE Transport** - Server-Sent Events functionality
 
-| File | Purpose | Coverage |
-|------|---------|----------|
-| `validate.js` | Package validation | Structure, metadata |
-| `tools.js` | Basic tool discovery | Tool loading, definitions |
-| `comprehensive-tools.js` | **Complete tool validation** | All 40 tools structure & parameters |
-| `integration.js` | **Real API functionality** | Network calls, error handling |
-| `test-sse.js` | **SSE server testing** | WebSocket connections |
+## 🔑 API Key Setup
 
-### Test Categories
+### Local Development (.env file)
 
-```
-📊 Test Coverage Overview
-├── 🔍 Structure Tests (100% - 40/40 tools)
-├── 📋 Parameter Validation (100% - 40/40 tools)
-├── 🛠️ Function Execution (100% - 40/40 tools)
-├── 🌐 Network Integration (depends on API key)
-├── 🔌 SSE Connectivity (depends on server)
-└── ❌ Error Handling (100% coverage)
-```
-
-## 🚀 Running Tests
-
-### Basic Test Commands
+Create a `.env` file in the project root:
 
 ```bash
-# Quick validation (package + tool discovery)
-npm test
-
-# Comprehensive tool testing (all 40 tools)
-npm run test:comprehensive
-
-# Integration tests (requires INFURA_API_KEY)
-npm run test:integration
-
-# SSE server tests (requires running server)
-npm run test:sse
-
-# All tests together
-npm run test:all
-
-# Full test suite (includes integration)
-npm run test:full
+INFURA_API_KEY="your_real_infura_api_key_here"
 ```
 
-### Test Requirements
+### GitHub Actions (Repository Secrets)
 
-| Test Type | Requirements | Skips Gracefully |
-|-----------|-------------|-------------------|
-| **Basic** | None | ✅ Always runs |
-| **Comprehensive** | None | ✅ Always runs |
-| **Integration** | `INFURA_API_KEY` | ✅ Skips if no API key |
-| **SSE** | Running server | ✅ Skips if server down |
+Set up repository secrets for CI/CD testing:
 
-## 📋 Tool Categories Tested
+1. Go to your GitHub repository
+2. Navigate to **Settings** > **Secrets and variables** > **Actions**
+3. Click **New repository secret**
+4. Name: `INFURA_API_KEY`
+5. Value: Your real Infura API key
+6. Click **Add secret**
 
-### Account & Balance Tools (3 tools)
-- `eth_getBalance` - Get account balance
-- `eth_getCode` - Get contract bytecode  
-- `eth_getTransactionCount` - Get nonce/transaction count
+## 🚀 Test Commands
 
-### Block Tools (8 tools)
-- `eth_getBlockNumber` - Get latest block number
-- `eth_getBlockByHash` - Get block by hash
-- `eth_getBlockByNumber` - Get block by number
-- `eth_getUncleByBlockHashAndIndex` - Get uncle block
-- `eth_getUncleByBlockNumberAndIndex` - Get uncle block
-- `eth_getUncleCountByBlockHash` - Count uncle blocks
-- `eth_getUncleCountByBlockNumber` - Count uncle blocks
-- `eth_newBlockFilter` - Create block filter
-
-### Transaction Tools (7 tools)
-- `eth_getBlockTransactionCountByHash` - Count transactions in block
-- `eth_getBlockTransactionCountByNumber` - Count transactions in block
-- `eth_getTransactionByBlockHashAndIndex` - Get transaction by index
-- `eth_getTransactionByBlockNumberAndIndex` - Get transaction by index
-- `eth_getTransactionByHash` - Get transaction details
-- `eth_getTransactionReceipt` - Get transaction receipt
-- `eth_sendRawTransaction` - Send signed transaction
-
-### Smart Contract Tools (3 tools)
-- `eth_call` - Execute read-only contract call
-- `eth_estimateGas` - Estimate gas for transaction
-- `eth_getStorageAt` - Read contract storage
-
-### Network Tools (5 tools)
-- `eth_chainId` - Get chain ID
-- `net_isListening` - Check if node is listening
-- `net_getPeerCount` - Get peer count
-- `net_getVersion` - Get network version
-- `web3_getClientVersion` - Get client version
-
-### Filter Tools (5 tools)
-- `eth_getFilterChanges` - Get filter changes
-- `eth_getFilterLogs` - Get filter logs
-- `eth_getLogs` - Get event logs with filters
-- `eth_newFilter` - Create event filter
-- `eth_uninstallFilter` - Remove filter
-
-### Mining Tools (2 tools)
-- `eth_getWork` - Get work for mining
-- `eth_submitWork` - Submit mining work
-
-### Utility Tools (7 tools)
-- `eth_getFeeHistory` - Get fee history
-- `eth_getGasPrice` - Get current gas price
-- `eth_getHashrate` - Get network hashrate
-- `eth_isMining` - Check if mining
-- `eth_getProtocolVersion` - Get protocol version
-- `eth_isSyncing` - Check sync status
-- `parity_getNextNonce` - Get next nonce (Parity)
-
-## 🔍 Test Validation Levels
-
-### Level 1: Structure Validation
-- ✅ Tool definition exists
-- ✅ Function is callable
-- ✅ Parameters schema is valid
-- ✅ Required fields present
-- ✅ Network parameter handling
-
-### Level 2: Parameter Validation
-- ✅ Required parameters defined
-- ✅ Parameter types specified
-- ✅ Enum values validated
-- ✅ Default values present
-- ✅ Description fields complete
-
-### Level 3: Function Execution
-- ✅ Functions execute without parameter errors
-- ✅ Error handling for invalid inputs
-- ✅ Network-specific behavior
-- ✅ Mock API key handling
-
-### Level 4: Integration Testing (with API key)
-- ✅ Real network calls succeed
-- ✅ Expected response formats
-- ✅ Chain ID validation
-- ✅ Error handling for invalid requests
-- ✅ Contract interaction testing
-
-## 🌐 Network Testing
-
-### Supported Networks
-- **mainnet** - Ethereum mainnet
-- **sepolia** - Ethereum testnet
-- **polygon-mainnet** - Polygon mainnet
-- **arbitrum-mainnet** - Arbitrum mainnet
-- **base-mainnet** - Base mainnet
-- **optimism-mainnet** - Optimism mainnet
-
-### Network-Specific Tests
-- Chain ID validation
-- Gas price retrieval
-- Block number fetching
-- Balance checking
-- Transaction count verification
-
-## 🛠️ Error Handling Tests
-
-### Invalid Input Tests
-- ❌ Invalid Ethereum addresses
-- ❌ Invalid network names
-- ❌ Missing required parameters
-- ❌ Invalid parameter types
-- ❌ Malformed data
-
-### Network Error Tests
-- ❌ Invalid API keys
-- ❌ Network connectivity issues
-- ❌ Rate limiting responses
-- ❌ Invalid endpoints
-
-## 📊 Test Results Format
-
-### Success Output
-```
-✅ [timestamp] ✅ eth_getBalance - All tests passed
+### Basic Testing (No API Key Required)
+```bash
+# Structure validation only
+npm test                    # Basic validation + tool discovery
+npm run test:comprehensive  # All 35 tools structure validation
+npm run test:sse           # SSE transport testing
 ```
 
-### Detailed Summary
+### Full API Testing (Requires API Key)
+```bash
+# Real API validation - all 35 tools
+INFURA_API_KEY=your_key npm run test:comprehensive
+
+# Integration testing - selected API calls
+INFURA_API_KEY=your_key npm run test:integration
+
+# Complete API testing suite
+INFURA_API_KEY=your_key npm run test:api
+
+# Everything - structure + API + SSE
+INFURA_API_KEY=your_key npm run test:full
 ```
-═══════════════════════════════════════════
-COMPREHENSIVE TOOL TEST SUMMARY
-═══════════════════════════════════════════
-Total Tools: 40
-Passed: 40
-Failed: 0
-Success Rate: 100.0%
-
-Recommendations:
-  • Run tests with real INFURA_API_KEY for complete validation
-  • All tools passed - ready for deployment
-```
-
-## 🚀 CI/CD Integration
-
-### GitHub Actions Integration
-The test suite is integrated into GitHub Actions workflows:
-
-```yaml
-- name: Run comprehensive tests
-  run: npm run test:all
-
-- name: Run integration tests (if API key available)
-  run: npm run test:integration
-  continue-on-error: true
-
-- name: Check tool coverage
-  run: npm run test:comprehensive
-```
-
-### Development Workflow
-1. **Pre-commit**: Run `npm test` for quick validation
-2. **Pre-push**: Run `npm run test:all` for comprehensive testing
-3. **Release**: Run `npm run test:full` with real API key
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-**Test Failures:**
-- Check tool definitions in `/tools/` directory
-- Verify parameter schemas are complete
-- Ensure network parameter has default value
-
-**Integration Test Skips:**
-- Set `INFURA_API_KEY` environment variable
-- Verify API key is valid and active
-- Check network connectivity
-
-**SSE Test Failures:**
-- Start SSE server: `npm run start:sse`
-- Check port 3001 is available
-- Verify server configuration
 
 ### Debug Mode
 ```bash
-# Enable debug logging
-DEBUG=true npm run test:comprehensive
-
-# Verbose integration testing
-INFURA_API_KEY=your_key DEBUG=true npm run test:integration
+# Enable detailed logging
+INFURA_API_KEY=your_key DEBUG=true npm run test:comprehensive
 ```
 
-## 📈 Coverage Metrics
+## 📊 Test Types
 
-| Test Type | Tools Covered | Success Rate | CI Integration |
-|-----------|---------------|--------------|----------------|
-| **Structure** | 40/40 (100%) | ✅ 100% | ✅ Required |
-| **Parameters** | 40/40 (100%) | ✅ 100% | ✅ Required |
-| **Execution** | 40/40 (100%) | ✅ 100% | ✅ Required |
-| **Integration** | 40/40 (100%) | ⚠️ API dependent | ⚠️ Optional |
-| **SSE** | Server testing | ✅ 100% | ⚠️ Optional |
+| Test Type | Command | API Key | Description |
+|-----------|---------|---------|-------------|
+| **Structure** | `npm test` | ❌ Not required | Package validation, tool discovery |
+| **Comprehensive** | `test:comprehensive` | ✅ Enhanced with API key | All 35 tools validation |
+| **Integration** | `test:integration` | ✅ Required | Real API functionality |
+| **SSE** | `test:sse` | ❌ Not required | Transport layer testing |
+| **API Suite** | `test:api` | ✅ Required | Comprehensive + Integration |
+| **Full Suite** | `test:full` | ✅ Enhanced with API key | Everything |
 
-## 🎯 Quality Gates
+## 🔧 Comprehensive Testing (35 Tools)
 
-### Required for Deployment
-- ✅ All 40 tools pass structure validation
-- ✅ All parameters properly defined
-- ✅ No execution errors with mock data
-- ✅ Error handling works correctly
+When a valid `INFURA_API_KEY` is provided, the comprehensive test validates **all 35 tools** with real API calls:
 
-### Optional but Recommended
-- ✅ Integration tests pass with real API
-- ✅ SSE functionality verified
-- ✅ Performance benchmarks met
-- ✅ Security scans clean
+### Tool Categories Tested:
+- **Account Tools** (3): `eth_getBalance`, `eth_getTransactionCount`, `eth_getCode`
+- **Block Tools** (8): `eth_getBlockByNumber`, `eth_getBlockByHash`, etc.
+- **Transaction Tools** (7): `eth_getTransactionByHash`, `eth_getTransactionReceipt`, etc.
+- **Smart Contract Tools** (3): `eth_call`, `eth_estimateGas`, `eth_getStorageAt`
+- **Network Tools** (5): `eth_chainId`, `eth_gasPrice`, `net_version`, etc.
+- **Filter Tools** (5): `eth_getLogs`, `eth_newFilter`, etc.
+- **Mining Tools** (2): `eth_getWork`, `eth_submitWork`
+- **Utility Tools** (7): `eth_getFeeHistory`, `eth_isSyncing`, etc.
+
+### API Call Examples:
+```bash
+🔑 Testing eth_getBalance with real API call...
+✅ eth_getBalance API call successful: 0x1b1ae4d6e2ef500000...
+
+🔑 Testing eth_call with real API call...  
+✅ eth_call API call successful: 0x0000000000000000000000000000000000000000000000000000000...
+
+🔑 Testing eth_chainId with real API call...
+✅ eth_chainId API call successful: 0x1
+```
+
+## 🏗️ CI/CD Integration
+
+All workflows automatically use GitHub secrets when available:
+
+### GitHub Actions Workflows:
+- **CI (`ci.yml`)**: Tests PRs and main branch
+- **Release (`release.yml`)**: Pre-release validation
+- **NPM Publish (`npm-publish.yml`)**: Pre-publish validation
+
+### Workflow Behavior:
+```bash
+# With INFURA_API_KEY secret configured:
+🔑 Using real API key for comprehensive testing...
+🔗 Running integration tests with real API...
+✅ All tests including real API validation passed!
+
+# Without INFURA_API_KEY secret:
+⚠️ No API key available, running structure validation only...
+ℹ️ Skipping integration tests (no API key)
+```
+
+## 🛡️ Security Features
+
+- ✅ **Zero hardcoded keys** - All API keys from environment
+- ✅ **Graceful fallbacks** - Works without API key
+- ✅ **GitHub secrets** - Secure CI/CD testing
+- ✅ **Local .env support** - Developer-friendly
+- ✅ **Error handling** - Validates API responses
+
+## 📈 Test Results
+
+### Without API Key (Structure Only):
+```
+COMPREHENSIVE TOOL TEST SUMMARY
+Total Tools: 40
+Passed: 40  
+Failed: 0
+Success Rate: 100.0%
+• Run tests with real INFURA_API_KEY for complete validation
+```
+
+### With API Key (Full Validation):
+```
+COMPREHENSIVE TOOL TEST SUMMARY
+Total Tools: 40
+Passed: 40
+Failed: 0  
+Success Rate: 100.0%
+• All tools passed - ready for deployment
+• Real API validation completed for all 35 tools
+```
+
+## 🎯 Usage Examples
+
+### Local Development:
+```bash
+# Create .env file
+echo "INFURA_API_KEY=your_key_here" > .env
+
+# Test all 35 tools with real API
+npm run test:comprehensive
+
+# Output shows real API calls:
+🔑 Testing eth_getBalance with real API call...
+✅ eth_getBalance API call successful: 0x1b1ae4d6e2ef500000...
+```
+
+### GitHub Actions:
+```yaml
+# .github/workflows/ci.yml (already configured)
+env:
+  INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
+run: |
+  if [ -n "$INFURA_API_KEY" ]; then
+    echo "🔑 Using real API key for comprehensive testing..."
+    npm run test:comprehensive
+  fi
+```
+
+### Manual Verification:
+```bash
+# Test specific networks
+INFURA_API_KEY=your_key INFURA_NETWORK=polygon-mainnet npm run test:integration
+INFURA_API_KEY=your_key INFURA_NETWORK=arbitrum-mainnet npm run test:integration
+```
+
+## 🚨 Requirements
+
+- **Node.js** 16+
+- **Valid Infura API Key** (for API testing)
+- **Network connectivity** (for API calls)
+
+## 🐛 Troubleshooting
+
+### Test Failures:
+```bash
+# Check API key validity
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' \
+  https://mainnet.infura.io/v3/YOUR_API_KEY
+
+# Expected response:
+{"jsonrpc":"2.0","id":1,"result":"0x1"}
+```
+
+### Common Issues:
+- **401/403 errors**: Invalid or missing API key
+- **Rate limiting**: Too many requests (use delays)
+- **Network errors**: Check internet connectivity
+- **Tool failures**: Review specific error messages
 
 ---
 
-**Ready for Official Deployment:** All core tests passing ensures the server is ready for production use as the official Infura MCP server. 
+**Ready to validate all 35 tools with real Infura API calls!** 🎉 

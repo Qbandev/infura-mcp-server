@@ -141,12 +141,11 @@ jobs:
 
       - name: Test Docker image
         run: |
-          # Test stdio mode (default)
+          # Test stdio mode (default) - validate container can start without API key
           echo "Testing stdio mode..."
           timeout 10s docker run --rm \
-            -e INFURA_API_KEY=test_key_for_validation \
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version || 'latest' }} \
-            echo '{"jsonrpc":"2.0","method":"tools/list","id":1}' || true
+            --help || true
 
           echo "✅ Stdio mode test completed"
 
