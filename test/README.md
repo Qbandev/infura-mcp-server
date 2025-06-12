@@ -2,7 +2,7 @@
 
 ## 🧪 Overview
 
-This testing framework validates **all 35 Ethereum JSON-RPC tools** with comprehensive testing across multiple levels:
+This testing framework validates **all 29 read-only Ethereum JSON-RPC tools** with comprehensive testing across multiple levels:
 
 1. **Structure Validation** - Tool definitions, parameters, schemas
 2. **Parameter Validation** - Required fields, types, enum values  
@@ -84,8 +84,7 @@ When a valid `INFURA_API_KEY` is provided, the comprehensive test validates **al
 - **Smart Contract Tools** (3): `eth_call`, `eth_estimateGas`, `eth_getStorageAt`
 - **Network Tools** (5): `eth_chainId`, `eth_gasPrice`, `net_version`, etc.
 - **Log Query Tools** (1): `eth_getLogs` for event filtering
-- **Mining Tools** (2): `eth_getWork`, `eth_submitWork`
-- **Utility Tools** (7): `eth_getFeeHistory`, `eth_isSyncing`, etc.
+- **Utility Tools** (4): `eth_getFeeHistory`, `eth_isSyncing`, etc.
 
 ### API Call Examples:
 ```bash
@@ -133,8 +132,8 @@ All workflows automatically use GitHub secrets when available:
 ### Without API Key (Structure Only):
 ```
 COMPREHENSIVE TOOL TEST SUMMARY
-Total Tools: 40
-Passed: 40  
+Total Tools: 29
+Passed: 29  
 Failed: 0
 Success Rate: 100.0%
 • Run tests with real INFURA_API_KEY for complete validation
@@ -143,8 +142,8 @@ Success Rate: 100.0%
 ### With API Key (Full Validation):
 ```
 COMPREHENSIVE TOOL TEST SUMMARY
-Total Tools: 40
-Passed: 40
+Total Tools: 29
+Passed: 29
 Failed: 0  
 Success Rate: 100.0%
 • All tools passed - ready for deployment
