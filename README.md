@@ -322,7 +322,6 @@ INFURA_API_KEY=your_key npm run test:full
 
 **"Rate limit exceeded"**
 - Upgrade your Infura plan for higher limits
-- Implement delays between rapid requests
 
 ### Getting Help
 
