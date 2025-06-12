@@ -2,7 +2,7 @@
 
 /**
  * Comprehensive Tools Test Suite
- * Tests all 35 tools for functionality, parameter validation, error handling, and network support
+ * Tests all 31 tools for functionality, parameter validation, error handling, and network support
  */
 
 import { fileURLToPath } from 'url';

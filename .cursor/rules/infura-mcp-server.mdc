@@ -140,7 +140,7 @@ const PRIMARY_NETWORKS = {
 ```bash
 npm test           # Run validation + tools discovery
 npm run test:validate  # Package.json validation
-npm run test:tools     # Validate all 35 tools
+npm run test:tools     # Validate all 31 tools
 npm run test:sse       # SSE functionality test
 ```
 
@@ -170,7 +170,7 @@ CMD ["npm", "start"]
 
 ### Release Process
 1. Authorization verification (owner check)
-2. Comprehensive testing (all 35 tools)
+2. Comprehensive testing (all 31 tools)
 3. Version bumping (semantic versioning)
 4. Git tagging and changelog generation
 5. GitHub release creation

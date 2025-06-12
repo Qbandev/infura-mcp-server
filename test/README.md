@@ -37,13 +37,13 @@ Set up repository secrets for CI/CD testing:
 ```bash
 # Structure validation only
 npm test                    # Basic validation + tool discovery
-npm run test:comprehensive  # All 35 tools structure validation
+npm run test:comprehensive  # All 31 tools structure validation
 npm run test:sse           # SSE transport testing
 ```
 
 ### Full API Testing (Requires API Key)
 ```bash
-# Real API validation - all 35 tools
+# Real API validation - all 31 tools
 INFURA_API_KEY=your_key npm run test:comprehensive
 
 # Integration testing - selected API calls
@@ -67,15 +67,15 @@ INFURA_API_KEY=your_key DEBUG=true npm run test:comprehensive
 | Test Type | Command | API Key | Description |
 |-----------|---------|---------|-------------|
 | **Structure** | `npm test` | ❌ Not required | Package validation, tool discovery |
-| **Comprehensive** | `test:comprehensive` | ✅ Enhanced with API key | All 35 tools validation |
+| **Comprehensive** | `test:comprehensive` | ✅ Enhanced with API key | All 31 tools validation |
 | **Integration** | `test:integration` | ✅ Required | Real API functionality |
 | **SSE** | `test:sse` | ❌ Not required | Transport layer testing |
 | **API Suite** | `test:api` | ✅ Required | Comprehensive + Integration |
 | **Full Suite** | `test:full` | ✅ Enhanced with API key | Everything |
 
-## 🔧 Comprehensive Testing (35 Tools)
+## 🔧 Comprehensive Testing (31 tools)
 
-When a valid `INFURA_API_KEY` is provided, the comprehensive test validates **all 35 tools** with real API calls:
+When a valid `INFURA_API_KEY` is provided, the comprehensive test validates **all 31 tools** with real API calls:
 
 ### Tool Categories Tested:
 - **Account Tools** (3): `eth_getBalance`, `eth_getTransactionCount`, `eth_getCode`
@@ -148,7 +148,7 @@ Passed: 40
 Failed: 0  
 Success Rate: 100.0%
 • All tools passed - ready for deployment
-• Real API validation completed for all 35 tools
+• Real API validation completed for all 31 tools
 ```
 
 ## 🎯 Usage Examples
@@ -158,7 +158,7 @@ Success Rate: 100.0%
 # Create .env file
 echo "INFURA_API_KEY=your_key_here" > .env
 
-# Test all 35 tools with real API
+# Test all 31 tools with real API
 npm run test:comprehensive
 
 # Output shows real API calls:
@@ -213,4 +213,4 @@ curl -X POST \
 
 ---
 
-**Ready to validate all 35 tools with real Infura API calls!** 🎉 
+**Ready to validate all 31 tools with real Infura API calls!** 🎉 
