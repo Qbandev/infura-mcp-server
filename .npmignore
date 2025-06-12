@@ -5,14 +5,27 @@
 .env
 .env.*
 !.env.example
+.cursor/
+.editorconfig
 
-# Test files
-test-sse.js
+# Test files  
+test/
+*.test.js
+*.spec.js
+
+# Build and release files
+scripts/
+node_modules/
 
 # Docker files
 Dockerfile
 .dockerignore
 docker-compose.yml
+
+# Documentation (dev-specific)
+CONTRIBUTING.md
+CHANGELOG.md
+docs/
 
 # Logs
 *.log
@@ -27,3 +40,8 @@ npm-debug.log*
 # OS generated files
 .DS_Store
 Thumbs.db
+*.tmp
+
+# Lock files
+package-lock.json
+yarn.lock
