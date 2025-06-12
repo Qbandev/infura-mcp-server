@@ -35,6 +35,10 @@ try {
     throw new Error('Package main entry point is required');
   }
   
+  if (!packageJson.repository) {
+    throw new Error('Package repository is required');
+  }
+  
   console.log(`✅ Package validation passed for ${packageJson.name}@${packageJson.version}`);
   
 } catch (error) {

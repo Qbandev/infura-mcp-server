@@ -46,8 +46,9 @@ jobs:
 
       - name: Lint package.json
         run: |
-          node -e "
-            const pkg = require('./package.json');
+          node --input-type=module -e "
+            import { readFileSync } from 'fs';
+            const pkg = JSON.parse(readFileSync('./package.json', 'utf8'));
             console.log('Package name:', pkg.name);
             console.log('Version:', pkg.version);
             console.log('Repository:', pkg.repository?.url);
