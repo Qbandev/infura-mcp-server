@@ -26,7 +26,7 @@ alwaysApply: true
 - **Summary**: `docs/llm-context-summary.md`
 
 The LLM context document provides detailed guidance for AI assistants on:
-- 35 Ethereum JSON-RPC tools usage patterns
+- 29 read-only Ethereum JSON-RPC tools usage patterns
 - Blockchain concepts explanation
 - Security best practices
 - User experience guidelines
@@ -34,11 +34,11 @@ The LLM context document provides detailed guidance for AI assistants on:
 
 ## Project Overview
 
-The Infura MCP Server is a Model Context Protocol (MCP) server that provides 35+ Ethereum JSON-RPC tools with multi-network support. It enables AI assistants like Claude Desktop and Cursor to interact with Ethereum blockchain data through Infura's infrastructure.
+The Infura MCP Server is a Model Context Protocol (MCP) server that provides 29 read-only Ethereum JSON-RPC tools with multi-network support. It enables AI assistants like Claude Desktop and Cursor to interact with Ethereum blockchain data through Infura's infrastructure.
 
 ### Key Statistics
 - **Language**: Node.js ES modules (type: "module")
-- **Tools**: 35+ Ethereum JSON-RPC methods
+- **Tools**: 29 read-only Ethereum JSON-RPC methods
 - **Networks**: 6 primary + 15+ additional Infura networks supported
 - **Transport**: SSE and stdio modes
 - **Version**: Published on npm as `infura-mcp-server`
@@ -49,7 +49,7 @@ The Infura MCP Server is a Model Context Protocol (MCP) server that provides 35+
 ### Core Files
 - `mcpServer.js` - Main MCP server implementation
 - `index.js` - Entry point and CLI handling
-- `tools/` - 35+ individual Ethereum JSON-RPC tools
+- `tools/` - 29 read-only Ethereum JSON-RPC tools
 - `commands/` - Command definitions and metadata
 - `lib/` - Utility functions and helpers
 - `test/` - Validation and testing scripts
@@ -90,7 +90,7 @@ const PRIMARY_NETWORKS = {
 - `INFURA_NETWORK` - Network selection (defaults to mainnet)
 - `DEBUG` - Enable debug logging
 
-## Available Tools (35+)
+## Available Tools (29)
 
 ### Account & Balance Tools
 - `eth_getBalance` - Get account balance
@@ -140,7 +140,7 @@ const PRIMARY_NETWORKS = {
 ```bash
 npm test           # Run validation + tools discovery
 npm run test:validate  # Package.json validation
-npm run test:tools     # Validate all 31 tools
+npm run test:tools     # Validate all 29 tools
 npm run test:sse       # SSE functionality test
 ```
 
@@ -170,7 +170,7 @@ CMD ["npm", "start"]
 
 ### Release Process
 1. Authorization verification (owner check)
-2. Comprehensive testing (all 31 tools)
+2. Comprehensive testing (all 29 tools)
 3. Version bumping (semantic versioning)
 4. Git tagging and changelog generation
 5. GitHub release creation
@@ -303,5 +303,5 @@ INFURA_API_KEY=your_key INFURA_NETWORK=bsc-mainnet npx infura-mcp-server
 
 - `package.json` - Project metadata and dependencies
 - `mcpServer.js` - Core server implementation  
-- `tools/` - All 35+ Ethereum JSON-RPC tools
+- `tools/` - All 29 read-only Ethereum JSON-RPC tools
 - `.github/workflows/`

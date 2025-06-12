@@ -87,8 +87,8 @@ jobs:
           echo "📋 Running validation tests..."
           npm test
           
-          # Run comprehensive tool testing (all 31 tools)
-          echo "🔧 Running comprehensive tool validation (31 tools)..."
+          # Run comprehensive tool testing (all 29 tools)
+          echo "🔧 Running comprehensive tool validation (29 tools)..."
           if [ -n "$INFURA_API_KEY" ]; then
             echo "🔑 Using real API key for comprehensive testing..."
             npm run test:comprehensive
