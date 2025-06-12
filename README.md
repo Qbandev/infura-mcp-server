@@ -250,7 +250,7 @@ For Docker installation:
 
 Once configured, you can have natural blockchain conversations with AI assistants in Claude Desktop, Cursor, or VS Code:
 
-![AI Assistant Blockchain Conversation](cursor-chat.jpg)
+![Cursor Chat with Infura MCP](img/cursor-chat.jpg)
 
 **Key Benefits:**
 - **Contextual insights** - AI explains what the data means and provides actionable advice

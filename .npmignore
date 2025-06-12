@@ -42,6 +42,5 @@ npm-debug.log*
 Thumbs.db
 *.tmp
 
-# Lock files
-package-lock.json
+# Lock files (yarn.lock excluded, package-lock.json included for reproducible builds)
 yarn.lock
