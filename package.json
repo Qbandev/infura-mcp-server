@@ -84,15 +84,15 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.9.0",
-    "commander": "^13.1.0",
+    "commander": "^14.0.0",
     "dotenv": "^16.4.7",
     "express": "^5.1.0"
   },
   "devDependencies": {
     "node-fetch": "^3.3.2",
-    "eventsource": "^2.0.2",
-    "@commitlint/cli": "^18.4.3",
-    "@commitlint/config-conventional": "^18.4.3"
+    "eventsource": "^4.0.0",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1"
   },
   "engines": {
     "node": ">=20.0.0"
