@@ -1,10 +1,10 @@
 # Infura MCP Server
 
-A Model Context Protocol (MCP) server implementation that provides comprehensive Ethereum blockchain access through Infura's infrastructure. Connect Claude Desktop, VS Code, and other MCP clients to 35+ Ethereum JSON-RPC tools across 21+ networks.
+A Model Context Protocol (MCP) server implementation that provides comprehensive Ethereum blockchain access through Infura's infrastructure. Connect Claude Desktop, VS Code, and other MCP clients to 31 read-only Ethereum JSON-RPC tools across 21+ networks.
 
 ## Features
 
-- **35 Ethereum JSON-RPC tools** - Complete blockchain interaction suite
+- **31 read-only Ethereum JSON-RPC tools** - Complete blockchain query suite
 - **Multi-network support** - 21+ networks including Ethereum, Polygon, Arbitrum, Base, Optimism
 - **Enterprise security** - 9.5/10 security rating with comprehensive CI/CD protection
 - **Real-time data** - Direct access to Infura's blockchain infrastructure
@@ -18,7 +18,7 @@ A Model Context Protocol (MCP) server implementation that provides comprehensive
 - **eth_getCode** - Get contract bytecode  
 - **eth_getTransactionCount** - Get account nonce/transaction count
 
-### Block Tools (8)
+### Block Tools (7)
 - **eth_getBlockNumber** - Get latest block number
 - **eth_getBlockByHash** - Get block details by hash
 - **eth_getBlockByNumber** - Get block details by number
@@ -26,16 +26,14 @@ A Model Context Protocol (MCP) server implementation that provides comprehensive
 - **eth_getUncleByBlockNumberAndIndex** - Get uncle block by number and index
 - **eth_getUncleCountByBlockHash** - Count uncle blocks by hash
 - **eth_getUncleCountByBlockNumber** - Count uncle blocks by number
-- **eth_newBlockFilter** - Create new block filter
 
-### Transaction Tools (7)
+### Transaction Tools (6)
 - **eth_getBlockTransactionCountByHash** - Count transactions in block by hash
 - **eth_getBlockTransactionCountByNumber** - Count transactions in block by number
 - **eth_getTransactionByBlockHashAndIndex** - Get transaction by block hash and index
 - **eth_getTransactionByBlockNumberAndIndex** - Get transaction by block number and index
 - **eth_getTransactionByHash** - Get transaction details by hash
 - **eth_getTransactionReceipt** - Get transaction receipt and logs
-- **eth_sendRawTransaction** - Submit signed transaction to network
 
 ### Smart Contract Tools (3)
 - **eth_call** - Execute read-only contract call
@@ -49,12 +47,10 @@ A Model Context Protocol (MCP) server implementation that provides comprehensive
 - **net_getVersion** - Get network ID
 - **web3_getClientVersion** - Get client version string
 
-### Filter Tools (5)
+### Filter Tools (3)
 - **eth_getFilterChanges** - Get filter changes since last poll
 - **eth_getFilterLogs** - Get all logs for filter
 - **eth_getLogs** - Get logs with flexible filtering
-- **eth_newFilter** - Create new log filter
-- **eth_uninstallFilter** - Remove existing filter
 
 ### Utility Tools (4)
 - **eth_getFeeHistory** - Get historical gas fee data (EIP-1559)
@@ -401,6 +397,21 @@ INFURA_API_KEY=your_key npm run test:full
 2. Review the [test documentation](test/README.md) for examples
 3. Visit [Infura documentation](https://docs.infura.io/) for API details
 4. Open an issue on GitHub for bugs or feature requests
+
+## 🔐 Security
+
+### API Key Security
+- **Never hardcode** API keys in configuration files
+- **Monitor API usage** in your Infura dashboard regularly
+- **Rotate keys** for production environments
+
+### 🛡️ Built-in Security Features
+- ✅ **Required parameter validation** - validates presence of required parameters
+- ✅ **No arbitrary code execution** - only predefined Ethereum JSON-RPC methods
+- ✅ **HTTPS/TLS encryption** for all Infura connections
+- ✅ **Local execution** by default (stdio mode, no network exposure)
+- ✅ **Read-only operations** - server can never modify blockchain state
+
 
 ## License
 
