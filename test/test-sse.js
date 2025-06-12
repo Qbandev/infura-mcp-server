@@ -6,8 +6,11 @@
  * It gracefully handles cases where the server is not running
  */
 
+import { createRequire } from 'module';
 import fetch from 'node-fetch';
-import EventSource from 'eventsource';
+
+const require = createRequire(import.meta.url);
+const EventSource = require('eventsource');
 
 const SERVER_URL = 'http://localhost:3001';
 const CONNECTION_TIMEOUT = 5000; // Reduced timeout for faster CI
