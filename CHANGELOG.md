@@ -10,6 +10,18 @@
 - Bug fixes go here
 
 
+## [0.2.0](https://github.com/Qbandev/infura-mcp-server/compare/v0.1.3...v0.2.0) (2025-06-12)
+
+
+### Features
+
+* add Release Please for automated releases ([fbca697](https://github.com/Qbandev/infura-mcp-server/commit/fbca697545a3b97f452a7492b67fc5f5059ac739))
+
+
+### Bug Fixes
+
+* add permissions documentation for Release Please ([30fe3ca](https://github.com/Qbandev/infura-mcp-server/commit/30fe3ca8546db44fe98b490743a9ec79c1a91e46))
+
 ## v0.1.2 - 2025-06-12
 
 ### Added
