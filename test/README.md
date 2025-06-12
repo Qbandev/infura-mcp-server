@@ -186,7 +186,7 @@ INFURA_API_KEY=your_key INFURA_NETWORK=arbitrum-mainnet npm run test:integration
 
 ## 🚨 Requirements
 
-- **Node.js** 16+
+- **Node.js** 20+
 - **Valid Infura API Key** (for API testing)
 - **Network connectivity** (for API calls)
 

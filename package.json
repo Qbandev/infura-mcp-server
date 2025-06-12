@@ -95,7 +95,7 @@
     "@commitlint/config-conventional": "^18.4.3"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.0.0"
   },
   "author": {
     "name": "qbandev",
