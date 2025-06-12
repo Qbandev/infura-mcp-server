@@ -125,22 +125,27 @@ jobs:
           # Extract tag name
           TAG_NAME=${GITHUB_REF#refs/tags/}
           
-          # Create release using GitHub CLI (modern approach)
-          gh release create "$TAG_NAME" \
-            --title "Release $TAG_NAME" \
-            --notes "## Changes in this version
+          # Create release notes with proper escaping
+          cat > release-notes.md << 'EOF'
+          ## Changes in this version
 
           Please see the [CHANGELOG.md](./CHANGELOG.md) for detailed changes.
 
           ## Installation
 
-          \`\`\`bash
+          ```bash
           npm install -g infura-mcp-server
           # or
           npx infura-mcp-server
-          \`\`\`
+          ```
 
           ## What's Changed
 
-          For a complete list of changes, see the commit history since the last release." \
+          For a complete list of changes, see the commit history since the last release.
+          EOF
+          
+          # Create release using GitHub CLI with notes file
+          gh release create "$TAG_NAME" \
+            --title "Release $TAG_NAME" \
+            --notes-file release-notes.md \
             --verify-tag 
