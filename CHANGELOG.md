@@ -1,3 +1,15 @@
+## v0.1.3 - 2025-06-12
+
+### Added
+- New features go here
+
+### Changed
+- Changes go here
+
+### Fixed
+- Bug fixes go here
+
+
 ## v0.1.2 - 2025-06-12
 
 ### Added
