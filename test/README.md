@@ -83,7 +83,7 @@ When a valid `INFURA_API_KEY` is provided, the comprehensive test validates **al
 - **Transaction Tools** (7): `eth_getTransactionByHash`, `eth_getTransactionReceipt`, etc.
 - **Smart Contract Tools** (3): `eth_call`, `eth_estimateGas`, `eth_getStorageAt`
 - **Network Tools** (5): `eth_chainId`, `eth_gasPrice`, `net_version`, etc.
-- **Filter Tools** (5): `eth_getLogs`, `eth_newFilter`, etc.
+- **Log Query Tools** (1): `eth_getLogs` for event filtering
 - **Mining Tools** (2): `eth_getWork`, `eth_submitWork`
 - **Utility Tools** (7): `eth_getFeeHistory`, `eth_isSyncing`, etc.
 

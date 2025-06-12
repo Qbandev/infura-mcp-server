@@ -168,7 +168,7 @@ jobs:
           ### Added
           - Initial release
           - Infura MCP Server with 29 read-only Ethereum JSON-RPC tools
-          - Support for multiple networks (Mainnet, Optimism, Arbitrum, Polygon, Base, Sepolia)
+          - Support for 30+ networks including Ethereum, Polygon, Arbitrum, Base, Optimism
           - SSE and stdio transport modes
           - Docker support
           - Enhanced error handling and logging
@@ -241,7 +241,7 @@ jobs:
           ## Features
 
           - 29 read-only Ethereum JSON-RPC tools
-          - Multi-network support (Mainnet, Optimism, Arbitrum, Polygon, Base, Sepolia)
+          - Multi-network support (30+ networks including Ethereum, Polygon, Arbitrum, Base, Optimism)
           - SSE and stdio transport modes
           - Enhanced error handling and logging
           - Docker support

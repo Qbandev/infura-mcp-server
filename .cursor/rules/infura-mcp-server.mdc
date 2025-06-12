@@ -39,7 +39,7 @@ The Infura MCP Server is a Model Context Protocol (MCP) server that provides 29 
 ### Key Statistics
 - **Language**: Node.js ES modules (type: "module")
 - **Tools**: 29 read-only Ethereum JSON-RPC methods
-- **Networks**: 6 primary + 15+ additional Infura networks supported
+- **Networks**: 30+ network endpoints across 18 blockchain ecosystems supported
 - **Transport**: SSE and stdio modes
 - **Version**: Published on npm as `infura-mcp-server`
 - **Security**: GPG signed commits, strict release access control

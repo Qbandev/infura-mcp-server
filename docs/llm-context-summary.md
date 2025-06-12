@@ -12,8 +12,8 @@ The **Infura MCP Server LLM Context Document** is a comprehensive guide designed
 ## 🎯 Key Sections
 
 ### 1. **Project Architecture**
-- 35 verified Ethereum JSON-RPC tools
-- 21+ supported networks (Ethereum, Polygon, Arbitrum, etc.)
+- 29 read-only Ethereum JSON-RPC tools
+- 30+ supported networks (Ethereum, Polygon, Arbitrum, etc.)
 - Enterprise-grade security (9.5/10 rating)
 - 100% test coverage with real API validation
 
@@ -68,7 +68,7 @@ Would you like me to check other L2 networks like Arbitrum or Base?"
 ```
 
 ### **Security Reminders**
-- Never use `eth_sendRawTransaction` without proper transaction signing
+- All tools are read-only - no write operations like `eth_sendRawTransaction` available
 - Always validate all user inputs
 - Use appropriate networks for different use cases
 - Respect Infura rate limits

@@ -1,15 +1,14 @@
 # Infura MCP Server
 
-A Model Context Protocol (MCP) server implementation that provides comprehensive Ethereum blockchain access through Infura's infrastructure. Connect Claude Desktop, VS Code, and other MCP clients to 29 read-only Ethereum JSON-RPC tools across 21+ networks.
+A Model Context Protocol (MCP) server implementation that provides comprehensive Ethereum blockchain access through Infura's infrastructure. Connect Claude Desktop, VS Code, and other MCP clients to 29 read-only Ethereum JSON-RPC tools across 30+ networks.
 
 ## Features
 
 - **29 read-only Ethereum JSON-RPC tools** - Complete blockchain query suite
-- **Multi-network support** - 21+ networks including Ethereum, Polygon, Arbitrum, Base, Optimism
-- **Enterprise security** - 9.5/10 security rating with comprehensive CI/CD protection
+- **Multi-network support** - 30+ networks including Ethereum, Polygon, Arbitrum, Base, Optimism
 - **Real-time data** - Direct access to Infura's blockchain infrastructure
 - **AI-optimized** - Comprehensive LLM context for expert blockchain guidance
-- **Production ready** - 100% test coverage with real API validation
+
 
 ## Tools
 
@@ -58,28 +57,41 @@ A Model Context Protocol (MCP) server implementation that provides comprehensive
 
 ## Network Support
 
-### Primary Networks
-- **mainnet** - Ethereum Mainnet
-- **sepolia** - Ethereum Sepolia Testnet
-- **polygon-mainnet** - Polygon Mainnet
-- **arbitrum-mainnet** - Arbitrum One
-- **base-mainnet** - Base Mainnet
-- **optimism-mainnet** - Optimism Mainnet
+The Infura MCP Server supports **all networks available through MetaMask/Infura infrastructure** - providing access to 30+ network endpoints across 18 blockchain ecosystems.
 
-### Additional Networks
-- **avalanche-mainnet**, **avalanche-fuji** - Avalanche C-Chain
-- **bsc-mainnet**, **bsc-testnet** - Binance Smart Chain
-- **celo-mainnet**, **celo-alfajores** - Celo
-- **linea-mainnet**, **linea-sepolia** - Linea
-- **mantle-mainnet**, **mantle-sepolia** - Mantle
-- **palm-mainnet**, **palm-testnet** - Palm
-- **scroll-mainnet**, **scroll-sepolia** - Scroll
-- **starknet-mainnet**, **starknet-sepolia** - Starknet
-- **zksync-mainnet**, **zksync-sepolia** - ZKsync Era
-- **blast-mainnet**, **blast-sepolia** - Blast
-- **opbnb-mainnet**, **opbnb-testnet** - opBNB
-- **swellchain-mainnet**, **swellchain-testnet** - Swellchain
-- **unichain-mainnet**, **unichain-sepolia** - Unichain
+*For complete network details and endpoints, see: [MetaMask Developer Documentation](https://docs.metamask.io/services/get-started/endpoints/)*
+
+### Primary Ethereum Networks
+- **mainnet** - Ethereum Mainnet
+- **sepolia** - Ethereum Sepolia Testnet  
+- **holesky** - Ethereum Holesky Testnet
+
+### Layer 2 & Scaling Solutions
+- **arbitrum-mainnet**, **arbitrum-sepolia** - Arbitrum One & Testnet
+- **base-mainnet**, **base-sepolia** - Base (Coinbase) & Testnet
+- **blast-mainnet**, **blast-sepolia** - Blast & Testnet
+- **linea-mainnet**, **linea-sepolia** - Linea (MetaMask) & Testnet
+- **mantle-mainnet**, **mantle-sepolia** - Mantle & Testnet
+- **optimism-mainnet**, **optimism-sepolia** - Optimism & Testnet
+- **polygon-mainnet**, **polygon-amoy** - Polygon PoS & Testnet
+- **scroll-mainnet**, **scroll-sepolia** - Scroll & Testnet
+- **zksync-mainnet**, **zksync-sepolia** - ZKsync Era & Testnet
+
+### Alternative Layer 1 Networks
+- **avalanche-mainnet**, **avalanche-fuji** - Avalanche C-Chain & Testnet
+- **bsc-mainnet**, **bsc-testnet** - BNB Smart Chain & Testnet
+- **celo-mainnet**, **celo-alfajores** - Celo & Testnet
+- **opbnb-mainnet**, **opbnb-testnet** - opBNB (Binance Layer 2) & Testnet
+- **palm-mainnet**, **palm-testnet** - Palm (NFT-focused) & Testnet
+- **starknet-mainnet**, **starknet-sepolia** - Starknet & Testnet
+- **swellchain-mainnet**, **swellchain-testnet** - Swellchain & Testnet
+- **unichain-mainnet**, **unichain-sepolia** - Unichain (Uniswap) & Testnet
+
+### Usage Notes
+- Use the `INFURA_NETWORK` environment variable to specify networks
+- All networks support the same 29 read-only JSON-RPC tools  
+- Primary networks (Ethereum, Polygon, Arbitrum, Base, Optimism) are fully tested
+- Additional networks leverage Infura's infrastructure for maximum reliability
 
 ## Configuration
 
@@ -230,84 +242,94 @@ For Docker installation:
 
 ### Getting Started
 
-1. **Get your Infura API key** at [infura.io](https://infura.io)
+1. **Get your Infura API key** at [MetaMask Developer Portal](https://developer.metamask.io/)
 2. **Configure your MCP client** (Claude Desktop, Cursor, or VS Code) using the examples above
 3. **Start exploring blockchain data** with AI assistance
 
-### Cursor-Specific Usage
+### AI Assistant Conversations
 
-Once configured in Cursor, you can interact with blockchain data directly in your AI conversations:
+Once configured, you can have natural blockchain conversations with AI assistants in Claude Desktop, Cursor, or VS Code:
 
-```javascript
-// In Cursor's AI chat, ask:
-"What's the current gas price on Ethereum mainnet?"
-"Show me the balance of this wallet: 0x742d35Cc6E99043Ed1287354E1e3E19b61FC0B72"
-"Help me analyze this smart contract on Polygon"
-"Compare gas fees across Ethereum, Arbitrum, and Base networks"
-```
+**You:** "What's the current gas price on Ethereum mainnet?"
 
-**Cursor Integration Benefits:**
-- **Code context awareness** - AI understands your blockchain project structure
-- **Inline suggestions** - Get blockchain data while coding smart contracts
-- **Multi-file analysis** - Analyze contracts across your entire project
-- **Network switching** - Easily switch between mainnet, testnets, and L2s
+**AI:** "Current Ethereum mainnet gas price is 25 gwei. Based on recent fee history, this is about average for this time of day. Would you like me to check L2 alternatives for lower costs?"
+
+**You:** "Check if this contract exists on mainnet, Polygon, and Base: 0x1234..."
+
+**AI:** "I'll check that contract address across multiple networks:
+- ✅ Ethereum mainnet: Contract found (Token contract with 1M supply)
+- ❌ Polygon: No contract at this address  
+- ✅ Base: Contract found (Same token, bridged version)
+
+This appears to be a multi-chain token with bridges to Base but not Polygon."
+
+**You:** "This transaction failed: 0xabc123... Can you help me figure out why?"
+
+**AI:** "Let me analyze this failed transaction for you. Looking at the receipt, it failed with 'execution reverted' due to insufficient allowance. The gas limit was adequate, but the contract call failed because the spender wasn't approved to transfer the required tokens."
+
+**Key Benefits:**
+- **Contextual insights** - AI explains what the data means and provides actionable advice
+- **Multi-network analysis** - Seamlessly compare data across different blockchain networks  
+- **Educational guidance** - Learn blockchain concepts through natural conversation
 
 ### Common Use Cases
 
-#### Check Account Balance
-```javascript
-// Ask your AI assistant:
-"What's the ETH balance of vitalik.eth?"
-// Uses: eth_getBalance with ENS resolution
-```
+Once the MCP server is configured, you can have natural conversations with your AI assistant about blockchain data. Here are real examples:
 
-#### Analyze Smart Contracts
-```javascript  
-// Ask your AI assistant:
-"Show me the total supply of USDC and estimate gas for a transfer"
-// Uses: eth_call for contract data, eth_estimateGas for cost analysis
-```
+#### Check Account Balances
+**You:** "What's the current ETH balance of vitalik.eth?"
 
-#### Monitor Gas Prices
-```javascript
-// Ask your AI assistant:
-"What's the current gas price and fee history?"
-// Uses: eth_gasPrice, eth_getFeeHistory for optimization insights
-```
+**AI:** "Let me check Vitalik's current ETH balance for you..." *(uses eth_getBalance)*
+
+**You:** "Can you show me the token balances for this address: 0x742d35Cc6E99043Ed1287354E1e3E19b61FC0B72?"
+
+#### Smart Contract Analysis  
+**You:** "I'm looking at this USDC contract, can you tell me its total supply and current gas costs for transfers?"
+
+**AI:** "I'll analyze the USDC contract for you. Let me get the total supply and estimate gas costs..." *(uses eth_call, eth_estimateGas)*
+
+**You:** "Is this contract verified and what functions does it expose?"
+
+#### Gas Price Monitoring
+**You:** "What's the current gas situation on Ethereum? Should I wait to make a transaction?"
+
+**AI:** "Let me check current gas prices and recent fee history to give you the best timing advice..." *(uses eth_gasPrice, eth_getFeeHistory)*
+
+**You:** "Compare gas costs between Ethereum mainnet, Polygon, and Arbitrum for similar transactions"
 
 #### Cross-Chain Analysis
-```javascript
-// Ask your AI assistant:
-"Compare this contract address across Ethereum, Polygon, and Arbitrum"
-// Uses: Multi-network eth_getCode, eth_call queries
-```
+**You:** "I have this contract address: 0x123... Can you check if it exists on Ethereum, Polygon, and Base?"
+
+**AI:** "I'll check that contract address across multiple networks for you..." *(uses eth_getCode across networks)*
+
+**You:** "Help me understand the differences between running this contract on L1 vs L2s"
 
 #### Transaction Debugging
-```javascript
-// Ask your AI assistant:
-"Why did this transaction fail and what was the gas used?"
-// Uses: eth_getTransactionReceipt, eth_getTransactionByHash for analysis
-```
+**You:** "This transaction failed: 0xabc123... Can you help me figure out why?"
 
-### Network-Specific Usage
+**AI:** "Let me analyze this failed transaction for you..." *(uses eth_getTransactionReceipt, eth_getTransactionByHash)*
 
-#### Polygon Operations
-```bash
-# Set network via environment variable
-INFURA_NETWORK=polygon-mainnet npx infura-mcp-server
-```
+**You:** "What went wrong with my smart contract deployment? Here's the transaction hash..."
 
-#### Arbitrum Analysis  
-```bash
-# Configure for Arbitrum
-INFURA_NETWORK=arbitrum-mainnet npx infura-mcp-server
-```
+#### DeFi Research
+**You:** "I'm researching yield farming opportunities. Can you help me analyze TVL and recent activity for these DeFi protocols?"
 
-#### Multi-Network Queries
-```javascript
-// AI assistants can automatically query multiple networks
-"Check if this contract exists on mainnet, Polygon, and Base"
-```
+**You:** "What's the current state of this liquidity pool? Show me recent swaps and fees generated"
+
+#### NFT Analysis
+**You:** "Can you help me verify the authenticity of this NFT contract and check recent mint activity?"
+
+**You:** "I want to understand the gas costs for minting from this NFT collection"
+
+#### Multi-Network Conversations
+**You:** "Check if this contract exists on mainnet, Polygon, and Base: 0x1234..."
+
+**AI:** "I'll check that contract address across multiple networks:
+- ✅ Ethereum mainnet: Contract found (Token contract with 1M supply)
+- ❌ Polygon: No contract at this address  
+- ✅ Base: Contract found (Same token, bridged version)
+
+This appears to be a multi-chain token with bridges to Base but not Polygon."
 
 ## 📚 AI Assistant & Developer Resources
 
@@ -317,20 +339,13 @@ This project includes a comprehensive **LLM Context Document** (600+ lines) that
 - **📖 Full Context**: `.cursor/rules/infura-mcp-server-llm-context.md`
 - **📋 Summary**: `docs/llm-context-summary.md`
 
-**Key Features:**
-- 29 read-only Ethereum JSON-RPC tools usage patterns
-- Blockchain concepts explanations  
-- Security best practices
-- Multi-network guidance (21+ networks)
-- Common troubleshooting scenarios
-
 **For AI Assistants:** Enables expert-level blockchain interactions while educating users about Ethereum, DeFi, and gas optimization.
 
 **For Developers:** Reference for adding tools, updating documentation, and maintaining blockchain accuracy.
 
 ## Environment Variables
 
-- **`INFURA_API_KEY`** (required) - Your Infura API key from [infura.io](https://infura.io)
+- **`INFURA_API_KEY`** (required) - Your Infura API key from [MetaMask Developer Portal](https://developer.metamask.io/)
 - **`INFURA_NETWORK`** (optional) - Target network (default: mainnet)
 - **`DEBUG`** (optional) - Enable debug logging
 
@@ -368,7 +383,7 @@ INFURA_API_KEY=your_key npm run test:full
 ### Common Issues
 
 **"API key not working"**
-- Verify your `INFURA_API_KEY` is valid at [infura.io](https://infura.io/dashboard)
+- Verify your `INFURA_API_KEY` is valid at [MetaMask Developer Dashboard](https://developer.metamask.io/)
 - Check the environment variable is properly set
 
 **"Network not supported"**
@@ -378,19 +393,16 @@ INFURA_API_KEY=your_key npm run test:full
 **"Tool not responding"**
 - Restart your MCP client (Claude Desktop, VS Code)
 - Verify the configuration JSON syntax
-- Check the server logs for specific errors
 
 **"Rate limit exceeded"**
 - Upgrade your Infura plan for higher limits
 - Implement delays between rapid requests
-- Use caching for frequently accessed data
 
 ### Getting Help
 
 1. Check the [LLM context document](.cursor/rules/infura-mcp-server-llm-context.md) for detailed guidance
-2. Review the [test documentation](test/README.md) for examples
-3. Visit [Infura documentation](https://docs.infura.io/) for API details
-4. Open an issue on GitHub for bugs or feature requests
+2. Visit [Infura documentation](https://docs.metamask.io/services/) for API details
+3. Open an issue on GitHub for bugs or feature requests
 
 ## 🔐 Security
 

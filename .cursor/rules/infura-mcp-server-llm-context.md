@@ -9,15 +9,15 @@ This document provides AI assistants (Claude, Cursor, etc.) with comprehensive c
 - **Name**: Infura MCP Server
 - **Version**: 0.1.1+
 - **Language**: Node.js ES modules (type: "module")
-- **Tools**: 35 verified Ethereum JSON-RPC tools
-- **Networks**: 6 primary + 15+ additional Infura networks
+- **Tools**: 29 read-only Ethereum JSON-RPC tools
+- **Networks**: 30+ network endpoints across 18 blockchain ecosystems
 - **Transport**: SSE and stdio modes
 - **Status**: Enterprise-ready, production-grade
 
 ### Key Statistics
 ```javascript
-Tools: 35 Ethereum JSON-RPC methods (100% verified)
-Networks: 21+ supported via Infura
+Tools: 29 read-only Ethereum JSON-RPC methods (100% verified)
+Networks: 30+ supported via Infura/MetaMask
 Security Score: 9.5/10 (enterprise-grade)
 Test Coverage: 100% with real API validation
 CI/CD: 5 automated workflows with comprehensive security
@@ -25,20 +25,20 @@ CI/CD: 5 automated workflows with comprehensive security
 
 ## 🏗️ Architecture Overview
 
-### Tool Categories (35 total)
+### Tool Categories (29 total - read-only)
 ```javascript
 // Account & Balance Tools (3)
 eth_getBalance, eth_getCode, eth_getTransactionCount
 
-// Block Tools (8) 
+// Block Tools (7) 
 eth_getBlockNumber, eth_getBlockByHash, eth_getBlockByNumber,
 eth_getUncleByBlockHashAndIndex, eth_getUncleByBlockNumberAndIndex,
-eth_getUncleCountByBlockHash, eth_getUncleCountByBlockNumber, eth_newBlockFilter
+eth_getUncleCountByBlockHash, eth_getUncleCountByBlockNumber
 
-// Transaction Tools (7)
+// Transaction Tools (6)
 eth_getBlockTransactionCountByHash, eth_getBlockTransactionCountByNumber,
 eth_getTransactionByBlockHashAndIndex, eth_getTransactionByBlockNumberAndIndex,
-eth_getTransactionByHash, eth_getTransactionReceipt, eth_sendRawTransaction
+eth_getTransactionByHash, eth_getTransactionReceipt
 
 // Smart Contract Tools (3)
 eth_call, eth_estimateGas, eth_getStorageAt
@@ -46,8 +46,8 @@ eth_call, eth_estimateGas, eth_getStorageAt
 // Network Tools (5)
 eth_chainId, net_isListening, net_getPeerCount, net_getVersion, web3_getClientVersion
 
-// Filter Tools (5)
-eth_getFilterChanges, eth_getFilterLogs, eth_getLogs, eth_newFilter, eth_uninstallFilter
+// Log Query Tools (1)
+eth_getLogs
 
 // Utility Tools (4)
 eth_getFeeHistory, eth_getGasPrice, eth_getProtocolVersion, eth_isSyncing
@@ -176,7 +176,7 @@ await eth_getFeeHistory({
 });
 ```
 
-### 6. **Event Log Filtering**
+### 6. **Event Log Querying**
 ```javascript
 // Get logs for contract events
 await eth_getLogs({
@@ -186,10 +186,12 @@ await eth_getLogs({
   network: "mainnet"
 });
 
-// Create and manage filters
-await eth_newFilter({
-  fromBlock: "latest",
-  toBlock: "latest",
+// Query logs with topic filters (e.g., Transfer events)
+await eth_getLogs({
+  fromBlock: "0x1000000",
+  toBlock: "latest", 
+  address: "0xA0b86a33E6417C4b8bC1ef4b0b61dd888E020e80",
+  topics: ["0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"],
   network: "mainnet"
 });
 ```
@@ -245,14 +247,17 @@ await eth_newFilter({
 
 ### **Infura API Limitations**
 ```javascript
-// ❌ NOT supported (removed from server)
-eth_getWork, eth_hashrate, eth_mining, eth_submitWork // Mining methods
-parity_getNextNonce // Parity-specific method
+// ❌ NOT supported (removed from server for security)
+eth_sendRawTransaction // Write operation (removed)
+eth_newFilter, eth_getFilterChanges, eth_getFilterLogs, eth_uninstallFilter // Filter management (removed)
+eth_newBlockFilter // Block filter creation (removed)
+eth_getWork, eth_hashrate, eth_mining, eth_submitWork // Mining methods (not supported by Infura)
+parity_getNextNonce // Parity-specific method (not supported by Infura)
 
-// ⚠️ Require real data
+// ⚠️ Require real data for testing
 eth_getBlockByHash // Needs actual block hash
 eth_getTransactionByHash // Needs actual transaction hash
-eth_sendRawTransaction // Needs properly signed transaction
+eth_getTransactionReceipt // Needs actual transaction hash
 ```
 
 ### **Rate Limiting**
@@ -325,7 +330,7 @@ transfer: "0xa9059cbb"
 approve: "0x095ea7b3"
 
 // Always use eth_call for read-only operations
-// Never use eth_sendRawTransaction without proper signing
+// Note: No write operations available - server is read-only for security
 ```
 
 ### **Multi-Network Workflows**
@@ -461,10 +466,12 @@ Solution: Validate address format (42 chars, starts with 0x)
 
 ### **Tool-Specific Issues**
 ```javascript
-eth_call: Returns "0x" for non-existent functions
-eth_getLogs: May return empty array for no matching events
-eth_estimateGas: May fail for invalid transactions
-eth_getCode: Returns "0x" for EOA (non-contract) addresses
+eth_call: Returns "0x" for non-existent functions or view functions that return nothing
+eth_getLogs: May return empty array for no matching events or invalid address
+eth_estimateGas: May fail for invalid transactions or insufficient balance
+eth_getCode: Returns "0x" for EOA (externally owned accounts, not contracts)
+eth_getBalance: Returns balance in wei (1 ETH = 10^18 wei)
+eth_getTransactionReceipt: Returns null for pending or non-existent transactions
 ```
 
 ## 📚 Integration Examples
