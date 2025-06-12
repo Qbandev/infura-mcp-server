@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main ]
 
 jobs:
   test:
@@ -24,7 +24,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
@@ -62,14 +62,37 @@ jobs:
             console.log('✅ Package.json validation passed');
           "
 
-      - name: Run tests (if available)
+      - name: Run comprehensive tests
+        env:
+          INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
         run: |
-          if npm run | grep -q "test"; then
-            npm test
+          echo "🧪 Running comprehensive test suite..."
+          
+          # Run basic validation tests
+          echo "📋 Running validation tests..."
+          npm test
+          
+          # Run comprehensive tool testing (all 29 tools)
+          echo "🔧 Running comprehensive tool validation (29 tools)..."
+          if [ -n "$INFURA_API_KEY" ]; then
+            echo "🔑 Using real API key for comprehensive testing..."
+            npm run test:comprehensive
           else
-            echo "No test script found, skipping tests"
+            echo "⚠️ No API key available, running structure validation only..."
+            npm run test:comprehensive
           fi
-        continue-on-error: false
+          
+          # Run SSE functionality tests  
+          echo "🌐 Running SSE functionality tests..."
+          npm run test:sse
+          
+          # Run integration tests if API key is available
+          if [ -n "$INFURA_API_KEY" ]; then
+            echo "🔗 Running integration tests with real API..."
+            npm run test:integration
+          else
+            echo "ℹ️ Skipping integration tests (no API key)"
+          fi
 
       - name: Verify package structure
         run: |

@@ -45,7 +45,6 @@ Thumbs.db
 
 # Test files
 test/
-test-sse.js
 
 # CI/CD
 .github/

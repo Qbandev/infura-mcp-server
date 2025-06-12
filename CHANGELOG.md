@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Initial release
-- Infura MCP Server with 40+ Ethereum JSON-RPC tools
-- Support for multiple networks (Mainnet, Optimism, Arbitrum, Polygon, Base, Sepolia)
+- Infura MCP Server with 29 read-only Ethereum JSON-RPC tools
+- Support for 30+ networks including Ethereum, Polygon, Arbitrum, Base, Optimism
 - SSE and stdio transport modes
 - Docker support
 - Enhanced error handling and logging

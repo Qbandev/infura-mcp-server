@@ -141,12 +141,11 @@ jobs:
 
       - name: Test Docker image
         run: |
-          # Test stdio mode (default)
+          # Test stdio mode (default) - validate container can start without API key
           echo "Testing stdio mode..."
           timeout 10s docker run --rm \
-            -e INFURA_API_KEY=test_key_for_validation \
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version || 'latest' }} \
-            echo '{"jsonrpc":"2.0","method":"tools/list","id":1}' || true
+            --help || true
 
           echo "✅ Stdio mode test completed"
 
@@ -220,7 +219,22 @@ jobs:
           output: 'trivy-results.sarif'
 
       - name: Upload Trivy scan results
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
-          sarif_file: 'trivy-results.sarif' 
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        if: success()
+        with:
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          format: spdx-json
+          output-file: sbom.spdx.json
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: sbom
+          path: sbom.spdx.json 

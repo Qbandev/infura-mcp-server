@@ -19,12 +19,10 @@ on:
         default: 'beta'
         type: string
 
-# Grant GITHUB_TOKEN the permissions required to make releases
+# Grant GITHUB_TOKEN only the minimal permissions required for releases
 permissions:
-  contents: write
-  pull-requests: write
-  issues: write
-  packages: write
+  contents: write  # Required for creating releases and pushing tags
+  packages: write  # Required for publishing packages
 
 jobs:
   # Security check - only allow repository owner to run releases
@@ -98,13 +96,10 @@ jobs:
           # Configure git to use the token for authentication
           git config --local url."https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/".insteadOf "https://github.com/"
 
-      - name: Run tests before release
-        run: |
-          if npm run | grep -q "test"; then
-            npm test
-          else
-            echo "No test script found, skipping tests"
-          fi
+      - name: Run comprehensive tests before release
+        env:
+          INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
+        run: ./scripts/run-ci-tests.sh "release"
 
       - name: Verify package works
         run: |
@@ -144,8 +139,8 @@ jobs:
 
           ### Added
           - Initial release
-          - Infura MCP Server with 40+ Ethereum JSON-RPC tools
-          - Support for multiple networks (Mainnet, Optimism, Arbitrum, Polygon, Base, Sepolia)
+          - Infura MCP Server with 29 read-only Ethereum JSON-RPC tools
+          - Support for 30+ networks including Ethereum, Polygon, Arbitrum, Base, Optimism
           - SSE and stdio transport modes
           - Docker support
           - Enhanced error handling and logging
@@ -217,8 +212,8 @@ jobs:
 
           ## Features
 
-          - 40+ Ethereum JSON-RPC tools
-          - Multi-network support (Mainnet, Optimism, Arbitrum, Polygon, Base, Sepolia)
+          - 29 read-only Ethereum JSON-RPC tools
+          - Multi-network support (30+ networks including Ethereum, Polygon, Arbitrum, Base, Optimism)
           - SSE and stdio transport modes
           - Enhanced error handling and logging
           - Docker support

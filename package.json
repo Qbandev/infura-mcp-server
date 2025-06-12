@@ -1,12 +1,43 @@
 {
   "name": "infura-mcp-server",
   "version": "0.1.1",
-  "description": "An MCP server for the Infura API, providing tools to interact with the Ethereum blockchain.",
+  "description": "Model Context Protocol (MCP) server providing comprehensive read-only Ethereum blockchain access through Infura's infrastructure. Connect Claude Desktop, VS Code, and Cursor to 29 secure Ethereum JSON-RPC tools across 30+ networks including Ethereum, Polygon, Arbitrum, Base, and Optimism.",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "infura",
+    "ethereum",
+    "blockchain",
+    "json-rpc",
+    "web3",
+    "claude",
+    "cursor",
+    "vscode",
+    "ai",
+    "assistant",
+    "defi",
+    "smart-contracts",
+    "polygon",
+    "arbitrum",
+    "base",
+    "optimism",
+    "layer2",
+    "l2"
+  ],
   "main": "index.js",
   "type": "module",
   "bin": {
     "infura-mcp-server": "mcpServer.js"
   },
+  "files": [
+    "index.js",
+    "mcpServer.js",
+    "lib/",
+    "tools/",
+    "commands/",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "start": "node mcpServer.js",
     "start:sse": "node mcpServer.js --sse",
@@ -14,8 +45,13 @@
     "test": "npm run test:validate && npm run test:tools",
     "test:validate": "node test/validate.js",
     "test:tools": "node test/tools.js",
-    "test:sse": "node test-sse.js",
-    "test:all": "npm test && npm run test:sse",
+    "test:comprehensive": "node test/comprehensive-tools.js",
+    "test:integration": "node test/integration.js",
+    "test:sse": "node test/test-sse.js",
+    "test:npm": "node test/npm-consistency.js",
+    "test:api": "npm run test:comprehensive && npm run test:integration",
+    "test:full": "npm test && npm run test:comprehensive && npm run test:integration && npm run test:sse && npm run test:npm",
+    "test:publish": "npm run test:npm && npm pack --dry-run",
     "commitlint": "commitlint --edit",
     "commitlint:last": "commitlint --from HEAD~1 --to HEAD --verbose",
     "commitlint:ci": "commitlint --verbose",
@@ -28,7 +64,7 @@
     "docker:build": "docker build -t infura-mcp-server .",
     "docker:run": "docker run --rm -i -e INFURA_API_KEY=${INFURA_API_KEY} infura-mcp-server",
     "docker:run:sse": "docker run --rm -p 3001:3001 -e INFURA_API_KEY=${INFURA_API_KEY} infura-mcp-server node mcpServer.js --sse",
-    "docker:test": "docker run --rm -e INFURA_API_KEY=test_key infura-mcp-server --help",
+    "docker:test": "docker run --rm infura-mcp-server --help",
     "docker:compose:up": "docker-compose up -d infura-mcp-server-sse",
     "docker:compose:stdio": "docker-compose run --rm infura-mcp-server",
     "docker:compose:down": "docker-compose down",
@@ -36,12 +72,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/qbandev/infura-mcp-server.git"
+    "url": "git+https://github.com/qbandev/infura-mcp-server.git"
   },
   "bugs": {
     "url": "https://github.com/qbandev/infura-mcp-server/issues"
   },
   "homepage": "https://github.com/qbandev/infura-mcp-server#readme",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/qbandev"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.9.0",
     "commander": "^13.1.0",
@@ -57,6 +97,18 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "author": "qbandev",
-  "license": "MIT"
+  "author": {
+    "name": "qbandev",
+    "url": "https://github.com/qbandev"
+  },
+  "license": "MIT",
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ]
 }
