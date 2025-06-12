@@ -186,6 +186,14 @@ class ToolTester {
             testParams = { 
               fromBlock: 'latest',
               toBlock: 'latest',
+              address: TEST_CONFIG.TEST_ADDRESSES.USDC_CONTRACT,
+              network: 'mainnet' 
+            };
+          } else if (def.name === 'eth_getFeeHistory') {
+            testParams = { 
+              blockCount: '0x4',  // 4 blocks in hex
+              newestBlock: 'latest',
+              rewardPercentiles: [25, 50, 75],  // 25th, 50th, 75th percentiles
               network: 'mainnet' 
             };
           } else if (def.name === 'eth_getStorageAt') {
