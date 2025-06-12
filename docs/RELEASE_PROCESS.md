@@ -16,10 +16,14 @@ This project uses [Release Please](https://github.com/googleapis/release-please)
 - **Trigger**: Manual workflow dispatch
 - **Process**: Manual version bump and release
 
-### NPM Publish Backup
+### Manual NPM Publish (Backup)
 - **Workflow**: `.github/workflows/npm-publish.yml`
-- **Trigger**: On release creation or version tags
-- **Purpose**: Backup mechanism for npm publishing
+- **Trigger**: Manual workflow dispatch only
+- **Purpose**: Emergency backup for manual npm publishing if Release Please fails
+- **Use Cases**:
+  - Recovery from failed Release Please publish
+  - Publishing specific tags manually
+  - Publishing with custom npm dist-tags (beta, next, etc.)
 
 ## How Release Please Works
 
@@ -122,11 +126,26 @@ git commit -m "test: add unit tests"
 4. **Keep changelogs clean** by writing good commit messages
 5. **Test thoroughly** before merging release PRs
 
+## Using the Manual NPM Publish Backup
+
+The manual NPM publish workflow is available for emergency situations:
+
+1. **Go to Actions** → "Manual NPM Publish (Backup)"
+2. **Click "Run workflow"** and provide:
+   - Git tag to publish (e.g., `v1.0.0`)
+   - NPM dist-tag (default: `latest`, options: `beta`, `next`)
+3. **Workflow will**:
+   - Verify authorization
+   - Check out the specific tag
+   - Verify version consistency
+   - Run tests
+   - Publish to npm if not already published
+
 ## Removing Legacy Workflows
 
 Once comfortable with Release Please, you can:
 1. Delete `.github/workflows/release.yml` (manual release)
-2. Keep or modify `.github/workflows/npm-publish.yml` as backup
+2. Keep `.github/workflows/npm-publish.yml` as emergency backup (recommended)
 3. Remove manual release scripts from `package.json`
 
 ## Resources

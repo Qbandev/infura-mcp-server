@@ -1,11 +1,17 @@
-name: Publish to npm
+name: Manual NPM Publish (Backup)
 
 on:
-  release:
-    types: [published]
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Git tag to publish (e.g., v1.0.0)'
+        required: true
+        type: string
+      npm_tag:
+        description: 'NPM dist-tag (latest, beta, next)'
+        required: false
+        default: 'latest'
+        type: string
 
 jobs:
   # Security check - only allow repository owner to publish
@@ -52,18 +58,16 @@ jobs:
     needs: authorize
     if: needs.authorize.outputs.authorized == 'true'
 
-    strategy:
-      matrix:
-        node-version: [20, 22, 24]
-
     steps:
-      - name: Checkout code
+      - name: Checkout code at tag
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '20'
           registry-url: 'https://registry.npmjs.org'
  
       - name: Cache dependencies
@@ -77,75 +81,57 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run comprehensive tests before publish
-        env:
-          INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
-        run: ./scripts/run-ci-tests.sh "npm publish"
-        continue-on-error: false
-
-      - name: Verify package can be built
-        run: |
-          # Test that the server can start and list tools
-          if command -v timeout >/dev/null 2>&1; then
-            timeout 10s npm run list-tools || true
-          else
-            # Fallback for systems without timeout
-            npm run list-tools &
-            sleep 3
-            kill $! 2>/dev/null || true
-          fi
-          echo "Package verification completed"
-
-      - name: Check if version should be published
-        id: check-version
+      - name: Verify tag matches package version
         run: |
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          NPM_VERSION=$(npm view infura-mcp-server version 2>/dev/null || echo "0.0.0")
-          echo "Package version: $PACKAGE_VERSION"
-          echo "NPM version: $NPM_VERSION"
-          if [ "$PACKAGE_VERSION" != "$NPM_VERSION" ]; then
-            echo "should-publish=true" >> $GITHUB_OUTPUT
-            echo "Version changed, will publish"
+          TAG_VERSION="${{ github.event.inputs.tag }}"
+          TAG_VERSION=${TAG_VERSION#v}  # Remove 'v' prefix if present
+          
+          if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
+            echo "❌ Error: Package version ($PACKAGE_VERSION) doesn't match tag ($TAG_VERSION)"
+            exit 1
+          fi
+          
+          echo "✅ Version verified: $PACKAGE_VERSION"
+
+      - name: Run tests before publish
+        env:
+          INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
+        run: npm test
+        continue-on-error: false
+
+      - name: Check if already published
+        id: check-published
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          NPM_VERSION=$(npm view infura-mcp-server@$PACKAGE_VERSION version 2>/dev/null || echo "")
+          
+          if [ -n "$NPM_VERSION" ]; then
+            echo "⚠️ Version $PACKAGE_VERSION already published to npm"
+            echo "already-published=true" >> $GITHUB_OUTPUT
           else
-            echo "should-publish=false" >> $GITHUB_OUTPUT
-            echo "Version unchanged, skipping publish"
+            echo "✅ Version $PACKAGE_VERSION not yet published"
+            echo "already-published=false" >> $GITHUB_OUTPUT
           fi
  
       - name: Publish to npm
-        if: steps.check-version.outputs.should-publish == 'true' && matrix.node-version == '20'
-        run: npm publish
+        if: steps.check-published.outputs.already-published == 'false'
+        run: npm publish --tag ${{ github.event.inputs.npm_tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Create GitHub release (if tag)
-        if: startsWith(github.ref, 'refs/tags/v') && matrix.node-version == '20'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Summary
+        if: always()
         run: |
-          # Extract tag name
-          TAG_NAME=${GITHUB_REF#refs/tags/}
-          
-          # Create release notes with proper escaping
-          cat > release-notes.md << 'EOF'
-          ## Changes in this version
-
-          Please see the [CHANGELOG.md](./CHANGELOG.md) for detailed changes.
-
-          ## Installation
-
-          ```bash
-          npm install -g infura-mcp-server
-          # or
-          npx infura-mcp-server
-          ```
-
-          ## What's Changed
-
-          For a complete list of changes, see the commit history since the last release.
-          EOF
-          
-          # Create release using GitHub CLI with notes file
-          gh release create "$TAG_NAME" \
-            --title "Release $TAG_NAME" \
-            --notes-file release-notes.md \
-            --verify-tag 
+          echo "## 📦 Manual NPM Publish Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag**: ${{ github.event.inputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **NPM Tag**: ${{ github.event.inputs.npm_tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Actor**: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Repository**: ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.check-published.outputs.already-published }}" == "true" ]; then
+            echo "⚠️ **Status**: Version already published, skipped" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ **Status**: Published successfully" >> $GITHUB_STEP_SUMMARY
+          fi
