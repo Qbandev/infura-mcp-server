@@ -129,7 +129,7 @@ jobs:
             org.opencontainers.image.url=https://github.com/${{ github.repository }}
 
       - name: Build Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/amd64,linux/arm64
@@ -153,7 +153,7 @@ jobs:
         if: >
           github.event_name != 'pull_request' && 
           (github.event.inputs.push_to_registry != 'false' || github.event.inputs.push_to_registry == '' || github.event.inputs.push_to_registry == null)
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/amd64,linux/arm64
