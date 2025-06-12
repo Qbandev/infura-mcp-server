@@ -250,86 +250,12 @@ For Docker installation:
 
 Once configured, you can have natural blockchain conversations with AI assistants in Claude Desktop, Cursor, or VS Code:
 
-**You:** "What's the current gas price on Ethereum mainnet?"
-
-**AI:** "Current Ethereum mainnet gas price is 25 gwei. Based on recent fee history, this is about average for this time of day. Would you like me to check L2 alternatives for lower costs?"
-
-**You:** "Check if this contract exists on mainnet, Polygon, and Base: 0x1234..."
-
-**AI:** "I'll check that contract address across multiple networks:
-- ✅ Ethereum mainnet: Contract found (Token contract with 1M supply)
-- ❌ Polygon: No contract at this address  
-- ✅ Base: Contract found (Same token, bridged version)
-
-This appears to be a multi-chain token with bridges to Base but not Polygon."
-
-**You:** "This transaction failed: 0xabc123... Can you help me figure out why?"
-
-**AI:** "Let me analyze this failed transaction for you. Looking at the receipt, it failed with 'execution reverted' due to insufficient allowance. The gas limit was adequate, but the contract call failed because the spender wasn't approved to transfer the required tokens."
+![AI Assistant Blockchain Conversation](cursor-chat.jpg)
 
 **Key Benefits:**
 - **Contextual insights** - AI explains what the data means and provides actionable advice
 - **Multi-network analysis** - Seamlessly compare data across different blockchain networks  
 - **Educational guidance** - Learn blockchain concepts through natural conversation
-
-### Common Use Cases
-
-Once the MCP server is configured, you can have natural conversations with your AI assistant about blockchain data. Here are real examples:
-
-#### Check Account Balances
-**You:** "What's the current ETH balance of vitalik.eth?"
-
-**AI:** "Let me check Vitalik's current ETH balance for you..." *(uses eth_getBalance)*
-
-**You:** "Can you show me the token balances for this address: 0x742d35Cc6E99043Ed1287354E1e3E19b61FC0B72?"
-
-#### Smart Contract Analysis  
-**You:** "I'm looking at this USDC contract, can you tell me its total supply and current gas costs for transfers?"
-
-**AI:** "I'll analyze the USDC contract for you. Let me get the total supply and estimate gas costs..." *(uses eth_call, eth_estimateGas)*
-
-**You:** "Is this contract verified and what functions does it expose?"
-
-#### Gas Price Monitoring
-**You:** "What's the current gas situation on Ethereum? Should I wait to make a transaction?"
-
-**AI:** "Let me check current gas prices and recent fee history to give you the best timing advice..." *(uses eth_gasPrice, eth_getFeeHistory)*
-
-**You:** "Compare gas costs between Ethereum mainnet, Polygon, and Arbitrum for similar transactions"
-
-#### Cross-Chain Analysis
-**You:** "I have this contract address: 0x123... Can you check if it exists on Ethereum, Polygon, and Base?"
-
-**AI:** "I'll check that contract address across multiple networks for you..." *(uses eth_getCode across networks)*
-
-**You:** "Help me understand the differences between running this contract on L1 vs L2s"
-
-#### Transaction Debugging
-**You:** "This transaction failed: 0xabc123... Can you help me figure out why?"
-
-**AI:** "Let me analyze this failed transaction for you..." *(uses eth_getTransactionReceipt, eth_getTransactionByHash)*
-
-**You:** "What went wrong with my smart contract deployment? Here's the transaction hash..."
-
-#### DeFi Research
-**You:** "I'm researching yield farming opportunities. Can you help me analyze TVL and recent activity for these DeFi protocols?"
-
-**You:** "What's the current state of this liquidity pool? Show me recent swaps and fees generated"
-
-#### NFT Analysis
-**You:** "Can you help me verify the authenticity of this NFT contract and check recent mint activity?"
-
-**You:** "I want to understand the gas costs for minting from this NFT collection"
-
-#### Multi-Network Conversations
-**You:** "Check if this contract exists on mainnet, Polygon, and Base: 0x1234..."
-
-**AI:** "I'll check that contract address across multiple networks:
-- ✅ Ethereum mainnet: Contract found (Token contract with 1M supply)
-- ❌ Polygon: No contract at this address  
-- ✅ Base: Contract found (Same token, bridged version)
-
-This appears to be a multi-chain token with bridges to Base but not Polygon."
 
 ## 📚 AI Assistant & Developer Resources
 
