@@ -10,6 +10,13 @@
 - Bug fixes go here
 
 
+## [0.2.1](https://github.com/Qbandev/infura-mcp-server/compare/v0.2.0...v0.2.1) (2025-06-13)
+
+
+### Bug Fixes
+
+* **test:** remove references to non-existent tools ([f0ca432](https://github.com/Qbandev/infura-mcp-server/commit/f0ca432bbf128ba1f606d5a1724e68e5a08b0ca9))
+
 ## [0.2.0](https://github.com/Qbandev/infura-mcp-server/compare/v0.1.3...v0.2.0) (2025-06-12)
 
 
