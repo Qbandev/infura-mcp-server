@@ -19,17 +19,13 @@ alwaysApply: true
 
 # Infura MCP Server Project Context
 
-## 📚 LLM Context Document
+## 📚 AI Assistant Resources
 
-**For comprehensive blockchain guidance and AI assistant instructions, see:**
-- **Primary LLM Context**: `.cursor/rules/infura-mcp-server-llm-context.md` (600+ lines)
-- **Summary**: `docs/llm-context-summary.md`
-
-The LLM context document provides detailed guidance for AI assistants on:
+This document provides comprehensive guidance for AI assistants on:
 - 29 read-only Ethereum JSON-RPC tools usage patterns
-- Blockchain concepts explanation
+- Blockchain integration and technical architecture
 - Security best practices
-- User experience guidelines
+- Development guidelines
 - Common troubleshooting scenarios
 
 ## Project Overview
