@@ -89,6 +89,11 @@ The Infura MCP Server supports **all networks available through MetaMask/Infura 
 
 ## Configuration
 
+### Environment Variables
+
+- **`INFURA_API_KEY`** (required) - Your Infura API key from [MetaMask Developer Portal](https://developer.metamask.io/)
+- **`INFURA_NETWORK`** (optional) - Target network (default: mainnet)
+
 ### Usage with Claude Desktop
 
 Add this to your `claude_desktop_config.json`:
@@ -251,57 +256,6 @@ Once configured, you can have natural blockchain conversations with AI assistant
 - **Multi-network analysis** - Seamlessly compare data across different blockchain networks  
 - **Educational guidance** - Learn blockchain concepts through natural conversation
 
-## 📚 AI Assistant & Developer Resources
-
-This project provides comprehensive documentation and context for AI assistants to deliver expert-level blockchain interactions while educating users about Ethereum, DeFi, and gas optimization.
-
-## Environment Variables
-
-- **`INFURA_API_KEY`** (required) - Your Infura API key from [MetaMask Developer Portal](https://developer.metamask.io/)
-- **`INFURA_NETWORK`** (optional) - Target network (default: mainnet)
-- **`DEBUG`** (optional) - Enable debug logging
-
-## Building
-
-### Docker
-```bash
-docker build -t infura-mcp-server .
-```
-
-### NPM
-```bash
-npm install
-npm test
-```
-
-## Testing
-
-The server includes a comprehensive testing framework that validates all 29 Ethereum tools:
-
-### Test Types
-- **Structure Validation** - Tool definitions and schemas (no API key required)
-- **API Validation** - Real Infura API calls for all 29 tools (requires API key)
-- **Integration Testing** - End-to-end functionality validation
-- **SSE Transport** - Server-Sent Events testing
-
-### Quick Start
-```bash
-# Basic validation (no API key needed)
-npm test
-
-# Test all 29 tools with real API calls
-INFURA_API_KEY=your_key npm run test:comprehensive
-
-# Full test suite (structure + API + SSE + integration)
-INFURA_API_KEY=your_key npm run test:full
-```
-
-### CI/CD Integration
-Tests run automatically in GitHub Actions using repository secrets:
-1. Go to Settings → Secrets → Actions
-2. Add `INFURA_API_KEY` secret
-3. All PRs and releases will validate with real API calls
-
 ## Troubleshooting
 
 ### Common Issues
@@ -328,11 +282,6 @@ Tests run automatically in GitHub Actions using repository secrets:
 
 ## 🔐 Security
 
-### API Key Security
-- **Never hardcode** API keys in configuration files
-- **Monitor API usage** in your Infura dashboard regularly
-- **Rotate keys** for production environments
-
 ### 🛡️ Built-in Security Features
 - ✅ **Required parameter validation** - validates presence of required parameters
 - ✅ **No arbitrary code execution** - only predefined Ethereum JSON-RPC methods
@@ -340,35 +289,13 @@ Tests run automatically in GitHub Actions using repository secrets:
 - ✅ **Local execution** by default (stdio mode, no network exposure)
 - ✅ **Read-only operations** - server can never modify blockchain state
 
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
 This MCP server is licensed under the MIT License. This means you are free to use, modify, and distribute the software, subject to the terms and conditions of the MIT License. For more details, please see the LICENSE file in the project repository.
-
-## Release Process
-
-This project uses [Release Please](https://github.com/googleapis/release-please) for automated releases based on [Conventional Commits](https://www.conventionalcommits.org/).
-
-### How It Works
-1. **Make commits** using conventional format:
-   - `feat:` → Minor version bump (new features)
-   - `fix:` → Patch version bump (bug fixes)
-   - `feat!:` or `fix!:` → Major version bump (breaking changes)
-2. **Release Please** automatically creates/updates a PR with version bumps and changelog
-3. **Merge the PR** to trigger automatic GitHub release and npm publish
-
-### Examples
-```bash
-git commit -m "feat: add support for new Ethereum network"
-git commit -m "fix: resolve connection timeout issue"
-git commit -m "feat!: change API response format"
-```
-
-
-
-## Contributing
-
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ---
 
