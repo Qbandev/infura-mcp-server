@@ -89,6 +89,11 @@ The Infura MCP Server supports **all networks available through MetaMask/Infura 
 
 ## Configuration
 
+### Environment Variables
+
+- **`INFURA_API_KEY`** (required) - Your Infura API key from [MetaMask Developer Portal](https://developer.metamask.io/)
+- **`INFURA_NETWORK`** (optional) - Target network (default: mainnet)
+
 ### Usage with Claude Desktop
 
 Add this to your `claude_desktop_config.json`:
@@ -175,7 +180,7 @@ Add this to your Cursor MCP configuration file (`.cursor/mcp.json` in your works
 
 **To configure in Cursor:**
 1. Open Command Palette (`Cmd/Ctrl + Shift + P`)
-2. Type "MCP: Configure Servers" 
+2. Type "Open MCP Settings" 
 3. Add the JSON configuration above
 4. Restart Cursor to activate the MCP server
 5. Start using blockchain tools in your AI conversations!
@@ -251,53 +256,6 @@ Once configured, you can have natural blockchain conversations with AI assistant
 - **Multi-network analysis** - Seamlessly compare data across different blockchain networks  
 - **Educational guidance** - Learn blockchain concepts through natural conversation
 
-## 📚 AI Assistant & Developer Resources
-
-### LLM Context Document
-This project includes a comprehensive **LLM Context Document** (600+ lines) that transforms AI assistants into blockchain experts:
-
-- **📖 Full Context**: `.cursor/rules/infura-mcp-server-llm-context.md`
-- **📋 Summary**: `docs/llm-context-summary.md`
-
-**For AI Assistants:** Enables expert-level blockchain interactions while educating users about Ethereum, DeFi, and gas optimization.
-
-**For Developers:** Reference for adding tools, updating documentation, and maintaining blockchain accuracy.
-
-## Environment Variables
-
-- **`INFURA_API_KEY`** (required) - Your Infura API key from [MetaMask Developer Portal](https://developer.metamask.io/)
-- **`INFURA_NETWORK`** (optional) - Target network (default: mainnet)
-- **`DEBUG`** (optional) - Enable debug logging
-
-## Building
-
-### Docker
-```bash
-docker build -t infura-mcp-server .
-```
-
-### NPM
-```bash
-npm install
-npm test
-npm run build
-```
-
-## Testing
-
-The server includes comprehensive testing with 100% tool validation:
-
-```bash
-# Basic validation
-npm test
-
-# Comprehensive tool testing (requires API key)
-INFURA_API_KEY=your_key npm run test:comprehensive
-
-# Full test suite including integration tests
-INFURA_API_KEY=your_key npm run test:full
-```
-
 ## Troubleshooting
 
 ### Common Issues
@@ -319,16 +277,10 @@ INFURA_API_KEY=your_key npm run test:full
 
 ### Getting Help
 
-1. Check the [LLM context document](.cursor/rules/infura-mcp-server-llm-context.md) for detailed guidance
-2. Visit [Infura documentation](https://docs.metamask.io/services/) for API details
-3. Open an issue on GitHub for bugs or feature requests
+1. Visit [Infura documentation](https://docs.metamask.io/services/) for API details
+2. Open an issue on GitHub for bugs or feature requests
 
 ## 🔐 Security
-
-### API Key Security
-- **Never hardcode** API keys in configuration files
-- **Monitor API usage** in your Infura dashboard regularly
-- **Rotate keys** for production environments
 
 ### 🛡️ Built-in Security Features
 - ✅ **Required parameter validation** - validates presence of required parameters
@@ -337,14 +289,13 @@ INFURA_API_KEY=your_key npm run test:full
 - ✅ **Local execution** by default (stdio mode, no network exposure)
 - ✅ **Read-only operations** - server can never modify blockchain state
 
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
 This MCP server is licensed under the MIT License. This means you are free to use, modify, and distribute the software, subject to the terms and conditions of the MIT License. For more details, please see the LICENSE file in the project repository.
-
-## Contributing
-
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ---
 

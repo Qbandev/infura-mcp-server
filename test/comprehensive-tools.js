@@ -236,10 +236,6 @@ class ToolTester {
             // Skip this test - needs real block hash
             this.log('info', `ℹ️ ${def.name} skipped - requires real block hash`);
             return [];
-          } else if (def.name === 'eth_sendRawTransaction') {
-            // Skip this test - needs real signed transaction
-            this.log('info', `ℹ️ ${def.name} skipped - requires real signed transaction`);
-            return [];
           }
 
           const result = await tool.function(testParams);
@@ -362,7 +358,6 @@ class ToolTester {
       contractTools: [],
       networkTools: [],
       filterTools: [],
-      miningTools: [],
       uncleTools: [],
       utilityTools: []
     };
@@ -380,10 +375,8 @@ class ToolTester {
         categories.contractTools.push(name);
       } else if (name.includes('chainId') || name.includes('gasPrice') || name.includes('blockNumber') || name.includes('net_') || name.includes('web3_')) {
         categories.networkTools.push(name);
-      } else if (name.includes('Filter') || name.includes('getLogs')) {
+      } else if (name.includes('getLogs')) {
         categories.filterTools.push(name);
-      } else if (name.includes('mining') || name.includes('hashrate') || name.includes('submitWork') || name.includes('getWork')) {
-        categories.miningTools.push(name);
       } else if (name.includes('Uncle')) {
         categories.uncleTools.push(name);
       } else {

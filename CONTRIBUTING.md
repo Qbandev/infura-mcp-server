@@ -71,16 +71,70 @@ npm run commitlint
 
 If you have a suggestion or find a bug, please open an issue to discuss it.
 
+### Prerequisites
+
+- Node.js 20+ installed
+- npm or yarn package manager
+- (Optional) Infura API key for full testing - get one at [MetaMask Developer Portal](https://developer.metamask.io/)
+
 If you want to contribute code, please follow these steps:
 
 1. Fork the repository.
 2. Create a new branch (`git checkout -b feat/your-feature-name`).
 3. Make your changes.
 4. Follow the commit message guidelines above.
-5. Add or update tests if applicable.
+5. Run tests to ensure everything works (`npm test` at minimum).
 6. Commit your changes using conventional commits format.
 7. Push to the branch (`git push origin feat/your-feature-name`).
 8. Open a new Pull Request.
+
+## Building
+
+### Docker
+```bash
+docker build -t infura-mcp-server .
+```
+
+### NPM
+```bash
+npm install
+npm test
+```
+
+## Testing
+
+The server includes a comprehensive testing framework that validates all 29 Ethereum tools:
+
+### Test Types
+- **Structure Validation** - Tool definitions and schemas (no API key required)
+- **API Validation** - Real Infura API calls for all 29 tools (requires API key)
+- **Integration Testing** - End-to-end functionality validation
+- **SSE Transport** - Server-Sent Events testing
+
+### Quick Start
+```bash
+# Basic validation (no API key needed)
+npm test
+
+# Test all 29 tools with real API calls
+INFURA_API_KEY=your_key npm run test:comprehensive
+
+# Full test suite (structure + API + SSE + integration)
+INFURA_API_KEY=your_key npm run test:full
+```
+
+### CI/CD Integration
+Tests run automatically in GitHub Actions using repository secrets:
+1. Go to Settings → Secrets → Actions
+2. Add `INFURA_API_KEY` secret
+3. All PRs and releases will validate with real API calls
+
+### Testing Your Changes
+When contributing, please ensure:
+- All existing tests pass (`npm test`)
+- If adding new tools, add corresponding tests
+- If fixing bugs, add tests to prevent regression
+- For API-dependent features, test with a real `INFURA_API_KEY`
 
 ## Branch Naming
 
@@ -93,8 +147,10 @@ Please use descriptive branch names that follow this pattern:
 
 ## Pull Request Guidelines
 
-- Ensure all tests pass
+- Ensure all tests pass (`npm test` minimum, `npm run test:full` preferred)
 - Update documentation if needed
 - Use conventional commit messages
 - Keep PRs focused on a single feature/fix
-- Provide clear description of changes in the PR 
+- Provide clear description of changes in the PR
+- Include test results in PR description if relevant
+- For tool additions/changes, show example usage 

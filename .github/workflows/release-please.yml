@@ -45,7 +45,17 @@ jobs:
       - name: Run comprehensive tests before publish
         env:
           INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
-        run: ./scripts/run-ci-tests.sh "npm publish"
+        run: |
+          echo "🧪 Running pre-publish tests..."
+          npm test
+          npm run test:npm
+          if [ -n "$INFURA_API_KEY" ]; then
+            echo "🔑 Running API tests with real API key..."
+            npm run test:comprehensive
+            npm run test:integration
+          else
+            echo "⚠️ Skipping API tests (no API key)"
+          fi
 
       - name: Publish to npm
         run: npm publish
