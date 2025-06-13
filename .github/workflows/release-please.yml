@@ -9,7 +9,6 @@ permissions:
   contents: write
   pull-requests: write
   issues: write # Required for creating release notes
-  actions: write # Required if you have workflow files
 
 jobs:
   release-please:

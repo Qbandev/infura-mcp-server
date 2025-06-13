@@ -89,38 +89,45 @@ const PRIMARY_NETWORKS = {
 ## Available Tools (29)
 
 ### Account & Balance Tools
-- `eth_getBalance` - Get account balance
-- `eth_getTransactionCount` - Get nonce/transaction count
-- `eth_getCode` - Get contract bytecode
+- `eth_getBalance` - Get the native token balance of an account.
+- `eth_getCode` - Get the compiled smart contract code at an address.
+- `eth_getTransactionCount` - Get the number of transactions sent from an address (nonce).
 
-### Block & Transaction Tools  
-- `eth_getBlockByNumber` - Get block by number
-- `eth_getBlockByHash` - Get block by hash
-- `eth_getTransactionByHash` - Get transaction details
-- `eth_getTransactionReceipt` - Get transaction receipt
-- `eth_getBlockTransactionCountByNumber` - Count transactions in block
-- `eth_getBlockTransactionCountByHash` - Count transactions in block
+### Block Tools
+- `eth_getBlockNumber` - Get the number of the most recent block.
+- `eth_getBlockByHash` - Get information on a block by its hash.
+- `eth_getBlockByNumber` - Get information on a block by its number.
+- `eth_getUncleByBlockHashAndIndex` - Get information about an uncle of a block by hash and index.
+- `eth_getUncleByBlockNumberAndIndex` - Get information about an uncle of a block by number and index.
+- `eth_getUncleCountByBlockHash` - Get the number of uncles in a block from a block matching the given block hash.
+- `eth_getUncleCountByBlockNumber` - Get the number of uncles in a block matching the given block number.
+
+### Transaction Tools
+- `eth_getBlockTransactionCountByHash` - Get the number of transactions in a block from a block matching the given hash.
+- `eth_getBlockTransactionCountByNumber` - Get the number of transactions in a block matching the given block number.
+- `eth_getTransactionByBlockHashAndIndex` - Get information about a transaction by block hash and transaction index position.
+- `eth_getTransactionByBlockNumberAndIndex` - Get information about a transaction by block number and transaction index.
+- `eth_getTransactionByHash` - Get the information about a transaction requested by transaction hash.
+- `eth_getTransactionReceipt` - Get the receipt of a transaction by transaction hash.
 
 ### Smart Contract Tools
-- `eth_call` - Execute read-only contract call
-- `eth_estimateGas` - Estimate gas for transaction
-- `eth_getLogs` - Get event logs with filters
-- `eth_getStorageAt` - Read contract storage
+- `eth_call` - Execute a read-only call to a smart contract.
+- `eth_estimateGas` - Estimate the gas necessary to perform a transaction.
+- `eth_getStorageAt` - Get the value from a storage position at a given address.
+- `eth_getLogs` - Get an array of all logs matching a given filter object.
 
 ### Network & Node Tools
-- `eth_chainId` - Get chain ID
-- `eth_gasPrice` - Get current gas price
-- `eth_blockNumber` - Get latest block number
-- `net_version` - Get network version
-- `web3_clientVersion` - Get client version
+- `eth_chainId` - Get the chain ID of the current network.
+- `net_isListening` - Check if the client is actively listening for network connections.
+- `net_getPeerCount` - Get the number of peers currently connected to the client.
+- `net_getVersion` - Get the network ID.
+- `web3_getClientVersion` - Get the current client version.
+- `eth_getProtocolVersion` - Get the current ethereum protocol version.
+- `eth_isSyncing` - Check if the node is currently synchronizing with the network.
 
-### Advanced Tools
-- `eth_getUncleByBlockNumberAndIndex` - Get uncle block
-- `eth_getUncleCountByBlockNumber` - Count uncle blocks
-- `eth_getProof` - Get Merkle proof
-- `eth_createAccessList` - Create access list
-- `eth_feeHistory` - Get fee history
-- `eth_maxPriorityFeePerGas` - Get priority fee
+### Fee & Gas Tools
+- `eth_getFeeHistory` - Get historical gas fee data.
+- `eth_getGasPrice` - Get the current price per gas in wei.
 
 ## Development Guidelines
 
