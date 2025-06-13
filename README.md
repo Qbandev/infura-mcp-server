@@ -175,7 +175,7 @@ Add this to your Cursor MCP configuration file (`.cursor/mcp.json` in your works
 
 **To configure in Cursor:**
 1. Open Command Palette (`Cmd/Ctrl + Shift + P`)
-2. Type "MCP: Configure Servers" 
+2. Type "Open MCP Settings" 
 3. Add the JSON configuration above
 4. Restart Cursor to activate the MCP server
 5. Start using blockchain tools in your AI conversations!
