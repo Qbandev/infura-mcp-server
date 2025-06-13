@@ -253,15 +253,7 @@ Once configured, you can have natural blockchain conversations with AI assistant
 
 ## 📚 AI Assistant & Developer Resources
 
-### LLM Context Document
-This project includes a comprehensive **LLM Context Document** (600+ lines) that transforms AI assistants into blockchain experts:
-
-- **📖 Full Context**: `.cursor/rules/infura-mcp-server-llm-context.md`
-- **📋 Summary**: `docs/llm-context-summary.md`
-
-**For AI Assistants:** Enables expert-level blockchain interactions while educating users about Ethereum, DeFi, and gas optimization.
-
-**For Developers:** Reference for adding tools, updating documentation, and maintaining blockchain accuracy.
+This project provides comprehensive documentation and context for AI assistants to deliver expert-level blockchain interactions while educating users about Ethereum, DeFi, and gas optimization.
 
 ## Environment Variables
 
@@ -280,23 +272,35 @@ docker build -t infura-mcp-server .
 ```bash
 npm install
 npm test
-npm run build
 ```
 
 ## Testing
 
-The server includes comprehensive testing with 100% tool validation:
+The server includes a comprehensive testing framework that validates all 29 Ethereum tools:
 
+### Test Types
+- **Structure Validation** - Tool definitions and schemas (no API key required)
+- **API Validation** - Real Infura API calls for all 29 tools (requires API key)
+- **Integration Testing** - End-to-end functionality validation
+- **SSE Transport** - Server-Sent Events testing
+
+### Quick Start
 ```bash
-# Basic validation
+# Basic validation (no API key needed)
 npm test
 
-# Comprehensive tool testing (requires API key)
+# Test all 29 tools with real API calls
 INFURA_API_KEY=your_key npm run test:comprehensive
 
-# Full test suite including integration tests
+# Full test suite (structure + API + SSE + integration)
 INFURA_API_KEY=your_key npm run test:full
 ```
+
+### CI/CD Integration
+Tests run automatically in GitHub Actions using repository secrets:
+1. Go to Settings → Secrets → Actions
+2. Add `INFURA_API_KEY` secret
+3. All PRs and releases will validate with real API calls
 
 ## Troubleshooting
 
@@ -319,9 +323,8 @@ INFURA_API_KEY=your_key npm run test:full
 
 ### Getting Help
 
-1. Check the [LLM context document](.cursor/rules/infura-mcp-server-llm-context.md) for detailed guidance
-2. Visit [Infura documentation](https://docs.metamask.io/services/) for API details
-3. Open an issue on GitHub for bugs or feature requests
+1. Visit [Infura documentation](https://docs.metamask.io/services/) for API details
+2. Open an issue on GitHub for bugs or feature requests
 
 ## 🔐 Security
 
@@ -341,6 +344,27 @@ INFURA_API_KEY=your_key npm run test:full
 ## License
 
 This MCP server is licensed under the MIT License. This means you are free to use, modify, and distribute the software, subject to the terms and conditions of the MIT License. For more details, please see the LICENSE file in the project repository.
+
+## Release Process
+
+This project uses [Release Please](https://github.com/googleapis/release-please) for automated releases based on [Conventional Commits](https://www.conventionalcommits.org/).
+
+### How It Works
+1. **Make commits** using conventional format:
+   - `feat:` → Minor version bump (new features)
+   - `fix:` → Patch version bump (bug fixes)
+   - `feat!:` or `fix!:` → Major version bump (breaking changes)
+2. **Release Please** automatically creates/updates a PR with version bumps and changelog
+3. **Merge the PR** to trigger automatic GitHub release and npm publish
+
+### Examples
+```bash
+git commit -m "feat: add support for new Ethereum network"
+git commit -m "fix: resolve connection timeout issue"
+git commit -m "feat!: change API response format"
+```
+
+
 
 ## Contributing
 
