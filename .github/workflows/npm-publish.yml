@@ -60,7 +60,7 @@ jobs:
 
     steps:
       - name: Checkout code at tag
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event.inputs.tag }}
 
