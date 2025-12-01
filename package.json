@@ -75,14 +75,14 @@
     "url": "https://github.com/sponsors/qbandev"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.20.2",
+    "@modelcontextprotocol/sdk": "^1.22.0",
     "commander": "^14.0.2",
     "dotenv": "^17.2.3",
     "express": "^5.1.0"
   },
   "devDependencies": {
     "node-fetch": "^3.3.2",
-    "eventsource": "^4.0.0",
+    "eventsource": "^4.1.0",
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0"
   },
