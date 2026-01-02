@@ -204,7 +204,7 @@ async function runStreamableHttpServer(tools) {
       res.setHeader("Cache-Control", "no-cache");
       res.setHeader("Connection", "keep-alive");
       
-      // Flush headers to establish SSE connection immediately
+      // Flush headers to establish event stream connection immediately
       res.flushHeaders();
       res.write(": connected\n\n");
 
