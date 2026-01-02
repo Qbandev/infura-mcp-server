@@ -1,6 +1,6 @@
 {
   "name": "infura-mcp-server",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Model Context Protocol (MCP) server providing comprehensive read-only Ethereum blockchain access through Infura's infrastructure. Connect Claude Desktop, VS Code, and Cursor to 29 secure Ethereum JSON-RPC tools across 30+ networks including Ethereum, Polygon, Arbitrum, Base, and Optimism.",
   "keywords": [
     "mcp",
@@ -22,7 +22,8 @@
     "base",
     "optimism",
     "layer2",
-    "l2"
+    "l2",
+    "streamable-http"
   ],
   "main": "index.js",
   "type": "module",
@@ -40,24 +41,24 @@
   ],
   "scripts": {
     "start": "node mcpServer.js",
-    "start:sse": "node mcpServer.js --sse",
+    "start:http": "node mcpServer.js --http",
     "list-tools": "node index.js tools",
     "test": "npm run test:validate && npm run test:tools",
     "test:validate": "node test/validate.js",
     "test:tools": "node test/tools.js",
     "test:comprehensive": "node test/comprehensive-tools.js",
     "test:integration": "node test/integration.js",
-    "test:sse": "node test/test-sse.js",
+    "test:http": "node test/test-http.js",
     "test:npm": "node test/npm-consistency.js",
-    "test:full": "npm test && npm run test:comprehensive && npm run test:integration && npm run test:sse && npm run test:npm",
+    "test:full": "npm test && npm run test:comprehensive && npm run test:integration && npm run test:http && npm run test:npm",
     "commitlint": "commitlint --edit",
     "commitlint:last": "commitlint --from HEAD~1 --to HEAD --verbose",
     "commitlint:ci": "commitlint --verbose",
     "docker:build": "docker build -t infura-mcp-server .",
     "docker:run": "docker run --rm -i -e INFURA_API_KEY=${INFURA_API_KEY} infura-mcp-server",
-    "docker:run:sse": "docker run --rm -p 3001:3001 -e INFURA_API_KEY=${INFURA_API_KEY} infura-mcp-server node mcpServer.js --sse",
+    "docker:run:http": "docker run --rm -p 3001:3001 -e INFURA_API_KEY=${INFURA_API_KEY} infura-mcp-server node mcpServer.js --http",
     "docker:test": "docker run --rm infura-mcp-server --help",
-    "docker:compose:up": "docker-compose up -d infura-mcp-server-sse",
+    "docker:compose:up": "docker-compose up -d infura-mcp-server-http",
     "docker:compose:stdio": "docker-compose run --rm infura-mcp-server",
     "docker:compose:down": "docker-compose down",
     "docker:compose:logs": "docker-compose logs -f"
@@ -75,14 +76,13 @@
     "url": "https://github.com/sponsors/qbandev"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.22.0",
+    "@modelcontextprotocol/sdk": "^1.25.1",
     "commander": "^14.0.2",
     "dotenv": "^17.2.3",
     "express": "^5.1.0"
   },
   "devDependencies": {
     "node-fetch": "^3.3.2",
-    "eventsource": "^4.1.0",
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0"
   },

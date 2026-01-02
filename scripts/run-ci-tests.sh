@@ -25,9 +25,9 @@ else
 fi
 $TEST_COMMAND
 
-# Run SSE functionality tests  
-echo "🌐 Running SSE functionality tests..."
-npm run test:sse
+# Run HTTP transport tests  
+echo "🌐 Running HTTP transport tests..."
+npm run test:http
 
 # Run integration tests if API key is available
 if [ -n "$INFURA_API_KEY" ]; then

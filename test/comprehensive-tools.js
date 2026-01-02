@@ -20,13 +20,15 @@ const TEST_CONFIG = {
   TEST_ADDRESSES: {
     ZERO_ADDRESS: '0x0000000000000000000000000000000000000000',
     VITALIK_ETH: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
-    USDC_CONTRACT: '0xA0b86a33E6441C8C1Afe8C76E4D5EB6e8c97e8B8'
+    // Real USDC contract on Ethereum mainnet
+    USDC_CONTRACT: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
   },
-  // Test transaction hashes and block hashes (known values)
+  // Test transaction hashes and block hashes (known values - 64 hex chars)
   TEST_DATA: {
     BLOCK_NUMBER: '0x1000000', // Block 16777216
     BLOCK_HASH: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
-    TX_HASH: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
+    TX_HASH: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
+    STORAGE_POSITION: '0x0'
   }
 };
 
@@ -112,18 +114,30 @@ class ToolTester {
         for (const param of def.parameters.required) {
           if (param === 'address') {
             minimalParams.address = TEST_CONFIG.TEST_ADDRESSES.ZERO_ADDRESS;
+          } else if (param === 'contractAddress') {
+            minimalParams.contractAddress = TEST_CONFIG.TEST_ADDRESSES.USDC_CONTRACT;
           } else if (param === 'tag') {
             minimalParams.tag = 'latest';
           } else if (param === 'blockNumber') {
-            minimalParams.blockNumber = TEST_CONFIG.TEST_DATA.BLOCK_NUMBER;
+            minimalParams.blockNumber = 'latest';
           } else if (param === 'blockHash') {
             minimalParams.blockHash = TEST_CONFIG.TEST_DATA.BLOCK_HASH;
           } else if (param === 'transactionHash') {
             minimalParams.transactionHash = TEST_CONFIG.TEST_DATA.TX_HASH;
           } else if (param === 'to') {
             minimalParams.to = TEST_CONFIG.TEST_ADDRESSES.USDC_CONTRACT;
+          } else if (param === 'from') {
+            minimalParams.from = TEST_CONFIG.TEST_ADDRESSES.VITALIK_ETH;
           } else if (param === 'data') {
             minimalParams.data = '0x';
+          } else if (param === 'fromBlock') {
+            minimalParams.fromBlock = 'latest';
+          } else if (param === 'toBlock') {
+            minimalParams.toBlock = 'latest';
+          } else if (param === 'position') {
+            minimalParams.position = TEST_CONFIG.TEST_DATA.STORAGE_POSITION;
+          } else if (param === 'value') {
+            minimalParams.value = '0x0';
           } else {
             // Default value for unknown required params
             minimalParams[param] = '';

@@ -121,7 +121,7 @@ jobs:
 
           labels: |
             org.opencontainers.image.title=Infura MCP Server
-            org.opencontainers.image.description=MCP server for Infura API with 40+ Ethereum JSON-RPC tools
+            org.opencontainers.image.description=MCP server for Infura API with 29 Ethereum JSON-RPC tools
             org.opencontainers.image.vendor=qbandev
             org.opencontainers.image.licenses=MIT
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
@@ -196,13 +196,13 @@ jobs:
           echo "  -e INFURA_API_KEY=your_api_key_here \\" >> $GITHUB_STEP_SUMMARY
           echo "  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "# Web service mode (SSE)" >> $GITHUB_STEP_SUMMARY
+          echo "# Web service mode (Streamable HTTP)" >> $GITHUB_STEP_SUMMARY
           echo "docker run -d \\" >> $GITHUB_STEP_SUMMARY
           echo "  --name infura-mcp-server \\" >> $GITHUB_STEP_SUMMARY
           echo "  -p 3001:3001 \\" >> $GITHUB_STEP_SUMMARY
           echo "  -e INFURA_API_KEY=your_api_key_here \\" >> $GITHUB_STEP_SUMMARY
           echo "  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \\" >> $GITHUB_STEP_SUMMARY
-          echo "  node mcpServer.js --sse" >> $GITHUB_STEP_SUMMARY
+          echo "  node mcpServer.js --http" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
 
   security-scan:

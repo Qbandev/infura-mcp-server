@@ -1,4 +1,5 @@
 import { callInfura } from "../lib/infura-client.js";
+import { validateAddress, validateBlockTag } from "../lib/validators.js";
 
 /**
  * Function to get the balance of an Ethereum account.
@@ -10,6 +11,8 @@ import { callInfura } from "../lib/infura-client.js";
  * @returns {Promise<Object>} - The balance of the specified address in wei.
  */
 const executeFunction = async ({ address, tag, network = "mainnet" }) => {
+  validateAddress(address);
+  validateBlockTag(tag);
   return callInfura("eth_getBalance", [address, tag], network);
 };
 

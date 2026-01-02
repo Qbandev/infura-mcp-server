@@ -1,5 +1,9 @@
 name: Manual NPM Publish (Backup)
 
+# Manual workflow for publishing to npm
+# Uses npm Trusted Publishing with OIDC (recommended since Dec 2025)
+# See: https://github.blog/changelog/2025-12-09-npm-classic-tokens-revoked-session-based-auth-and-cli-token-management-now-available/
+
 on:
   workflow_dispatch:
     inputs:
@@ -13,8 +17,11 @@ on:
         default: 'latest'
         type: string
 
+permissions:
+  contents: read
+  id-token: write  # Required for npm OIDC trusted publishing
+
 jobs:
-  # Security check - only allow repository owner to publish
   authorize:
     runs-on: ubuntu-latest
     outputs:
@@ -23,33 +30,28 @@ jobs:
       - name: Check authorization
         id: auth-check
         run: |
-          # Only allow repository owner or specified collaborators
           AUTHORIZED_USERS="Qbandev"
           REPO_OWNER="${{ github.repository_owner }}"
           ACTOR="${{ github.actor }}"
 
           echo "Repository owner: $REPO_OWNER"
           echo "Workflow actor: $ACTOR"
-          echo "Authorized users: $AUTHORIZED_USERS"
 
-          # Check if actor is repository owner
           if [ "$ACTOR" = "$REPO_OWNER" ]; then
             echo "✅ Authorized: Repository owner"
             echo "authorized=true" >> $GITHUB_OUTPUT
             exit 0
           fi
 
-          # Check if actor is in authorized users list
           for user in $AUTHORIZED_USERS; do
             if [ "$ACTOR" = "$user" ]; then
-              echo "✅ Authorized: Listed in authorized users"
+              echo "✅ Authorized: Listed user"
               echo "authorized=true" >> $GITHUB_OUTPUT
               exit 0
             fi
           done
 
-          # Not authorized
-          echo "❌ Unauthorized: $ACTOR is not authorized to publish packages"
+          echo "❌ Unauthorized: $ACTOR"
           echo "authorized=false" >> $GITHUB_OUTPUT
           exit 1
 
@@ -57,6 +59,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: authorize
     if: needs.authorize.outputs.authorized == 'true'
+    permissions:
+      contents: read
+      id-token: write  # Required for npm OIDC trusted publishing
+    
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/infura-mcp-server
 
     steps:
       - name: Checkout code at tag
@@ -67,16 +76,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '22'
           registry-url: 'https://registry.npmjs.org'
- 
+
       - name: Cache dependencies
         uses: actions/cache@v4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          restore-keys: ${{ runner.os }}-node-
 
       - name: Install dependencies
         run: npm ci
@@ -85,7 +93,7 @@ jobs:
         run: |
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
           TAG_VERSION="${{ github.event.inputs.tag }}"
-          TAG_VERSION=${TAG_VERSION#v}  # Remove 'v' prefix if present
+          TAG_VERSION=${TAG_VERSION#v}
           
           if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
             echo "❌ Error: Package version ($PACKAGE_VERSION) doesn't match tag ($TAG_VERSION)"
@@ -98,7 +106,10 @@ jobs:
         env:
           INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
         run: npm test
-        continue-on-error: false
+
+      - name: Security audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
 
       - name: Check if already published
         id: check-published
@@ -107,20 +118,21 @@ jobs:
           NPM_VERSION=$(npm view infura-mcp-server@$PACKAGE_VERSION version 2>/dev/null || echo "")
           
           if [ -n "$NPM_VERSION" ]; then
-            echo "⚠️ Version $PACKAGE_VERSION already published to npm"
+            echo "⚠️ Version $PACKAGE_VERSION already published"
             echo "already-published=true" >> $GITHUB_OUTPUT
           else
             echo "✅ Version $PACKAGE_VERSION not yet published"
             echo "already-published=false" >> $GITHUB_OUTPUT
           fi
- 
-      - name: Publish to npm
-        if: steps.check-published.outputs.already-published == 'false'
-        run: npm publish --tag ${{ github.event.inputs.npm_tag }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Summary
+      # npm Trusted Publishing with OIDC (Dec 2025+)
+      # No NPM_TOKEN needed - authentication via OIDC
+      # Configured at: npmjs.com/package/infura-mcp-server/access
+      - name: Publish to npm with provenance (OIDC)
+        if: steps.check-published.outputs.already-published == 'false'
+        run: npm publish --provenance --access public --tag ${{ github.event.inputs.npm_tag }}
+
+      - name: Create publish summary
         if: always()
         run: |
           echo "## 📦 Manual NPM Publish Summary" >> $GITHUB_STEP_SUMMARY
@@ -128,10 +140,14 @@ jobs:
           echo "- **Tag**: ${{ github.event.inputs.tag }}" >> $GITHUB_STEP_SUMMARY
           echo "- **NPM Tag**: ${{ github.event.inputs.npm_tag }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Actor**: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Repository**: ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           if [ "${{ steps.check-published.outputs.already-published }}" == "true" ]; then
             echo "⚠️ **Status**: Version already published, skipped" >> $GITHUB_STEP_SUMMARY
           else
-            echo "✅ **Status**: Published successfully" >> $GITHUB_STEP_SUMMARY
+            echo "✅ **Status**: Published with npm provenance attestation" >> $GITHUB_STEP_SUMMARY
           fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔐 npm Authentication (Dec 2025+)" >> $GITHUB_STEP_SUMMARY
+          echo "Using OIDC trusted publishing or granular access token." >> $GITHUB_STEP_SUMMARY
+          echo "Classic npm tokens were revoked on Dec 9, 2025." >> $GITHUB_STEP_SUMMARY
+          echo "See: https://docs.npmjs.com/trusted-publishers" >> $GITHUB_STEP_SUMMARY

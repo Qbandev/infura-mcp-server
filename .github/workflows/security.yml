@@ -34,7 +34,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -64,8 +64,6 @@ jobs:
           name: npm-audit-results
           path: audit-results.json
 
-
-
   secrets-scan:
     name: Secret Scanning
     runs-on: ubuntu-latest
@@ -93,7 +91,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install dependencies
         run: npm ci
@@ -144,4 +142,4 @@ jobs:
             echo "🎉 **All security scans passed!**" >> $GITHUB_STEP_SUMMARY
           else
             echo "⚠️ **Some security scans failed. Please review the results.**" >> $GITHUB_STEP_SUMMARY
-          fi 
+          fi
