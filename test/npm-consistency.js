@@ -66,7 +66,7 @@ if (!packageJson.version || !packageJson.version.match(/^\d+\.\d+\.\d+/)) {
 
 // Test 5: Repository links
 console.log('✅ Testing repository links...');
-const expectedRepo = 'git+https://github.com/qbandev/infura-mcp-server.git';
+const expectedRepo = 'git+https://github.com/Qbandev/infura-mcp-server.git';
 if (packageJson.repository.url !== expectedRepo) {
   console.error('❌ Repository URL mismatch');
   process.exit(1);
