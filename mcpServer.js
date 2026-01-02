@@ -204,15 +204,31 @@ async function runStreamableHttpServer(tools) {
       res.setHeader("Cache-Control", "no-cache");
       res.setHeader("Connection", "keep-alive");
       
+      // Flush headers to establish SSE connection immediately
+      res.flushHeaders();
+      res.write(": connected\n\n");
+
+      const keepAlive = setInterval(() => {
+        // Check if response is still writable before sending keep-alive
+        if (res.writableEnded || res.destroyed) {
+          clearInterval(keepAlive);
+          return;
+        }
+        try {
+          res.write(": keep-alive\n\n");
+        } catch (error) {
+          clearInterval(keepAlive);
+          log("error", "Error writing keep-alive", { sessionId, error: error.message });
+        }
+      }, 30000);
+
+      // Single close handler for cleanup and logging
       req.on("close", () => {
+        clearInterval(keepAlive);
         log("info", "Stream closed", { sessionId });
       });
 
-      const keepAlive = setInterval(() => {
-        res.write(": keep-alive\n\n");
-      }, 30000);
-
-      req.on("close", () => clearInterval(keepAlive));
+      return;
 
     } else if (req.method === "POST") {
       log("info", "POST /mcp - Received request", { sessionId, body: req.body });
@@ -271,6 +287,10 @@ async function runStreamableHttpServer(tools) {
       } else {
         res.status(404).json({ error: "Session not found" });
       }
+    } else {
+      // Return 405 for unsupported HTTP methods
+      res.set("Allow", "GET, POST, DELETE, OPTIONS");
+      res.status(405).json({ error: "Method Not Allowed" });
     }
   });
 
