@@ -12,6 +12,7 @@ import {
   ListToolsRequestSchema,
   McpError,
 } from "@modelcontextprotocol/sdk/types.js";
+import { ValidationError } from "./lib/validators.js";
 import { discoverTools } from "./lib/tools.js";
 
 import path from "path";
@@ -107,6 +108,11 @@ async function setupServerHandlers(server, tools) {
         stack: error.stack,
         args,
       });
+
+      // Handle validation errors with proper error code
+      if (error instanceof ValidationError) {
+        throw new McpError(ErrorCode.InvalidParams, error.message);
+      }
 
       if (error.message.includes("rate limit")) {
         throw new McpError(

@@ -156,11 +156,10 @@ jobs:
 
           echo "✅ Bundle size check completed"
 
-  # Security scanning job
+  # Security scanning job - runs on PRs and main pushes
   security:
     runs-on: ubuntu-latest
     needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     
     steps:
       - name: Checkout code

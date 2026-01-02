@@ -93,7 +93,7 @@ async function testMcpInitialize() {
         jsonrpc: "2.0",
         method: "initialize",
         params: {
-          protocolVersion: "2025-01-01",
+          protocolVersion: "2024-11-05",
           capabilities: {
             tools: {},
           },
