@@ -41,7 +41,9 @@ USER mcpserver
 # Expose port for HTTP mode
 EXPOSE 3001
 
-# Health check for HTTP mode deployments
+# Health check for HTTP mode deployments only
+# Note: This healthcheck only works when running with --http flag
+# For stdio mode (default), the healthcheck will fail but container still works
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
   CMD node -e "const http = require('http'); \
     const options = { hostname: 'localhost', port: 3001, path: '/health', timeout: 5000 }; \
@@ -53,5 +55,5 @@ ENV NODE_ENV=production
 ENV PORT=3001
 
 # Start the server in stdio mode by default (standard MCP approach)
-# Use --http for Streamable HTTP transport (web deployments)
+# For HTTP mode with healthcheck support, override CMD: ["node", "mcpServer.js", "--http"]
 CMD ["node", "mcpServer.js"]

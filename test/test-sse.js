@@ -17,10 +17,14 @@ console.log("   To test the new HTTP transport: npm run test:http");
 console.log("");
 
 // Import and run HTTP tests instead
-import("./test-http.js").catch((error) => {
-  console.log("ℹ️  HTTP test module not loaded, running legacy checks...");
-  console.log("");
-  console.log("✅ SSE deprecation notice displayed");
-  console.log("✅ Legacy SSE test completed (no-op)");
-  process.exit(0);
-});
+(async () => {
+  try {
+    await import("./test-http.js");
+  } catch (error) {
+    console.log("ℹ️  HTTP test module not loaded, running legacy checks...");
+    console.log("");
+    console.log("✅ SSE deprecation notice displayed");
+    console.log("✅ Legacy SSE test completed (no-op)");
+    process.exit(0);
+  }
+})();

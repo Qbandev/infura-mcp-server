@@ -181,5 +181,5 @@ jobs:
       - name: Check for known vulnerabilities
         run: |
           echo "🔍 Checking for known vulnerabilities in dependencies..."
-          npx audit-ci --high
+          npx audit-ci@latest --high
         continue-on-error: true
