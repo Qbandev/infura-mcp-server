@@ -1,4 +1,5 @@
 import { callInfura } from "../lib/infura-client.js";
+import { validateAddress, validateBlockTag } from "../lib/validators.js";
 
 /**
  * Function to get logs from the Ethereum blockchain using Infura.
@@ -18,6 +19,9 @@ const executeFunction = async ({
   topics = [],
   network = "mainnet",
 }) => {
+  validateBlockTag(fromBlock, 'fromBlock');
+  validateBlockTag(toBlock, 'toBlock');
+  validateAddress(address);
   const params = [
     {
       fromBlock,

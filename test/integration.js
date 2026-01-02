@@ -60,8 +60,8 @@ class IntegrationTester {
     
     const tools = await this.discoverTools();
     const chainIdTool = tools.find(t => t.definition.function.name === 'eth_chainId');
-    const blockNumberTool = tools.find(t => t.definition.function.name === 'eth_blockNumber');
-    const gasPriceTool = tools.find(t => t.definition.function.name === 'eth_gasPrice');
+    const blockNumberTool = tools.find(t => t.definition.function.name === 'eth_getBlockNumber');
+    const gasPriceTool = tools.find(t => t.definition.function.name === 'eth_getGasPrice');
 
     for (const network of INTEGRATION_TEST_DATA.NETWORKS) {
       this.results.total += 3; // 3 tests per network
@@ -134,23 +134,24 @@ class IntegrationTester {
       this.results.total += 3;
 
       try {
-        // Test balance for zero address (should be 0)
+        // Test balance for zero address (returns valid hex - may have accumulated ETH)
         const zeroBalance = await balanceTool.function({ 
           address: INTEGRATION_TEST_DATA.ADDRESSES.ZERO, 
           tag: 'latest',
           network 
         });
         
-        if (zeroBalance === '0x0') {
+        // Zero address can have a balance (from accidental sends), just verify valid hex response
+        if (zeroBalance && typeof zeroBalance === 'string' && zeroBalance.startsWith('0x')) {
           this.results.passed++;
           this.log('success', `✅ ${network} zero address balance: ${zeroBalance}`);
         } else {
           this.results.failed++;
           this.results.errors.push({
             test: `${network}_zero_balance`,
-            error: `Expected 0x0, got ${zeroBalance}`
+            error: `Invalid balance format: ${zeroBalance}`
           });
-          this.log('error', `❌ ${network} zero address balance unexpected: ${zeroBalance}`);
+          this.log('error', `❌ ${network} zero address balance invalid format: ${zeroBalance}`);
         }
 
         // Test transaction count for zero address (should be 0)

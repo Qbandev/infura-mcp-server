@@ -14,12 +14,12 @@ FROM node:25.1-alpine AS production
 
 # Add metadata
 LABEL org.opencontainers.image.title="Infura MCP Server"
-LABEL org.opencontainers.image.description="MCP server for Infura API with 40+ Ethereum JSON-RPC tools"
+LABEL org.opencontainers.image.description="MCP server for Infura API with 29 Ethereum JSON-RPC tools"
 LABEL org.opencontainers.image.vendor="qbandev"
 LABEL org.opencontainers.image.licenses="MIT"
 LABEL org.opencontainers.image.source="https://github.com/qbandev/infura-mcp-server"
 
-# Create app user for security
+# Create app user for security (never run as root)
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S mcpserver -u 1001
 
@@ -38,20 +38,20 @@ COPY --chown=mcpserver:nodejs mcpServer.js index.js ./
 # Switch to non-root user
 USER mcpserver
 
-# Expose ports (only needed for SSE mode)
+# Expose port for HTTP mode
 EXPOSE 3001
 
-# Health check (only works in SSE mode, disabled by default for stdio mode)
-# Uncomment for SSE deployments:
-# HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-#   CMD node -e "const http = require('http'); \
-#     const options = { hostname: 'localhost', port: 3001, path: '/health', timeout: 5000 }; \
-#     const req = http.request(options, (res) => process.exit(res.statusCode === 200 ? 0 : 1)); \
-#     req.on('error', () => process.exit(1)); req.end();" || exit 1
+# Health check for HTTP mode deployments
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD node -e "const http = require('http'); \
+    const options = { hostname: 'localhost', port: 3001, path: '/health', timeout: 5000 }; \
+    const req = http.request(options, (res) => process.exit(res.statusCode === 200 ? 0 : 1)); \
+    req.on('error', () => process.exit(1)); req.end();" || exit 1
 
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=3001
 
 # Start the server in stdio mode by default (standard MCP approach)
+# Use --http for Streamable HTTP transport (web deployments)
 CMD ["node", "mcpServer.js"]

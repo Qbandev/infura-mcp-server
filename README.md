@@ -1,6 +1,13 @@
 # Infura MCP Server
 
-A Model Context Protocol (MCP) server implementation that provides comprehensive Ethereum blockchain access through Infura's infrastructure. Connect Claude Desktop, VS Code, and other MCP clients to 29 read-only Ethereum JSON-RPC tools across 30+ networks.
+A Model Context Protocol (MCP) server implementation that provides comprehensive Ethereum blockchain access through Infura's infrastructure. Connect Claude Desktop, VS Code, Cursor, and other MCP clients to 29 read-only Ethereum JSON-RPC tools across 30+ networks.
+
+## What's New in v0.3.0
+
+- **Streamable HTTP Transport**: Migrated from deprecated SSE to the new Streamable HTTP transport (2025 MCP spec)
+- **Improved Session Management**: Better handling of multiple concurrent sessions
+- **Enhanced Security**: npm provenance attestation for package integrity
+- **Backward Compatibility**: Legacy SSE endpoint still available for older clients
 
 ## Features
 
@@ -8,7 +15,7 @@ A Model Context Protocol (MCP) server implementation that provides comprehensive
 - **Multi-network support** - 30+ networks including Ethereum, Polygon, Arbitrum, Base, Optimism
 - **Real-time data** - Direct access to Infura's blockchain infrastructure
 - **AI-optimized** - Comprehensive LLM context for expert blockchain guidance
-
+- **Dual Transport** - Streamable HTTP (recommended) and stdio modes
 
 ## Tools
 
@@ -93,12 +100,13 @@ The Infura MCP Server supports **all networks available through MetaMask/Infura 
 
 - **`INFURA_API_KEY`** (required) - Your Infura API key from [MetaMask Developer Portal](https://developer.metamask.io/)
 - **`INFURA_NETWORK`** (optional) - Target network (default: mainnet)
+- **`DEBUG`** (optional) - Enable debug logging
 
 ### Usage with Claude Desktop
 
 Add this to your `claude_desktop_config.json`:
 
-#### npx
+#### npx (Recommended)
 ```json
 {
   "mcpServers": {
@@ -115,7 +123,7 @@ Add this to your `claude_desktop_config.json`:
 }
 ```
 
-#### docker
+#### Docker
 ```json
 {
   "mcpServers": {
@@ -140,7 +148,7 @@ Add this to your `claude_desktop_config.json`:
 
 Add this to your Cursor MCP configuration file (`.cursor/mcp.json` in your workspace or global settings):
 
-#### npx
+#### npx (Recommended)
 ```json
 {
   "mcpServers": {
@@ -157,7 +165,7 @@ Add this to your Cursor MCP configuration file (`.cursor/mcp.json` in your works
 }
 ```
 
-#### docker
+#### Docker
 ```json
 {
   "mcpServers": {
@@ -237,6 +245,23 @@ For Docker installation:
 }
 ```
 
+### Web Deployment (Streamable HTTP)
+
+For web applications and remote deployments, use the Streamable HTTP transport:
+
+```bash
+# Start in HTTP mode
+npm run start:http
+
+# Or with Docker
+docker run -p 3001:3001 -e INFURA_API_KEY=your_key ghcr.io/qbandev/infura-mcp-server:latest node mcpServer.js --http
+```
+
+Connect your MCP client to:
+- **Streamable HTTP**: `http://localhost:3001/mcp` (recommended)
+- **Legacy SSE**: `http://localhost:3001/sse` (deprecated)
+- **Health Check**: `http://localhost:3001/health`
+
 ## Usage Examples
 
 ### Getting Started
@@ -255,6 +280,49 @@ Once configured, you can have natural blockchain conversations with AI assistant
 - **Contextual insights** - AI explains what the data means and provides actionable advice
 - **Multi-network analysis** - Seamlessly compare data across different blockchain networks  
 - **Educational guidance** - Learn blockchain concepts through natural conversation
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Run in stdio mode (default)
+npm start
+
+# Run in HTTP mode (Streamable HTTP)
+npm run start:http
+
+# Run tests
+npm test
+
+# Run all tests including HTTP transport
+npm run test:full
+
+# List available tools
+npm run list-tools
+```
+
+## Testing
+
+The project includes comprehensive tests for all 29 tools and transport modes:
+
+```bash
+# Run basic validation tests
+npm test
+
+# Run comprehensive tool validation
+npm run test:comprehensive
+
+# Run HTTP transport tests
+npm run test:http
+
+# Run integration tests (requires INFURA_API_KEY)
+npm run test:integration
+
+# Run all tests
+npm run test:full
+```
 
 ## Troubleshooting
 
@@ -288,6 +356,18 @@ Once configured, you can have natural blockchain conversations with AI assistant
 - ✅ **HTTPS/TLS encryption** for all Infura connections
 - ✅ **Local execution** by default (stdio mode, no network exposure)
 - ✅ **Read-only operations** - server can never modify blockchain state
+- ✅ **npm provenance** - package integrity verification with OIDC trusted publishing
+
+### 🔑 API Key Security
+- Store your `INFURA_API_KEY` in environment variables, never in code
+- Use environment-specific API keys for development and production
+- Monitor your API key usage in the MetaMask Developer Dashboard
+
+### 📦 npm Publishing Security (Dec 2025+)
+This package uses [npm Trusted Publishing with OIDC](https://docs.npmjs.com/trusted-publishers/) for secure releases:
+- No long-lived npm tokens stored in secrets
+- Provenance attestations verify build authenticity
+- Compliant with [npm's Dec 2025 security changes](https://github.blog/changelog/2025-12-09-npm-classic-tokens-revoked-session-based-auth-and-cli-token-management-now-available/)
 
 ## Contributing
 
@@ -300,4 +380,3 @@ This MCP server is licensed under the MIT License. This means you are free to us
 ---
 
 **Transform your AI into a blockchain expert with comprehensive Ethereum data access!** 🚀
-

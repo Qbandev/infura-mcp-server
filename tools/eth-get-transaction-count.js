@@ -1,4 +1,5 @@
 import { callInfura } from "../lib/infura-client.js";
+import { validateAddress, validateBlockTag } from "../lib/validators.js";
 
 /**
  * Function to get the transaction count for a specified Ethereum address.
@@ -14,6 +15,8 @@ const executeFunction = async ({
   tag = "latest",
   network = "mainnet",
 }) => {
+  validateAddress(address);
+  validateBlockTag(tag);
   return callInfura("eth_getTransactionCount", [address, tag], network);
 };
 

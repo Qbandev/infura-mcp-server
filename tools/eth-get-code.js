@@ -1,4 +1,5 @@
 import { callInfura } from "../lib/infura-client.js";
+import { validateAddress } from "../lib/validators.js";
 
 /**
  * Function to get the code of a smart contract at a specified address on the Ethereum network.
@@ -9,6 +10,7 @@ import { callInfura } from "../lib/infura-client.js";
  * @returns {Promise<Object>} - The result of the contract code retrieval.
  */
 const executeFunction = async ({ contractAddress, network = "mainnet" }) => {
+  validateAddress(contractAddress, 'contractAddress');
   return callInfura("eth_getCode", [contractAddress, "latest"], network);
 };
 
