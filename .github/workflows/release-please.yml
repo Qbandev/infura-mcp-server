@@ -71,13 +71,11 @@ jobs:
         continue-on-error: true
 
       # npm Trusted Publishing with OIDC (Dec 2025+)
-      # Primary: OIDC authentication (no token needed)
-      # Fallback: Granular access token via NPM_TOKEN secret
+      # OIDC authentication (no token needed)
       # Configured at: npmjs.com/package/infura-mcp-server/access
       - name: Publish to npm with provenance
         run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # Note: No NODE_AUTH_TOKEN needed - OIDC handles authentication automatically
 
       - name: Create release summary
         run: |
