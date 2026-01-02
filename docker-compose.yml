@@ -1,3 +1,4 @@
+# Docker Compose file for Infura MCP Server (Compose Spec format - no version needed)
 services:
   # Web service deployment (Streamable HTTP mode - recommended for 2025+)
   infura-mcp-server-http:

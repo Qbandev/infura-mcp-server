@@ -320,18 +320,20 @@ async function runStreamableHttpServer(tools) {
 
   const shutdown = async () => {
     log("info", "Shutting down gracefully...");
+    let hasErrors = false;
     
     for (const [sessionId, session] of sessions.entries()) {
       try {
         await session.transport.close();
         await session.server.close();
       } catch (error) {
+        hasErrors = true;
         log("error", `Error closing session ${sessionId}`, { error: error.message });
       }
     }
 
-    log("info", "All sessions closed");
-    process.exit(0);
+    log("info", "All sessions closed", { hasErrors });
+    process.exit(hasErrors ? 1 : 0);
   };
 
   process.on("SIGINT", shutdown);

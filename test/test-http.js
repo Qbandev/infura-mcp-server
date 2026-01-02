@@ -193,7 +193,8 @@ async function testToolsList(sessionId) {
     }
 
     if (tools.length !== 29) {
-      console.log(`⚠️ Expected 29 tools, got ${tools.length}`);
+      console.error(`❌ Expected 29 tools, got ${tools.length}`);
+      return false;
     }
 
     console.log("✅ Tools list test passed\n");
