@@ -1,12 +1,11 @@
-version: '3.8'
-
+# Docker Compose file for Infura MCP Server (Compose Spec format - no version needed)
 services:
-  # Web service deployment (SSE mode)
-  infura-mcp-server-sse:
+  # Web service deployment (Streamable HTTP mode - recommended for 2025+)
+  infura-mcp-server-http:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: infura-mcp-server-sse
+    container_name: infura-mcp-server-http
     ports:
       - "3001:3001"
     environment:
@@ -14,7 +13,7 @@ services:
       - INFURA_NETWORK=${INFURA_NETWORK:-mainnet}
       - NODE_ENV=production
       - DEBUG=${DEBUG:-false}
-    command: ["node", "mcpServer.js", "--sse"]
+    command: ["node", "mcpServer.js", "--http"]
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "node", "-e", "const http = require('http'); const options = { hostname: 'localhost', port: 3001, path: '/health', timeout: 5000 }; const req = http.request(options, (res) => process.exit(res.statusCode === 200 ? 0 : 1)); req.on('error', () => process.exit(1)); req.end();"]
@@ -24,8 +23,16 @@ services:
       start_period: 60s
     networks:
       - mcp-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
 
-  # Standard MCP server (stdio mode) - for development/testing
+  # Standard MCP server (stdio mode) - for Claude Desktop, Cursor, VS Code
   infura-mcp-server:
     build:
       context: .
@@ -39,6 +46,8 @@ services:
     # No ports exposed for stdio mode
     # Use: docker-compose run --rm infura-mcp-server
     profiles: ["stdio"]
+    stdin_open: true
+    tty: true
     networks:
       - mcp-network
 
@@ -48,4 +57,4 @@ networks:
 
 # Volumes for persistent data (if needed)
 volumes:
-  mcp-data: 
+  mcp-data:

@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+  security-events: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -16,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v6
@@ -24,7 +28,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Cache dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
@@ -38,10 +42,7 @@ jobs:
       - name: Validate commit messages
         if: github.event_name == 'pull_request'
         run: |
-          # Get the list of commits in the PR
           git fetch origin ${{ github.base_ref }}
-
-          # Validate all commits in the PR
           npx commitlint --from origin/${{ github.base_ref }} --to HEAD --verbose
 
       - name: Lint package.json
@@ -83,9 +84,9 @@ jobs:
             npm run test:comprehensive
           fi
           
-          # Run SSE functionality tests  
-          echo "🌐 Running SSE functionality tests..."
-          npm run test:sse
+          # Run HTTP transport tests (Streamable HTTP)
+          echo "🌐 Running HTTP transport tests..."
+          npm run test:http
           
           # Run integration tests if API key is available
           if [ -n "$INFURA_API_KEY" ]; then
@@ -112,12 +113,10 @@ jobs:
 
       - name: Test package installation
         run: |
-          # Pack the package locally and test installation
           npm pack
           PACKAGE_FILE=$(ls *.tgz)
           echo "Testing installation of $PACKAGE_FILE"
 
-          # Create a test directory and install the package
           mkdir -p test-install
           cd test-install
           npm init -y
@@ -129,11 +128,9 @@ jobs:
         run: |
           echo "Testing tools listing..."
 
-          # Test that the server can start and list tools
           if command -v timeout >/dev/null 2>&1; then
             timeout 15s npm run list-tools || true
           else
-            # Fallback for systems without timeout
             npm run list-tools &
             PID=$!
             sleep 5
@@ -143,18 +140,45 @@ jobs:
 
           echo "✅ Tools listing test completed"
 
-      - name: Check for security vulnerabilities
-        run: npm audit --audit-level=moderate
-        continue-on-error: true
+      - name: Security audit
+        run: |
+          echo "🔒 Running security audit..."
+          npm audit --audit-level=moderate || true
+          echo "✅ Security audit completed"
 
       - name: Check bundle size
         run: |
-          # Get package size
           PACKAGE_SIZE=$(du -sh . | cut -f1)
           echo "Package size: $PACKAGE_SIZE"
 
-          # Count files
           FILE_COUNT=$(find . -type f -not -path './node_modules/*' -not -path './.git/*' | wc -l)
           echo "File count: $FILE_COUNT"
 
-          echo "✅ Bundle size check completed" 
+          echo "✅ Bundle size check completed"
+
+  # Security scanning job - runs on PRs and main pushes
+  security:
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run npm audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Check for known vulnerabilities
+        run: |
+          echo "🔍 Checking for known vulnerabilities in dependencies..."
+          npx audit-ci@latest --high
+        continue-on-error: true

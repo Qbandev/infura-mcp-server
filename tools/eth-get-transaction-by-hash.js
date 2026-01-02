@@ -1,4 +1,5 @@
 import { callInfura } from "../lib/infura-client.js";
+import { validateHash } from "../lib/validators.js";
 
 /**
  * Function to get transaction information by transaction hash from Infura.
@@ -9,6 +10,7 @@ import { callInfura } from "../lib/infura-client.js";
  * @returns {Promise<Object>} - The transaction information or null if not found.
  */
 const executeFunction = async ({ transactionHash, network = "mainnet" }) => {
+  validateHash(transactionHash, 'transactionHash');
   return callInfura("eth_getTransactionByHash", [transactionHash], network);
 };
 

@@ -8,7 +8,8 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  issues: write # Required for creating release notes
+  issues: write
+  id-token: write
 
 jobs:
   release-please:
@@ -16,6 +17,7 @@ jobs:
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
@@ -24,22 +26,30 @@ jobs:
           release-type: node
 
   # Publish to npm when a release is created
+  # Uses npm Trusted Publishing with OIDC (recommended since Dec 2025)
+  # See: https://docs.npmjs.com/trusted-publishers
   npm-publish:
     needs: release-please
     if: needs.release-please.outputs.release_created
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write
+      id-token: write  # Required for npm OIDC trusted publishing
+    
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/infura-mcp-server
+
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '22'
           registry-url: 'https://registry.npmjs.org'
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
       - name: Run comprehensive tests before publish
         env:
@@ -56,7 +66,26 @@ jobs:
             echo "⚠️ Skipping API tests (no API key)"
           fi
 
-      - name: Publish to npm
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} 
+      - name: Security audit before publish
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      # npm Trusted Publishing with OIDC (Dec 2025+)
+      # No NPM_TOKEN needed - authentication via OIDC
+      # Configured at: npmjs.com/package/infura-mcp-server/access
+      - name: Publish to npm with provenance (OIDC)
+        run: npm publish --provenance --access public
+
+      - name: Create release summary
+        run: |
+          echo "## 📦 NPM Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version**: ${{ needs.release-please.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag**: ${{ needs.release-please.outputs.tag_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Package**: [infura-mcp-server](https://www.npmjs.com/package/infura-mcp-server)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ Published with npm provenance attestation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔐 Authentication Method" >> $GITHUB_STEP_SUMMARY
+          echo "Using OIDC trusted publishing or granular access token with provenance." >> $GITHUB_STEP_SUMMARY
+          echo "See: https://docs.npmjs.com/trusted-publishers" >> $GITHUB_STEP_SUMMARY

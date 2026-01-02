@@ -1,4 +1,5 @@
 import { callInfura } from "../lib/infura-client.js";
+import { validateHash } from "../lib/validators.js";
 
 /**
  * Function to get the transaction receipt from Infura Ethereum JSON-RPC.
@@ -9,6 +10,7 @@ import { callInfura } from "../lib/infura-client.js";
  * @returns {Promise<Object|null>} - The transaction receipt object or null if not found.
  */
 const executeFunction = async ({ transactionHash, network = "mainnet" }) => {
+  validateHash(transactionHash, 'transactionHash');
   return callInfura("eth_getTransactionReceipt", [transactionHash], network);
 };
 

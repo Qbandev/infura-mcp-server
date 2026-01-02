@@ -1,4 +1,5 @@
 import { callInfura } from "../lib/infura-client.js";
+import { validateHash } from "../lib/validators.js";
 
 /**
  * Function to get block information by hash from the Ethereum network using Infura.
@@ -14,6 +15,7 @@ const executeFunction = async ({
   fullTransactions,
   network = "mainnet",
 }) => {
+  validateHash(blockHash, 'blockHash');
   return callInfura(
     "eth_getBlockByHash",
     [blockHash, fullTransactions],

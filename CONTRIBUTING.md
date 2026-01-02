@@ -51,7 +51,7 @@ The scope should be the name of the package affected:
 Examples with scope:
 ```
 feat(tools): add eth_getTransactionReceipt tool
-fix(server): resolve SSE connection timeout issues
+fix(server): resolve HTTP transport timeout issues
 test(tools): add validation for all tool definitions
 ```
 
@@ -109,7 +109,7 @@ The server includes a comprehensive testing framework that validates all 29 Ethe
 - **Structure Validation** - Tool definitions and schemas (no API key required)
 - **API Validation** - Real Infura API calls for all 29 tools (requires API key)
 - **Integration Testing** - End-to-end functionality validation
-- **SSE Transport** - Server-Sent Events testing
+- **HTTP Transport** - Streamable HTTP transport testing
 
 ### Quick Start
 ```bash
@@ -119,7 +119,7 @@ npm test
 # Test all 29 tools with real API calls
 INFURA_API_KEY=your_key npm run test:comprehensive
 
-# Full test suite (structure + API + SSE + integration)
+# Full test suite (structure + API + HTTP + integration)
 INFURA_API_KEY=your_key npm run test:full
 ```
 
