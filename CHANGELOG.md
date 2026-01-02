@@ -10,6 +10,14 @@
 - Bug fixes go here
 
 
+## [1.0.2](https://github.com/Qbandev/infura-mcp-server/compare/v1.0.1...v1.0.2) (2026-01-02)
+
+
+### Bug Fixes
+
+* **ci:** remove NODE_AUTH_TOKEN for npm OIDC publishing ([5747bf2](https://github.com/Qbandev/infura-mcp-server/commit/5747bf232d9ad3f8e5cf867c80cb92be6931d200))
+* **ci:** remove NODE_AUTH_TOKEN for npm OIDC publishing ([b883011](https://github.com/Qbandev/infura-mcp-server/commit/b8830118f32a6eadc92bf1afb91ec158d9c8587f))
+
 ## [1.0.1](https://github.com/Qbandev/infura-mcp-server/compare/v1.0.0...v1.0.1) (2026-01-02)
 
 
