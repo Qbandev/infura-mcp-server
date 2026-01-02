@@ -4,10 +4,10 @@ A Model Context Protocol (MCP) server implementation that provides comprehensive
 
 ## What's New in v0.3.0
 
-- **Streamable HTTP Transport**: Migrated from deprecated SSE to the new Streamable HTTP transport (2025 MCP spec)
+- **Streamable HTTP Transport**: New Streamable HTTP transport following 2025 MCP specification
 - **Improved Session Management**: Better handling of multiple concurrent sessions
 - **Enhanced Security**: npm provenance attestation for package integrity
-- **Backward Compatibility**: Legacy SSE endpoint still available for older clients
+- **Input Validation**: Comprehensive validation for Ethereum addresses, hashes, and block tags
 
 ## Features
 
@@ -258,8 +258,7 @@ docker run -p 3001:3001 -e INFURA_API_KEY=your_key ghcr.io/qbandev/infura-mcp-se
 ```
 
 Connect your MCP client to:
-- **Streamable HTTP**: `http://localhost:3001/mcp` (recommended)
-- **Legacy SSE**: `http://localhost:3001/sse` (deprecated)
+- **Streamable HTTP**: `http://localhost:3001/mcp`
 - **Health Check**: `http://localhost:3001/health`
 
 ## Usage Examples
