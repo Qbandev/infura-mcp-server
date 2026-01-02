@@ -2,12 +2,13 @@
 
 A Model Context Protocol (MCP) server implementation that provides comprehensive Ethereum blockchain access through Infura's infrastructure. Connect Claude Desktop, VS Code, Cursor, and other MCP clients to 29 read-only Ethereum JSON-RPC tools across 30+ networks.
 
-## What's New in v0.3.0
+## What's New in v1.0.0
 
-- **Streamable HTTP Transport**: New Streamable HTTP transport following 2025 MCP specification
+- **Streamable HTTP Transport**: New transport following 2025 MCP specification (replaces deprecated SSE)
 - **Improved Session Management**: Better handling of multiple concurrent sessions
-- **Enhanced Security**: npm provenance attestation for package integrity
+- **Enhanced Security**: npm provenance attestation and OIDC trusted publishing
 - **Input Validation**: Comprehensive validation for Ethereum addresses, hashes, and block tags
+- **Graceful Shutdown**: Proper HTTP server and session cleanup on SIGINT/SIGTERM
 
 ## Features
 
