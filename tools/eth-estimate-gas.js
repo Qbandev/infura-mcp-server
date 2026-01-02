@@ -1,5 +1,5 @@
 import { callInfura } from "../lib/infura-client.js";
-import { validateAddress, isValidHexString } from "../lib/validators.js";
+import { validateAddress, isValidHexString, ValidationError } from "../lib/validators.js";
 
 /**
  * Function to estimate gas for a transaction on the Ethereum network using Infura.
@@ -15,7 +15,7 @@ const executeFunction = async ({ from, to, value, network = "mainnet" }) => {
   validateAddress(from, 'from');
   validateAddress(to, 'to');
   if (!isValidHexString(value)) {
-    throw new Error('Invalid value format. Expected hex string starting with 0x.');
+    throw new ValidationError('Invalid value format. Expected hex string starting with 0x.', 'value');
   }
   const params = [
     {

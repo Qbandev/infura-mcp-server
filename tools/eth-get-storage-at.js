@@ -1,5 +1,5 @@
 import { callInfura } from "../lib/infura-client.js";
-import { validateAddress, isValidHexString } from "../lib/validators.js";
+import { validateAddress, isValidHexString, ValidationError } from "../lib/validators.js";
 
 /**
  * Function to get the storage value at a specified address on the Ethereum network.
@@ -13,7 +13,7 @@ import { validateAddress, isValidHexString } from "../lib/validators.js";
 const executeFunction = async ({ address, position, network = "mainnet" }) => {
   validateAddress(address);
   if (!isValidHexString(position)) {
-    throw new Error('Invalid position format. Expected hex string starting with 0x.');
+    throw new ValidationError('Invalid position format. Expected hex string starting with 0x.', 'position');
   }
   return callInfura("eth_getStorageAt", [address, position, "latest"], network);
 };
