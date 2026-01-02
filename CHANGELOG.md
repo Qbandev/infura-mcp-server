@@ -10,6 +10,14 @@
 - Bug fixes go here
 
 
+## [1.0.5](https://github.com/Qbandev/infura-mcp-server/compare/v1.0.4...v1.0.5) (2026-01-02)
+
+
+### Bug Fixes
+
+* correct repository URL case to match GitHub organization ([7bd66f2](https://github.com/Qbandev/infura-mcp-server/commit/7bd66f2dbdf70f691fac958152e4f6a5e94bcf97))
+* correct repository URL case to match GitHub organization ([c999795](https://github.com/Qbandev/infura-mcp-server/commit/c9997953b380e0a27a93abb57df099cd235d740b))
+
 ## [1.0.4](https://github.com/Qbandev/infura-mcp-server/compare/v1.0.3...v1.0.4) (2026-01-02)
 
 
