@@ -10,6 +10,14 @@
 - Bug fixes go here
 
 
+## [1.0.3](https://github.com/Qbandev/infura-mcp-server/compare/v1.0.2...v1.0.3) (2026-01-02)
+
+
+### Bug Fixes
+
+* **ci:** remove registry-url from setup-node for OIDC auth ([b34a412](https://github.com/Qbandev/infura-mcp-server/commit/b34a412ed9a97d60f20dbc6d7d8a8cf56f6e8bd7))
+* **ci:** remove registry-url from setup-node for OIDC auth ([735d068](https://github.com/Qbandev/infura-mcp-server/commit/735d068b94bbc024e38451f13b73aa70abc9dad4))
+
 ## [1.0.2](https://github.com/Qbandev/infura-mcp-server/compare/v1.0.1...v1.0.2) (2026-01-02)
 
 
