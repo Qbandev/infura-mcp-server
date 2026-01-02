@@ -10,6 +10,14 @@
 - Bug fixes go here
 
 
+## [1.0.4](https://github.com/Qbandev/infura-mcp-server/compare/v1.0.3...v1.0.4) (2026-01-02)
+
+
+### Bug Fixes
+
+* **ci:** upgrade npm to 11.7.0 for OIDC authentication support ([a4dad1a](https://github.com/Qbandev/infura-mcp-server/commit/a4dad1a728edf6dce6539a378a46e77f635cbeb5))
+* **ci:** upgrade npm to 11.7.0 for OIDC authentication support ([209a738](https://github.com/Qbandev/infura-mcp-server/commit/209a738a9927cbec55cfcdae657601c59ac5955e))
+
 ## [1.0.3](https://github.com/Qbandev/infura-mcp-server/compare/v1.0.2...v1.0.3) (2026-01-02)
 
 
