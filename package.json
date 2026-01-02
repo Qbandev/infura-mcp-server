@@ -65,15 +65,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/qbandev/infura-mcp-server.git"
+    "url": "git+https://github.com/Qbandev/infura-mcp-server.git"
   },
   "bugs": {
-    "url": "https://github.com/qbandev/infura-mcp-server/issues"
+    "url": "https://github.com/Qbandev/infura-mcp-server/issues"
   },
-  "homepage": "https://github.com/qbandev/infura-mcp-server#readme",
+  "homepage": "https://github.com/Qbandev/infura-mcp-server#readme",
   "funding": {
     "type": "github",
-    "url": "https://github.com/sponsors/qbandev"
+    "url": "https://github.com/sponsors/Qbandev"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.25.1",
@@ -90,8 +90,8 @@
     "node": ">=20.0.0"
   },
   "author": {
-    "name": "qbandev",
-    "url": "https://github.com/qbandev"
+    "name": "Qbandev",
+    "url": "https://github.com/Qbandev"
   },
   "license": "MIT",
   "os": [
