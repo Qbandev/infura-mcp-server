@@ -46,7 +46,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '22'
-          registry-url: 'https://registry.npmjs.org'
+          # registry-url removed for npm OIDC authentication
 
       - name: Install dependencies
         run: npm ci
