@@ -10,6 +10,14 @@
 - Bug fixes go here
 
 
+## [1.0.6](https://github.com/Qbandev/infura-mcp-server/compare/v1.0.5...v1.0.6) (2026-01-02)
+
+
+### Bug Fixes
+
+* **ci:** update manual npm-publish workflow for OIDC authentication ([5e5c8c0](https://github.com/Qbandev/infura-mcp-server/commit/5e5c8c033b7316df64842558d9a39bd0843d298e))
+* **ci:** update manual npm-publish workflow for OIDC authentication ([03cb0ce](https://github.com/Qbandev/infura-mcp-server/commit/03cb0cec5fb9a2969cd96039de736b65141dbf03))
+
 ## [1.0.5](https://github.com/Qbandev/infura-mcp-server/compare/v1.0.4...v1.0.5) (2026-01-02)
 
 
