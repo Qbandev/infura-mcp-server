@@ -77,7 +77,11 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: '22'
-          registry-url: 'https://registry.npmjs.org'
+          # registry-url removed for npm OIDC authentication
+
+      - name: Upgrade npm for OIDC support
+        run: npm install -g npm@11.7.0
+        # npm 11.5+ required for OIDC authentication
 
       - name: Cache dependencies
         uses: actions/cache@v5
@@ -126,14 +130,12 @@ jobs:
           fi
 
       # npm Trusted Publishing with OIDC (Dec 2025+)
-      # Primary: OIDC authentication (no token needed)
-      # Fallback: Granular access token via NPM_TOKEN secret
+      # OIDC authentication (no token needed)
       # Configured at: npmjs.com/package/infura-mcp-server/access
       - name: Publish to npm with provenance
         if: steps.check-published.outputs.already-published == 'false'
         run: npm publish --provenance --access public --tag ${{ github.event.inputs.npm_tag }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # Note: No NODE_AUTH_TOKEN needed - OIDC handles authentication automatically
 
       - name: Create publish summary
         if: always()
