@@ -10,6 +10,13 @@
 - Bug fixes go here
 
 
+## [1.0.1](https://github.com/Qbandev/infura-mcp-server/compare/v1.0.0...v1.0.1) (2026-01-02)
+
+
+### Bug Fixes
+
+* **docs:** update README to reflect v1.0.0 release ([f79ad52](https://github.com/Qbandev/infura-mcp-server/commit/f79ad5244b72b348a5a47185a3d6ffe04ff132c2))
+
 ## [1.0.0](https://github.com/Qbandev/infura-mcp-server/compare/v0.2.1...v1.0.0) (2026-01-02)
 
 
