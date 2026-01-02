@@ -126,11 +126,14 @@ jobs:
           fi
 
       # npm Trusted Publishing with OIDC (Dec 2025+)
-      # No NPM_TOKEN needed - authentication via OIDC
+      # Primary: OIDC authentication (no token needed)
+      # Fallback: Granular access token via NPM_TOKEN secret
       # Configured at: npmjs.com/package/infura-mcp-server/access
-      - name: Publish to npm with provenance (OIDC)
+      - name: Publish to npm with provenance
         if: steps.check-published.outputs.already-published == 'false'
         run: npm publish --provenance --access public --tag ${{ github.event.inputs.npm_tag }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create publish summary
         if: always()
