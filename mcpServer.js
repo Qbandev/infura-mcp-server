@@ -318,10 +318,27 @@ async function runStreamableHttpServer(tools) {
     });
   });
 
+  const port = process.env.PORT || 3001;
+  const httpServer = app.listen(port, () => {
+    log("info", `Streamable HTTP server running on port ${port}`);
+    console.log(`\n🚀 Infura MCP Server v${SERVER_VERSION}`);
+    console.log(`   Streamable HTTP: http://localhost:${port}/mcp`);
+    console.log(`   Health:          http://localhost:${port}/health\n`);
+  });
+
+  httpServer.on("error", (error) => {
+    log("error", "HTTP server error", { error: error.message });
+  });
+
   const shutdown = async () => {
     log("info", "Shutting down gracefully...");
     let hasErrors = false;
     
+    // Stop accepting new connections
+    await new Promise((resolve) => httpServer.close(resolve));
+    log("info", "HTTP server closed, no new connections accepted");
+    
+    // Close all MCP sessions
     for (const [sessionId, session] of sessions.entries()) {
       try {
         await session.transport.close();
@@ -338,18 +355,6 @@ async function runStreamableHttpServer(tools) {
 
   process.on("SIGINT", shutdown);
   process.on("SIGTERM", shutdown);
-
-  const port = process.env.PORT || 3001;
-  const httpServer = app.listen(port, () => {
-    log("info", `Streamable HTTP server running on port ${port}`);
-    console.log(`\n🚀 Infura MCP Server v${SERVER_VERSION}`);
-    console.log(`   Streamable HTTP: http://localhost:${port}/mcp`);
-    console.log(`   Health:          http://localhost:${port}/health\n`);
-  });
-
-  httpServer.on("error", (error) => {
-    log("error", "HTTP server error", { error: error.message });
-  });
 
   return httpServer;
 }
