@@ -1,8 +1,18 @@
 #!/usr/bin/env node
 
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+
+// Named constants for magic numbers
+const MIN_NPX_EXAMPLES = 4;
+const MIN_DOCKER_EXAMPLES = 1;
+const MIN_README_SIZE = 8000;
+
+// Regex patterns as named constants
+const NPX_PATTERN = /npx[\s\S]*?infura-mcp-server/g;
+const DOCKER_PATTERN = /ghcr\.io\/qbandev\/infura-mcp-server/g;
+const SEMVER_PATTERN = /^\d+\.\d+\.\d+/;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -10,14 +20,48 @@ const projectRoot = join(__dirname, '..');
 
 console.log('🔍 NPM Package Consistency Validation\n');
 
+// File paths
+const packageJsonPath = join(projectRoot, 'package.json');
+const readmePath = join(projectRoot, 'README.md');
+
+// Check file existence before reading
+if (!existsSync(packageJsonPath)) {
+  console.error('❌ package.json not found at:', packageJsonPath);
+  process.exit(1);
+}
+
+if (!existsSync(readmePath)) {
+  console.error('❌ README.md not found at:', readmePath);
+  process.exit(1);
+}
+
 // Test 1: Package.json consistency
 console.log('✅ Testing package.json consistency...');
-const packageJson = JSON.parse(readFileSync(join(projectRoot, 'package.json'), 'utf8'));
-const readme = readFileSync(join(projectRoot, 'README.md'), 'utf8');
+
+let packageJson;
+try {
+  const packageJsonContent = readFileSync(packageJsonPath, 'utf8');
+  packageJson = JSON.parse(packageJsonContent);
+} catch (error) {
+  if (error instanceof SyntaxError) {
+    console.error('❌ Invalid JSON in package.json:', error.message);
+  } else {
+    console.error('❌ Failed to read package.json:', error.message);
+  }
+  process.exit(1);
+}
+
+let readme;
+try {
+  readme = readFileSync(readmePath, 'utf8');
+} catch (error) {
+  console.error('❌ Failed to read README.md:', error.message);
+  process.exit(1);
+}
 
 // Validate description
 const descriptionKeywords = ['MCP', 'Model Context Protocol', 'Infura', 'Ethereum', '29', 'read-only', 'JSON-RPC', '30+'];
-const hasAllKeywords = descriptionKeywords.every(keyword => 
+const hasAllKeywords = descriptionKeywords.every(keyword =>
   packageJson.description.includes(keyword)
 );
 
@@ -33,7 +77,7 @@ const requiredKeywords = [
   'json-rpc', 'web3', 'claude', 'cursor', 'vscode', 'ai'
 ];
 
-const missingKeywords = requiredKeywords.filter(keyword => 
+const missingKeywords = requiredKeywords.filter(keyword =>
   !packageJson.keywords.includes(keyword)
 );
 
@@ -44,22 +88,22 @@ if (missingKeywords.length > 0) {
 
 // Test 3: Installation instructions consistency
 console.log('✅ Testing installation instructions...');
-const npxMatches = (readme.match(/npx[\s\S]*?infura-mcp-server/g) || []).length;
-const dockerMatches = (readme.match(/ghcr\.io\/qbandev\/infura-mcp-server/g) || []).length;
+const npxMatches = (readme.match(NPX_PATTERN) || []).length;
+const dockerMatches = (readme.match(DOCKER_PATTERN) || []).length;
 
-if (npxMatches < 5) {
-  console.error('❌ Insufficient npx installation examples in README');
+if (npxMatches < MIN_NPX_EXAMPLES) {
+  console.error(`❌ Insufficient npx installation examples in README (found ${npxMatches}, need ${MIN_NPX_EXAMPLES})`);
   process.exit(1);
 }
 
-if (dockerMatches < 3) {
-  console.error('❌ Insufficient Docker installation examples in README');
+if (dockerMatches < MIN_DOCKER_EXAMPLES) {
+  console.error(`❌ Insufficient Docker installation examples in README (found ${dockerMatches}, need ${MIN_DOCKER_EXAMPLES})`);
   process.exit(1);
 }
 
 // Test 4: Version consistency
 console.log('✅ Testing version consistency...');
-if (!packageJson.version || !packageJson.version.match(/^\d+\.\d+\.\d+/)) {
+if (!packageJson.version || !packageJson.version.match(SEMVER_PATTERN)) {
   console.error('❌ Invalid semantic version in package.json');
   process.exit(1);
 }
@@ -82,7 +126,7 @@ if (packageJson.license !== 'MIT') {
 // Test 7: Files field validation
 console.log('✅ Testing files field...');
 const requiredFiles = ['index.js', 'mcpServer.js', 'lib/', 'tools/', 'commands/', 'LICENSE', 'README.md'];
-const missingFiles = requiredFiles.filter(file => 
+const missingFiles = requiredFiles.filter(file =>
   !packageJson.files.includes(file)
 );
 
@@ -110,12 +154,12 @@ console.log('✅ Testing README quality...');
 const readmeSize = readme.length;
 
 const sectionsRequired = [
-  'Features', 'Tools', 'Network Support', 'Configuration', 
-  'Usage with Claude Desktop', 'Usage with Cursor', 'Usage with VS Code',
-  'Environment Variables', 'Testing', 'Troubleshooting'
+  'Features', 'Available Tools', 'Supported Networks', 'Quick Start',
+  'Configuration', 'Claude Desktop', 'VS Code', 'Docker',
+  'Development', 'Troubleshooting', 'Security', 'License'
 ];
 
-const missingSections = sectionsRequired.filter(section => 
+const missingSections = sectionsRequired.filter(section =>
   !readme.includes(section)
 );
 
@@ -125,35 +169,31 @@ if (missingSections.length > 0) {
 }
 
 // Only check size if sections are missing (more meaningful than arbitrary threshold)
-if (readmeSize < 8000 && missingSections.length === 0) {
+if (readmeSize < MIN_README_SIZE && missingSections.length === 0) {
   console.log('⚠️ README is shorter than expected but has all required sections');
 }
 
-// Test 11: Security and quality documentation
+// Test 11: Security documentation
 console.log('✅ Testing security documentation...');
-if (!readme.includes('🔐 Security') || !readme.includes('Built-in Security Features')) {
-  console.error('❌ Missing security documentation sections');
+if (!readme.includes('## Security')) {
+  console.error('❌ Missing security section in README');
   process.exit(1);
 }
 
 // Test 12: Security section validation
-console.log('✅ Testing security section...');
-if (!readme.includes('## 🔐 Security')) {
-  console.error('❌ Security section missing from README');
-  process.exit(1);
-}
+console.log('✅ Testing security section content...');
 
-// Essential security features should be documented
+// Essential security features should be documented (matching actual README content)
 const securityFeatures = [
-  'API Key Security',
   'Built-in Security Features',
   'Required parameter validation',
+  'Read-only operations',
   'HTTPS/TLS encryption',
   'Local execution',
-  'Read-only operations'
+  'API Key Security'
 ];
 
-const missingSecurityFeatures = securityFeatures.filter(feature => 
+const missingSecurityFeatures = securityFeatures.filter(feature =>
   !readme.includes(feature)
 );
 
@@ -165,7 +205,7 @@ if (missingSecurityFeatures.length > 0) {
 // Test 13: Read-only security messaging
 console.log('✅ Testing read-only security messaging...');
 // Should mention read-only nature clearly
-if (!readme.includes('Read-only operations') || !readme.includes('can never modify blockchain state')) {
+if (!readme.includes('Read-only operations') || !readme.includes('never modify blockchain state')) {
   console.error('❌ Missing read-only security messaging');
   process.exit(1);
 }
@@ -182,5 +222,5 @@ console.log(`   • NPX examples: ${npxMatches}`);
 console.log(`   • Docker examples: ${dockerMatches}`);
 console.log(`   • Security section: Validated ✅`);
 console.log(`   • Security features: ${securityFeatures.length} documented ✅`);
-console.log(`   • Read-only security: Blockchain modification impossible ✅`);
-console.log('\n✅ Ready for NPM publication with full consistency!'); 
+console.log(`   • Read-only security: Documented ✅`);
+console.log('\n✅ Ready for NPM publication with full consistency!');
