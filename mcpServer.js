@@ -267,7 +267,7 @@ async function setupServerHandlers(server, tools) {
         }
         textContent = truncated + truncationMessage(
           itemCount,
-          'CHARACTER_LIMIT exceeded'
+          CHARACTER_LIMIT
         );
       }
 
