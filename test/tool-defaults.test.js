@@ -15,18 +15,6 @@ const __dirname = dirname(__filename);
 let passed = 0;
 let failed = 0;
 
-function test(name, fn) {
-  try {
-    fn();
-    passed++;
-    console.log(`✅ ${name}`);
-  } catch (error) {
-    failed++;
-    console.log(`❌ ${name}`);
-    console.log(`   Error: ${error.message}`);
-  }
-}
-
 async function testAsync(name, fn) {
   try {
     await fn();
@@ -54,25 +42,11 @@ console.log('Testing tool parameter defaults...\n');
 console.log('--- eth_getBalance Default Tag Tests ---\n');
 
 await testAsync('eth_getBalance: uses "latest" as default tag when not provided', async () => {
-  // Track what parameters were passed to callInfura
-  let capturedParams = null;
-
-  // Mock the infura-client module
-  const mockCallInfura = async (method, params, network) => {
-    capturedParams = { method, params, network };
-    return '0xde0b6b3a7640000'; // 1 ETH in wei
-  };
-
   // Dynamically import the eth-get-balance module
   const toolPath = join(__dirname, '../tools/eth-get-balance.js');
   const { apiTool } = await import(`${toolPath}?t=${Date.now()}`);
 
-  // Get the internal function that we can test
-  // We need to call it with only address (no tag) to test default
-  const executeFunction = apiTool.function;
-
-  // Mock callInfura by temporarily replacing global.fetch behavior
-  // Instead, we'll verify via the tool's schema that default is 'latest'
+  // Verify via the tool's schema that default is 'latest'
   const tagParam = apiTool.definition.function.parameters.properties.tag;
 
   assertEqual(tagParam.default, 'latest', 'Tag parameter should default to "latest"');
