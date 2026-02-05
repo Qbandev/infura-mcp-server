@@ -261,6 +261,221 @@ async function testErrorHandling() {
   }
 }
 
+/**
+ * Security Header Validation Tests
+ * These tests check for recommended security headers on API responses.
+ * Missing headers are reported as warnings (informational) since adding
+ * them requires server-side changes.
+ */
+
+const SECURITY_HEADERS = {
+  "x-content-type-options": {
+    description: "Prevents MIME type sniffing",
+    expected: "nosniff",
+    validate: (value) => value === "nosniff",
+  },
+  "x-frame-options": {
+    description: "Prevents clickjacking attacks",
+    expected: "DENY or SAMEORIGIN",
+    validate: (value) => value === "DENY" || value === "SAMEORIGIN",
+  },
+  "content-security-policy": {
+    description: "Controls resources the browser can load",
+    expected: "present (any value)",
+    validate: (value) => value && value.length > 0,
+  },
+  "x-xss-protection": {
+    description: "Legacy XSS filter (deprecated but still used)",
+    expected: "1; mode=block or 0",
+    validate: (value) => value === "1; mode=block" || value === "0",
+  },
+  "strict-transport-security": {
+    description: "Enforces HTTPS connections (HSTS)",
+    expected: "max-age directive present",
+    validate: (value) => value && value.includes("max-age"),
+  },
+  "cache-control": {
+    description: "Controls caching behavior for API responses",
+    expected: "no-store, no-cache, or private",
+    validate: (value) =>
+      value &&
+      (value.includes("no-store") ||
+        value.includes("no-cache") ||
+        value.includes("private")),
+  },
+};
+
+function checkSecurityHeaders(headers, endpointName) {
+  const results = {
+    present: [],
+    missing: [],
+    invalid: [],
+  };
+
+  for (const [headerName, config] of Object.entries(SECURITY_HEADERS)) {
+    const value = headers.get(headerName);
+
+    if (!value) {
+      results.missing.push({
+        header: headerName,
+        description: config.description,
+        expected: config.expected,
+      });
+    } else if (!config.validate(value)) {
+      results.invalid.push({
+        header: headerName,
+        description: config.description,
+        expected: config.expected,
+        actual: value,
+      });
+    } else {
+      results.present.push({
+        header: headerName,
+        value: value,
+      });
+    }
+  }
+
+  return results;
+}
+
+function printSecurityHeaderResults(results, endpointName) {
+  console.log(`   Endpoint: ${endpointName}`);
+  console.log(`   ${"─".repeat(40)}`);
+
+  if (results.present.length > 0) {
+    console.log(`   Present headers (${results.present.length}):`);
+    for (const item of results.present) {
+      console.log(`     ✅ ${item.header}: ${item.value}`);
+    }
+  }
+
+  if (results.invalid.length > 0) {
+    console.log(`   Invalid headers (${results.invalid.length}):`);
+    for (const item of results.invalid) {
+      console.log(`     ⚠️  ${item.header}`);
+      console.log(`        Expected: ${item.expected}`);
+      console.log(`        Actual: ${item.actual}`);
+    }
+  }
+
+  if (results.missing.length > 0) {
+    console.log(`   Missing headers (${results.missing.length}):`);
+    for (const item of results.missing) {
+      console.log(`     ⚠️  ${item.header}`);
+      console.log(`        Purpose: ${item.description}`);
+      console.log(`        Recommended: ${item.expected}`);
+    }
+  }
+
+  console.log("");
+}
+
+async function testSecurityHeaders() {
+  console.log("🧪 Testing Security Headers...\n");
+  console.log("   This test checks for recommended security headers on API responses.");
+  console.log("   Missing headers are reported as warnings (informational).\n");
+
+  const endpoints = [
+    { name: "/health (GET)", url: `${SERVER_URL}/health`, method: "GET" },
+    { name: "/ (GET)", url: `${SERVER_URL}/`, method: "GET" },
+    {
+      name: "/mcp (POST)",
+      url: `${SERVER_URL}/mcp`,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json, text/event-stream",
+      },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        method: "initialize",
+        params: {
+          protocolVersion: "2024-11-05",
+          capabilities: { tools: {} },
+          clientInfo: { name: "security-test-client", version: "1.0.0" },
+        },
+        id: 999,
+      }),
+    },
+  ];
+
+  const allResults = [];
+
+  for (const endpoint of endpoints) {
+    try {
+      const fetchOptions = {
+        method: endpoint.method,
+      };
+
+      if (endpoint.headers) {
+        fetchOptions.headers = endpoint.headers;
+      }
+
+      if (endpoint.body) {
+        fetchOptions.body = endpoint.body;
+      }
+
+      const response = await fetch(endpoint.url, fetchOptions);
+      const results = checkSecurityHeaders(response.headers, endpoint.name);
+      allResults.push({ endpoint: endpoint.name, results });
+      printSecurityHeaderResults(results, endpoint.name);
+    } catch (error) {
+      console.log(`   ❌ Failed to test ${endpoint.name}: ${error.message}\n`);
+      allResults.push({
+        endpoint: endpoint.name,
+        results: { present: [], missing: [], invalid: [] },
+        error: error.message,
+      });
+    }
+  }
+
+  // Summary
+  console.log("   Security Header Summary");
+  console.log(`   ${"═".repeat(40)}`);
+
+  let totalPresent = 0;
+  let totalMissing = 0;
+  let totalInvalid = 0;
+
+  for (const { results } of allResults) {
+    totalPresent += results.present.length;
+    totalMissing += results.missing.length;
+    totalInvalid += results.invalid.length;
+  }
+
+  const totalChecks = totalPresent + totalMissing + totalInvalid;
+  const securityScore = totalChecks > 0 ? Math.round((totalPresent / totalChecks) * 100) : 0;
+
+  console.log(`   Total headers checked: ${totalChecks}`);
+  console.log(`   ✅ Present & valid: ${totalPresent}`);
+  console.log(`   ⚠️  Missing: ${totalMissing}`);
+  console.log(`   ⚠️  Invalid: ${totalInvalid}`);
+  console.log(`   Security header coverage: ${securityScore}%`);
+  console.log("");
+
+  if (totalMissing > 0 || totalInvalid > 0) {
+    console.log("   Recommendations:");
+    console.log("   - Consider adding missing security headers to improve security posture");
+    console.log("   - Use helmet.js middleware for Express/Connect servers");
+    console.log("   - Review OWASP Secure Headers Project for guidance");
+    console.log("");
+  }
+
+  // This test always passes - it's informational
+  // Return detailed results for the summary
+  console.log("✅ Security header validation completed (informational)\n");
+  return {
+    success: true,
+    details: {
+      present: totalPresent,
+      missing: totalMissing,
+      invalid: totalInvalid,
+      score: securityScore,
+    },
+  };
+}
+
 async function runHttpTests() {
   console.log("🧪 Testing MCP Streamable HTTP Server...\n");
   console.log("━".repeat(50) + "\n");
@@ -287,7 +502,11 @@ async function runHttpTests() {
     toolsList: false,
     sessionTermination: false,
     errorHandling: false,
+    securityHeaders: false,
   };
+
+  // Store security header details for extended summary
+  let securityHeaderDetails = null;
 
   results.health = await testHealthEndpoint();
   results.info = await testInfoEndpoint();
@@ -301,6 +520,12 @@ async function runHttpTests() {
   }
 
   results.errorHandling = await testErrorHandling();
+
+  // Run security header tests
+  console.log("━".repeat(50) + "\n");
+  const securityResult = await testSecurityHeaders();
+  results.securityHeaders = securityResult.success;
+  securityHeaderDetails = securityResult.details;
 
   console.log("━".repeat(50));
   console.log("\n📊 Test Summary:\n");
@@ -319,7 +544,22 @@ async function runHttpTests() {
   }
 
   console.log(`\n   Total: ${passed}/${total} tests passed`);
-  console.log("━".repeat(50) + "\n");
+
+  // Extended security header summary
+  if (securityHeaderDetails) {
+    console.log("\n📊 Security Header Coverage:\n");
+    console.log(`   Present: ${securityHeaderDetails.present}/${securityHeaderDetails.present + securityHeaderDetails.missing + securityHeaderDetails.invalid}`);
+    console.log(`   Coverage: ${securityHeaderDetails.score}%`);
+    if (securityHeaderDetails.score < 50) {
+      console.log("   Status: ⚠️  Low coverage - consider adding security headers");
+    } else if (securityHeaderDetails.score < 80) {
+      console.log("   Status: ⚠️  Moderate coverage - room for improvement");
+    } else {
+      console.log("   Status: ✅ Good coverage");
+    }
+  }
+
+  console.log("\n" + "━".repeat(50) + "\n");
 
   if (passed === total) {
     console.log("🎉 All HTTP transport tests passed!");

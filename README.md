@@ -64,7 +64,7 @@ Add to `claude_desktop_config.json` or `.cursor/mcp.json`:
       "command": "npx",
       "args": ["infura-mcp-server"],
       "env": {
-        "INFURA_API_KEY": "your_infura_api_key_here",
+        "INFURA_API_KEY": "<YOUR_API_KEY_DO_NOT_COMMIT>",
         "INFURA_NETWORK": "mainnet"
       }
     }
@@ -74,7 +74,7 @@ Add to `claude_desktop_config.json` or `.cursor/mcp.json`:
 
 ### VS Code
 
-Quick install: [![NPX](https://img.shields.io/badge/Install-NPX-0098FF?style=flat-square&logo=visualstudiocode)](https://insiders.vscode.dev/redirect/mcp/install?name=infura-mcp-server&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22infura-mcp-server%22%5D%2C%22env%22%3A%7B%22INFURA_API_KEY%22%3A%22your_infura_api_key_here%22%7D%7D)
+Quick install: [![NPX](https://img.shields.io/badge/Install-NPX-0098FF?style=flat-square&logo=visualstudiocode)](https://insiders.vscode.dev/redirect/mcp/install?name=infura-mcp-server&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22infura-mcp-server%22%5D%2C%22env%22%3A%7B%22INFURA_API_KEY%22%3A%22%3CYOUR_API_KEY_DO_NOT_COMMIT%3E%22%7D%7D)
 
 Or manually add to User Settings (JSON) or `.vscode/mcp.json`:
 
@@ -86,7 +86,7 @@ Or manually add to User Settings (JSON) or `.vscode/mcp.json`:
         "command": "npx",
         "args": ["infura-mcp-server"],
         "env": {
-          "INFURA_API_KEY": "your_infura_api_key_here"
+          "INFURA_API_KEY": "<YOUR_API_KEY_DO_NOT_COMMIT>"
         }
       }
     }
@@ -101,7 +101,7 @@ Or manually add to User Settings (JSON) or `.vscode/mcp.json`:
   "command": "docker",
   "args": [
     "run", "--rm", "-i",
-    "-e", "INFURA_API_KEY=your_key",
+    "-e", "INFURA_API_KEY=<YOUR_API_KEY_DO_NOT_COMMIT>",
     "-e", "INFURA_NETWORK=mainnet",
     "ghcr.io/qbandev/infura-mcp-server:latest"
   ]
@@ -148,11 +148,27 @@ For detailed API documentation, see [Infura docs](https://docs.metamask.io/servi
 
 ## Security
 
-**Built-in protections**: Parameter validation, read-only operations, HTTPS/TLS encryption, local execution by default, no arbitrary code execution.
+> **Warning**: Never commit API keys to version control. Use environment variables or secrets management.
 
-**API key management**: Store keys in environment variables, use separate keys for dev/prod, monitor usage via MetaMask Developer Dashboard.
+### Built-in Security Features
 
-**Publishing**: This package uses npm Trusted Publishing with OIDC and provenance attestations for supply chain security.
+- **Required parameter validation** - All tool inputs are validated before execution
+- **Read-only operations** - All tools can never modify blockchain state, only query data
+- **HTTPS/TLS encryption** - All Infura API calls use secure connections
+- **Local execution** - Server runs locally by default, no external code execution
+- **No arbitrary code execution** - Tools only execute predefined JSON-RPC methods
+
+### API Key Security
+
+- Store keys in environment variables, never in code or config files committed to git
+- Use separate API keys for development and production environments
+- Monitor usage and set alerts via the [MetaMask Developer Dashboard](https://developer.metamask.io/)
+- Rotate keys periodically and revoke unused keys
+- Consider using Infura's allowlist feature to restrict key usage by domain or IP
+
+### Supply Chain Security
+
+This package uses npm Trusted Publishing with OIDC and provenance attestations for supply chain security.
 
 ## Contributing
 
