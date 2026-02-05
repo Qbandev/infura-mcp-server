@@ -221,7 +221,8 @@ async function runTests() {
       () => callInfura('eth_blockNumber', [], 'mainnet')
     );
 
-    assertIncludes(error.message, '401');
+    // Error message uses actionable format instead of raw status code
+    assertIncludes(error.message, 'Authentication failed');
   });
 
   // Test 4: HTTP 403 Forbidden
@@ -239,7 +240,8 @@ async function runTests() {
       () => callInfura('eth_blockNumber', [], 'mainnet')
     );
 
-    assertIncludes(error.message, '403');
+    // Error message uses actionable format instead of raw status code
+    assertIncludes(error.message, 'Authentication failed');
   });
 
   // Test 5: HTTP 429 Rate Limited
@@ -257,7 +259,8 @@ async function runTests() {
       () => callInfura('eth_blockNumber', [], 'mainnet')
     );
 
-    assertIncludes(error.message, '429');
+    // Error message uses actionable format instead of raw status code
+    assertIncludes(error.message, 'Rate limit exceeded');
   });
 
   // Test 6: HTTP 500 Server Error
@@ -357,6 +360,124 @@ async function runTests() {
     );
 
     assertIncludes(error.message, 'Method not found');
+  });
+
+  // Test 11: Retry occurs on transient 429 error
+  await runTest(11, 'Retry occurs on transient 429 error (3 attempts)', async () => {
+    let fetchCallCount = 0;
+
+    global.fetch = async (url, options) => {
+      fetchCallCount++;
+      return {
+        ok: false,
+        status: 429,
+        statusText: 'Too Many Requests',
+        headers: new Map(),
+        json: async () => ({ error: { message: 'Rate limit exceeded' } })
+      };
+    };
+
+    const { callInfura } = await import(`${infuraClientPath}?t=${Date.now()}`);
+
+    await assertThrowsAsync(
+      () => callInfura('eth_blockNumber', [], 'mainnet'),
+      'Rate limit exceeded'
+    );
+
+    // Should have retried 3 times (MAX_RETRIES = 3)
+    assertEqual(fetchCallCount, 3, 'Should have made 3 fetch attempts.');
+  });
+
+  // Test 12: Retry occurs on transient 500 error
+  await runTest(12, 'Retry occurs on transient 500 error (3 attempts)', async () => {
+    let fetchCallCount = 0;
+
+    global.fetch = async (url, options) => {
+      fetchCallCount++;
+      return {
+        ok: false,
+        status: 500,
+        statusText: 'Internal Server Error',
+        headers: new Map(),
+        json: async () => ({ error: { message: 'Server error' } })
+      };
+    };
+
+    const { callInfura } = await import(`${infuraClientPath}?t=${Date.now()}`);
+
+    await assertThrowsAsync(
+      () => callInfura('eth_blockNumber', [], 'mainnet'),
+      '500'
+    );
+
+    // Should have retried 3 times
+    assertEqual(fetchCallCount, 3, 'Should have made 3 fetch attempts for 500 error.');
+  });
+
+  // Test 13: Success after transient failure (retry succeeds)
+  await runTest(13, 'Success after transient failure on second attempt', async () => {
+    let fetchCallCount = 0;
+    const expectedResult = '0xabcdef';
+
+    global.fetch = async (url, options) => {
+      fetchCallCount++;
+
+      // First attempt fails with 503
+      if (fetchCallCount === 1) {
+        return {
+          ok: false,
+          status: 503,
+          statusText: 'Service Unavailable',
+          headers: new Map(),
+          json: async () => ({ error: { message: 'Service temporarily unavailable' } })
+        };
+      }
+
+      // Second attempt succeeds
+      return {
+        ok: true,
+        status: 200,
+        statusText: 'OK',
+        json: async () => ({
+          jsonrpc: '2.0',
+          id: 1,
+          result: expectedResult
+        })
+      };
+    };
+
+    const { callInfura } = await import(`${infuraClientPath}?t=${Date.now()}`);
+
+    const result = await callInfura('eth_blockNumber', [], 'mainnet');
+
+    assertEqual(fetchCallCount, 2, 'Should have made 2 fetch attempts.');
+    assertEqual(result, expectedResult, 'Should return result from successful retry.');
+  });
+
+  // Test 14: No retry on 401 (non-transient error)
+  await runTest(14, 'No retry on 401 (non-transient auth error)', async () => {
+    let fetchCallCount = 0;
+
+    global.fetch = async (url, options) => {
+      fetchCallCount++;
+      return {
+        ok: false,
+        status: 401,
+        statusText: 'Unauthorized',
+        headers: new Map(),
+        json: async () => ({ error: { message: 'Invalid API key' } })
+      };
+    };
+
+    const { callInfura } = await import(`${infuraClientPath}?t=${Date.now()}`);
+
+    await assertThrowsAsync(
+      () => callInfura('eth_blockNumber', [], 'mainnet'),
+      'Authentication failed'
+    );
+
+    // Should NOT retry on auth errors
+    assertEqual(fetchCallCount, 1, 'Should NOT retry on 401 error.');
   });
 
   // Print summary
