@@ -11,15 +11,11 @@ import {
   truncateHash,
   formatBlock,
   formatTransaction,
-  formatReceipt,
   formatBalance,
   formatLogs,
   formatGasPrice,
-  formatFeeHistory,
-  formatHexValue,
   formatSyncStatus,
   formatBoolean,
-  formatCode,
   formatAsMarkdown
 } from '../lib/formatters.js';
 

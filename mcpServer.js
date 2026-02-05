@@ -257,8 +257,16 @@ async function setupServerHandlers(server, tools) {
       // Apply character limit
       if (textContent.length > CHARACTER_LIMIT) {
         const truncated = textContent.substring(0, CHARACTER_LIMIT);
+        // Determine item count for truncation message
+        let itemCount = 1;
+        if (result && typeof result === "object" && Array.isArray(result.logs)) {
+          // Handle paginated responses like { logs: [...], pagination: {...} }
+          itemCount = result.logs.length;
+        } else if (Array.isArray(result)) {
+          itemCount = result.length;
+        }
         textContent = truncated + truncationMessage(
-          Array.isArray(result) ? result.length : 1,
+          itemCount,
           'CHARACTER_LIMIT exceeded'
         );
       }

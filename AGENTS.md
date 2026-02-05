@@ -201,30 +201,30 @@ When querying event logs that may return large result sets, use pagination to re
     "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
     "topics": ["0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"],
     "network": "mainnet",
-    "pageSize": 100
+    "limit": 100
   }
 }
 ```
 
 **Pagination response structure:**
 
-When pagination is enabled, the response includes a `pagination` object:
+When pagination parameters are used, the response includes a `pagination` object:
 
 ```json
 {
   "logs": [...],
   "pagination": {
-    "currentPage": 1,
-    "pageSize": 100,
-    "totalLogs": 450,
-    "totalPages": 5,
-    "hasNextPage": true,
-    "hasPreviousPage": false
+    "total": 450,
+    "count": 100,
+    "offset": 0,
+    "limit": 100,
+    "has_more": true,
+    "next_offset": 100
   }
 }
 ```
 
-**Retrieve subsequent pages with `pageNumber`:**
+**Retrieve subsequent pages with `offset`:**
 
 ```json
 {
@@ -235,23 +235,23 @@ When pagination is enabled, the response includes a `pagination` object:
     "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
     "topics": ["0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"],
     "network": "mainnet",
-    "pageSize": 100,
-    "pageNumber": 2
+    "limit": 100,
+    "offset": 100
   }
 }
 ```
 
 **Pagination workflow:**
 
-1. Make initial request with `pageSize` to get first page and total count
-2. Check `pagination.hasNextPage` to determine if more pages exist
-3. Request subsequent pages by incrementing `pageNumber`
-4. Continue until `hasNextPage` is `false`
+1. Make initial request with `limit` to get first page and total count
+2. Check `pagination.has_more` to determine if more results exist
+3. Use `pagination.next_offset` as the `offset` for the next request
+4. Continue until `has_more` is `false`
 
 **Best practices for pagination:**
 
-- Use page sizes between 50-500 depending on log complexity
-- Always check `hasNextPage` rather than assuming page counts
+- Use limit values between 100-1000 depending on log complexity
+- Always check `has_more` rather than calculating from totals
 - For very large result sets, consider narrowing filters first
 - Combine with `response_format: "markdown"` for human-readable paginated output
 
