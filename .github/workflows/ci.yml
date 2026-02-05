@@ -69,11 +69,15 @@ jobs:
           INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
         run: |
           echo "🧪 Running comprehensive test suite..."
-          
+
           # Run basic validation tests
           echo "📋 Running validation tests..."
           npm test
-          
+
+          # Run unit tests (errors, formatters, infura-client, tool-defaults)
+          echo "🔬 Running unit tests..."
+          npm run test:unit
+
           # Run comprehensive tool testing (all 29 tools)
           echo "🔧 Running comprehensive tool validation (29 tools)..."
           if [ -n "$INFURA_API_KEY" ]; then
@@ -83,11 +87,11 @@ jobs:
             echo "⚠️ No API key available, running structure validation only..."
             npm run test:comprehensive
           fi
-          
+
           # Run HTTP transport tests (Streamable HTTP)
           echo "🌐 Running HTTP transport tests..."
           npm run test:http
-          
+
           # Run integration tests if API key is available
           if [ -n "$INFURA_API_KEY" ]; then
             echo "🔗 Running integration tests with real API..."

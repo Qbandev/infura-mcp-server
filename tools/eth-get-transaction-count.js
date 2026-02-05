@@ -31,7 +31,7 @@ const apiTool = {
     function: {
       name: "eth_getTransactionCount",
       description:
-        "Get the transaction count for a specified Ethereum address on a given network.",
+        "Returns the number of transactions sent from an address (nonce). Useful for determining the next nonce for sending transactions.\n\nArgs:\n  - address (string): 20-byte Ethereum address in hex format (e.g., '0x742d35Cc6634C0532925a3b844Bc9e7595f...')\n  - tag (string, optional): Block tag - 'latest', 'earliest', or 'pending', defaults to 'latest'\n  - network (string, optional): Ethereum network to query, defaults to 'mainnet'\n\nReturns:\n  - Hex-encoded integer representing the number of transactions sent from the address\n\nExamples:\n  - \"Get current nonce for address\": { \"address\": \"0x742d35Cc6634C0532925a3b844Bc454e4438f44e\" }\n  - \"Get pending transaction count\": { \"address\": \"0x742d35Cc6634C0532925a3b844Bc454e4438f44e\", \"tag\": \"pending\" }\n\nErrors:\n  - InvalidParams: When address format is invalid or tag is not a valid block tag\n  - InternalError: When Infura API is unavailable",
       parameters: {
         type: "object",
         properties: {
@@ -49,8 +49,20 @@ const apiTool = {
             description: "The Ethereum network to query, e.g., 'mainnet' or 'sepolia'.",
             default: "mainnet",
           },
+          response_format: {
+            type: "string",
+            enum: ["json", "markdown"],
+            description: "Output format: 'json' for structured data, 'markdown' for human-readable.",
+            default: "json",
+          },
         },
         required: ["address"],
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true,
       },
     },
   },

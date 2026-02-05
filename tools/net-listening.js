@@ -22,7 +22,7 @@ const apiTool = {
     function: {
       name: "net_isListening",
       description:
-        "Check if the Ethereum client is actively listening for network connections on a specified network.",
+        "Returns whether the client is actively listening for network connections. Useful for checking node connectivity status.\n\nArgs:\n  - network (string, optional): Ethereum network to query, defaults to 'mainnet'\n\nReturns:\n  - true if the client is listening for connections\n  - false if the client is not listening\n\nExamples:\n  - \"Check if mainnet node is listening\": {}\n  - \"Check Sepolia node status\": { \"network\": \"sepolia\" }\n\nErrors:\n  - InternalError: When Infura API is unavailable",
       parameters: {
         type: "object",
         properties: {
@@ -31,8 +31,20 @@ const apiTool = {
             description: "The Ethereum network to query, e.g., 'mainnet' or 'sepolia'.",
             default: "mainnet",
           },
+          response_format: {
+            type: "string",
+            enum: ["json", "markdown"],
+            description: "Output format: 'json' for structured data, 'markdown' for human-readable.",
+            default: "json",
+          },
         },
         required: [],
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true,
       },
     },
   },
