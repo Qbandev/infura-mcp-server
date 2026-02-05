@@ -10,6 +10,18 @@
 - Bug fixes go here
 
 
+## [1.1.0](https://github.com/Qbandev/infura-mcp-server/compare/v1.0.6...v1.1.0) (2026-02-05)
+
+
+### Features
+
+* **tools:** add response formatting, pagination, and improved defaults ([#70](https://github.com/Qbandev/infura-mcp-server/issues/70)) ([50a8aa2](https://github.com/Qbandev/infura-mcp-server/commit/50a8aa2aba2bcb68bf24f5ec8dfa4ce8e6b5224e))
+
+
+### Bug Fixes
+
+* **security:** address CI/CD vulnerabilities and add comprehensive tests ([#68](https://github.com/Qbandev/infura-mcp-server/issues/68)) ([6c63dc1](https://github.com/Qbandev/infura-mcp-server/commit/6c63dc173ce3c33df8722bb7eb02c16476900b66))
+
 ## [1.0.6](https://github.com/Qbandev/infura-mcp-server/compare/v1.0.5...v1.0.6) (2026-01-02)
 
 
