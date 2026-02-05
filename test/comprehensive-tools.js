@@ -138,6 +138,16 @@ class ToolTester {
             minimalParams.position = TEST_CONFIG.TEST_DATA.STORAGE_POSITION;
           } else if (param === 'value') {
             minimalParams.value = '0x0';
+          } else if (param === 'index' || param === 'transactionIndex') {
+            minimalParams[param] = '0x0';
+          } else if (param === 'blockCount') {
+            minimalParams.blockCount = '0x4';
+          } else if (param === 'newestBlock') {
+            minimalParams.newestBlock = 'latest';
+          } else if (param === 'rewardPercentiles') {
+            minimalParams.rewardPercentiles = [25, 50, 75];
+          } else if (param === 'fullTransactions') {
+            minimalParams.fullTransactions = false;
           } else {
             // Default value for unknown required params
             minimalParams[param] = '';

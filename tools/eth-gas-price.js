@@ -22,7 +22,7 @@ const apiTool = {
     function: {
       name: "eth_getGasPrice",
       description:
-        "Fetch the current gas price from a specified Infura Ethereum network.",
+        "Get the current gas price in wei for legacy (non-EIP-1559) transactions.\n\nArgs:\n  - network (string, optional): Ethereum network to query. Defaults to 'mainnet'.\n\nReturns:\n  - Hexadecimal string representing gas price in wei (e.g., '0x3b9aca00' for 1 Gwei).\n\nExamples:\n  - \"Get mainnet gas price\": {}\n  - \"Get Sepolia gas price\": { \"network\": \"sepolia\" }\n\nErrors:\n  - InternalError: When Infura API is unavailable or returns an error.",
       parameters: {
         type: "object",
         properties: {
@@ -31,8 +31,20 @@ const apiTool = {
             description: "The Ethereum network to query, e.g., 'mainnet' or 'sepolia'.",
             default: "mainnet",
           },
+          response_format: {
+            type: "string",
+            enum: ["json", "markdown"],
+            description: "Output format: 'json' for structured data, 'markdown' for human-readable.",
+            default: "json",
+          },
         },
         required: [],
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true,
       },
     },
   },

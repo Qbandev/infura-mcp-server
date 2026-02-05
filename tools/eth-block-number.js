@@ -21,7 +21,7 @@ const apiTool = {
     function: {
       name: "eth_getBlockNumber",
       description:
-        "Fetch the latest block number from a specified Ethereum network.",
+        "Fetch the latest block number from an Ethereum network.\n\nArgs:\n  - network (string, optional): Ethereum network to query. Defaults to 'mainnet'.\n\nReturns:\n  - Hexadecimal string representing the current block number (e.g., '0x10d4f').\n\nExamples:\n  - \"Get mainnet block number\": {}\n  - \"Get Sepolia block number\": { \"network\": \"sepolia\" }\n\nErrors:\n  - InternalError: When Infura API is unavailable or returns an error.",
       parameters: {
         type: "object",
         properties: {
@@ -30,8 +30,20 @@ const apiTool = {
             description: "The Ethereum network to query, e.g., 'mainnet' or 'sepolia'.",
             default: "mainnet",
           },
+          response_format: {
+            type: "string",
+            enum: ["json", "markdown"],
+            description: "Output format: 'json' for structured data, 'markdown' for human-readable.",
+            default: "json",
+          },
         },
         required: [],
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true,
       },
     },
   },

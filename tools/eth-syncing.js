@@ -22,7 +22,7 @@ const apiTool = {
     function: {
       name: "eth_isSyncing",
       description:
-        "Check the synchronization status of the Ethereum node on a specified network.",
+        "Returns the sync status of the Ethereum node. Useful for determining if the node is fully synced before relying on its data.\n\nArgs:\n  - network (string, optional): Ethereum network to query, defaults to 'mainnet'\n\nReturns:\n  - false if the node is not syncing (fully synced)\n  - Object with startingBlock, currentBlock, and highestBlock (all hex-encoded) if syncing is in progress\n\nExamples:\n  - \"Check if mainnet node is synced\": {}\n  - \"Check Sepolia sync status\": { \"network\": \"sepolia\" }\n\nErrors:\n  - InternalError: When Infura API is unavailable",
       parameters: {
         type: "object",
         properties: {
@@ -31,8 +31,20 @@ const apiTool = {
             description: "The Ethereum network to query, e.g., 'mainnet' or 'sepolia'.",
             default: "mainnet",
           },
+          response_format: {
+            type: "string",
+            enum: ["json", "markdown"],
+            description: "Output format: 'json' for structured data, 'markdown' for human-readable.",
+            default: "json",
+          },
         },
         required: [],
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: true,
       },
     },
   },
