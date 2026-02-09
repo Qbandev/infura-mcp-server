@@ -210,6 +210,11 @@ jobs:
     needs: [build-and-push]
     if: success()
 
+    permissions:
+      contents: read
+      security-events: write
+      actions: write
+
     steps:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
