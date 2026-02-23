@@ -85,8 +85,8 @@
   },
   "devDependencies": {
     "node-fetch": "^3.3.2",
-    "@commitlint/cli": "^20.4.1",
-    "@commitlint/config-conventional": "^20.4.1"
+    "@commitlint/cli": "^20.4.2",
+    "@commitlint/config-conventional": "^20.4.2"
   },
   "engines": {
     "node": ">=20.0.0"
