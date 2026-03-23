@@ -219,18 +219,21 @@ jobs:
       actions: write
 
     steps:
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+      - name: Run Grype vulnerability scanner
+        uses: anchore/scan-action@v7
+        id: scan
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          format: 'sarif'
-          output: 'trivy-results.sarif'
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          fail-build: false
+          severity-cutoff: high
+          output-format: sarif
+          output-file: 'grype-results.sarif'
 
-      - name: Upload Trivy scan results
+      - name: Upload Grype scan results
         uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: 'grype-results.sarif'
 
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
