@@ -42,7 +42,7 @@ jobs:
         run: npm ci
 
       - name: Validate commit messages
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
         run: |
           git fetch origin ${{ github.base_ref }}
           npx commitlint --from origin/${{ github.base_ref }} --to HEAD --verbose
