@@ -84,7 +84,7 @@ jobs:
           echo "Tag format validated: $GIT_TAG"
 
       - name: Checkout code at tag
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.event.inputs.tag }}
 
@@ -99,7 +99,7 @@ jobs:
         # npm 11.5+ required for OIDC authentication
 
       - name: Cache dependencies
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
