@@ -115,6 +115,7 @@ jobs:
           sbom: sbom.spdx.json
           fail-build: true
           severity-cutoff: high
+          only-fixed: true
 
   security-summary:
     name: Security Summary
