@@ -81,11 +81,11 @@
     "commander": "^15.0.0",
     "dotenv": "^17.4.2",
     "express": "^5.1.0",
-    "express-rate-limit": "^8.5.2"
+    "express-rate-limit": "^8.6.2"
   },
   "devDependencies": {
     "node-fetch": "^3.3.2",
-    "@commitlint/cli": "^21.0.2",
+    "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.0.2"
   },
   "engines": {
