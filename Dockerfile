@@ -1,5 +1,5 @@
 # Build stage
-FROM node:26.5-alpine AS builder
+FROM node:26.8-alpine AS builder
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ COPY package.json package-lock.json ./
 RUN npm ci --only=production && npm cache clean --force
 
 # Production stage
-FROM node:26.5-alpine AS production
+FROM node:26.8-alpine AS production
 
 # Add metadata
 LABEL org.opencontainers.image.title="Infura MCP Server"
