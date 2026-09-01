@@ -230,7 +230,7 @@ jobs:
           output-file: 'grype-results.sarif'
 
       - name: Upload Grype scan results
-        uses: github/codeql-action/upload-sarif@v4.37.3
+        uses: github/codeql-action/upload-sarif@v4.37.9
         if: always()
         with:
           sarif_file: 'grype-results.sarif'
